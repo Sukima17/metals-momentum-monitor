@@ -1,6 +1,7 @@
 """Small deterministic checks for the signal engine; run with `python test_model.py`."""
 
 from momentum_monitor import (
+    EASTMONEY_WEIGHTED_CODES,
     capital_bucket,
     classify_signal_change,
     daily_four_factor,
@@ -11,6 +12,8 @@ from momentum_monitor import (
     rolling_atr,
     rolling_rsi,
     technical_snapshot,
+    volatility_position_control,
+    aggregate_oi_change,
 )
 from market_universe import UNIVERSE
 from research_backtest import compare_strategies, run_strategy
@@ -77,9 +80,29 @@ if __name__ == "__main__":
     assert friction_test["trades"] == 1 and friction_test["net_return_pct"] is not None
     assert {row[2] for row in UNIVERSE} >= {"SHFE", "SHFE/INE", "DCE", "CZCE", "GFEX", "CFFEX"}
     assert {row[3] for row in UNIVERSE} >= {"precious", "nonferrous", "ferrous", "energy", "agriculture", "new_energy", "financial"}
-    assert len(config["assets"]) == 18
+    assert len(config["assets"]) == 17
     assert "cobalt" not in {asset["id"] for asset in config["assets"]}
-    assert sum(asset["sector"] == "ferrous" for asset in config["assets"]) == 9
+    assert sum(asset["sector"] == "ferrous" for asset in config["assets"]) == 8
+    assert "wire_rod" not in {asset["id"] for asset in config["assets"]}
+    assert len(config["paper_asset_ids"]) == 10
+    assert set(config["paper_asset_ids"]) <= {asset["id"] for asset in config["assets"]}
+    assert {asset["symbol"] for asset in config["assets"]} == set(EASTMONEY_WEIGHTED_CODES)
+    detailed_levels = research_risk_levels(100, 110, 90, 2, ma20=98, boll_upper=108, boll_lower=92)
+    assert detailed_levels["supports"][0]["value"] == 98
+    assert detailed_levels["resistances"][0]["value"] == 108
+    volatile_bars = make_bars(1) * 3
+    for index, bar in enumerate(volatile_bars):
+        bar["datetime"] = f"2026-01-{index + 1:03d}"
+        if index >= len(volatile_bars) - 14:
+            bar["high"] = bar["close"] + 12
+            bar["low"] = bar["close"] - 12
+    volatility = volatility_position_control(volatile_bars)
+    assert volatility["regime"] == "surge" and volatility["position_multiplier"] == 0.25
+    oi_series = [
+        {"bars": [{"hold": value} for value in (100, 110, 120, 130, 140, 150)]},
+        {"bars": [{"hold": value} for value in (300, 306, 312, 318, 324, 330)]},
+    ]
+    assert abs(aggregate_oi_change(oi_series, 5) - 20.0) < 1e-9
     direct_reversal = classify_signal_change(
         {"signal": "long", "daily_signal": "long", "score": 70},
         {"signal": "short", "daily_signal": "short", "score": -65},
@@ -90,4 +113,4 @@ if __name__ == "__main__":
     )
     assert direct_reversal and direct_reversal["severity"] == "major"
     assert score_jump and score_jump["severity"] == "major"
-    print("signal, strategy comparison, market universe and risk checks OK")
+    print("signal, volatility sizing, aggregate OI, strategy comparison, market universe and risk checks OK")

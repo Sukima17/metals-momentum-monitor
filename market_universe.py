@@ -14,7 +14,7 @@ UNIVERSE = [
     # DCE
     ("V0","PVC","DCE","energy"),("P0","棕榈油","DCE","agriculture"),("B0","豆二","DCE","agriculture"),("M0","豆粕","DCE","agriculture"),("I0","铁矿石","DCE","ferrous"),("JD0","鸡蛋","DCE","agriculture"),("L0","塑料","DCE","energy"),("PP0","聚丙烯","DCE","energy"),("FB0","纤维板","DCE","agriculture"),("BB0","胶合板","DCE","agriculture"),("Y0","豆油","DCE","agriculture"),("C0","玉米","DCE","agriculture"),("A0","豆一","DCE","agriculture"),("J0","焦炭","DCE","ferrous"),("JM0","焦煤","DCE","ferrous"),("CS0","玉米淀粉","DCE","agriculture"),("EG0","乙二醇","DCE","energy"),("RR0","粳米","DCE","agriculture"),("EB0","苯乙烯","DCE","energy"),("PG0","液化气","DCE","energy"),("LH0","生猪","DCE","agriculture"),("LG0","原木","DCE","agriculture"),("BZ0","纯苯","DCE","energy"),
     # SHFE + INE
-    ("FU0","燃油","SHFE/INE","energy"),("SC0","原油","SHFE/INE","energy"),("AL0","沪铝","SHFE","nonferrous"),("RU0","橡胶","SHFE","energy"),("ZN0","沪锌","SHFE","nonferrous"),("CU0","沪铜","SHFE","nonferrous"),("AU0","黄金","SHFE","precious"),("RB0","螺纹钢","SHFE","ferrous"),("WR0","线材","SHFE","ferrous"),("PB0","沪铅","SHFE","nonferrous"),("AG0","白银","SHFE","precious"),("BU0","沥青","SHFE","energy"),("HC0","热卷","SHFE","ferrous"),("SN0","沪锡","SHFE","nonferrous"),("NI0","沪镍","SHFE","nonferrous"),("SP0","纸浆","SHFE","energy"),("NR0","20号胶","SHFE/INE","energy"),("SS0","不锈钢","SHFE","ferrous"),("LU0","低硫燃油","SHFE/INE","energy"),("BC0","国际铜","SHFE/INE","nonferrous"),("AO0","氧化铝","SHFE","nonferrous"),("BR0","丁二烯橡胶","SHFE","energy"),("EC0","集运欧线","SHFE/INE","energy"),("AD0","铸造铝合金","SHFE","nonferrous"),("OP0","胶版印刷纸","SHFE","energy"),
+    ("FU0","燃油","SHFE/INE","energy"),("SC0","原油","SHFE/INE","energy"),("AL0","沪铝","SHFE","nonferrous"),("RU0","橡胶","SHFE","energy"),("ZN0","沪锌","SHFE","nonferrous"),("CU0","沪铜","SHFE","nonferrous"),("AU0","黄金","SHFE","precious"),("RB0","螺纹钢","SHFE","ferrous"),("PB0","沪铅","SHFE","nonferrous"),("AG0","白银","SHFE","precious"),("BU0","沥青","SHFE","energy"),("HC0","热卷","SHFE","ferrous"),("SN0","沪锡","SHFE","nonferrous"),("NI0","沪镍","SHFE","nonferrous"),("SP0","纸浆","SHFE","energy"),("NR0","20号胶","SHFE/INE","energy"),("SS0","不锈钢","SHFE","ferrous"),("LU0","低硫燃油","SHFE/INE","energy"),("BC0","国际铜","SHFE/INE","nonferrous"),("AO0","氧化铝","SHFE","nonferrous"),("BR0","丁二烯橡胶","SHFE","energy"),("EC0","集运欧线","SHFE/INE","energy"),("AD0","铸造铝合金","SHFE","nonferrous"),("OP0","胶版印刷纸","SHFE","energy"),
     # CFFEX
     ("IF0","沪深300股指","CFFEX","financial"),("TF0","5年国债","CFFEX","financial"),("T0","10年国债","CFFEX","financial"),("IH0","上证50股指","CFFEX","financial"),("IC0","中证500股指","CFFEX","financial"),("TS0","2年国债","CFFEX","financial"),("IM0","中证1000股指","CFFEX","financial"),
     # GFEX
@@ -63,10 +63,19 @@ def fetch_market_breadth(generated_at: datetime) -> dict[str, Any]:
         median = (changes[middle] if valid % 2 else (changes[middle - 1] + changes[middle]) / 2) if valid else 0.0
         breadth_ratio = (up - down) / valid if valid else 0.0
         strength_score = max(-100.0, min(100.0, breadth_ratio * 60 + average * 20))
+        member_rows = [
+            {
+                **row,
+                "signal": "long" if row["change_pct"] > 0.005 else "short" if row["change_pct"] < -0.005 else "neutral",
+                "weight": 1 / valid if valid else 0,
+            }
+            for row in sorted(members, key=lambda item: item["change_pct"], reverse=True)
+        ]
         categories[key] = {
             "up": up, "down": down, "flat": valid - up - down, "valid": valid,
             "average_change_pct": average, "median_change_pct": median,
             "breadth_ratio": breadth_ratio, "strength_score": strength_score,
+            "members": member_rows,
         }
     ranked_sectors = sorted(
         ({"category": key, **value} for key, value in categories.items() if value["valid"]),
@@ -82,7 +91,7 @@ def fetch_market_breadth(generated_at: datetime) -> dict[str, Any]:
         "short": [sector for sector in ranked_sectors if sector["allocation"] == "relative_short"],
         "neutral": [sector for sector in ranked_sectors if sector["allocation"] == "neutral"],
         "spread_score": ranked_sectors[0]["strength_score"] - ranked_sectors[-1]["strength_score"] if len(ranked_sectors) > 1 else 0,
-        "method": "板块内主力连续等权：强弱分=60×涨跌家数差/有效品种数+20×板块平均涨跌幅；做多前2、做空后2，其余中性",
+        "method": "板块内每个主力连续等权：强弱分=60×涨跌家数差/有效品种数+20×板块平均涨跌幅；做多前2、做空后2，其余中性，并展开全部品种贡献",
         "note": "这是当日截面相对强弱配置，不代表七板块均已完成日线策略回测；金融板块同时含股指与国债，使用前应复核内部方向。",
     }
     return {

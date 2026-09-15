@@ -42,6 +42,7 @@ CONFIG_PATH = ROOT / "config.json"
 LATEST_PATH = DIST / "latest.json"
 HISTORY_PATH = STATE_DIR / "scan_history.jsonl"
 PAPER_PATH = STATE_DIR / "paper_portfolio.json"
+PAPER_REPORT_PATH = DIST / "paper-history.json"
 SIGNAL_STATE_PATH = STATE_DIR / "signal_state.json"
 PERFORMANCE_PATH = DIST / "performance-report.json"
 SINA_ENDPOINT = (
@@ -52,8 +53,30 @@ SINA_DAILY_ENDPOINT = (
     "https://stock2.finance.sina.com.cn/futures/api/jsonp.php/"
     "var%20_{variable}=/InnerFuturesNewService.getDailyKLine"
 )
+SINA_CONTRACT_TABLE_ENDPOINT = (
+    "https://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/"
+    "Market_Center.getHQFuturesData"
+)
+EASTMONEY_KLINE_ENDPOINT = "https://push2his.eastmoney.com/api/qt/stock/kline/get"
+EASTMONEY_WEIGHTED_CODES = {
+    "CU0": "cufi", "AL0": "alfi", "PB0": "pbfi", "ZN0": "znfi", "NI0": "nifi",
+    "LC0": "lcfi", "SN0": "snfi", "AU0": "aufi", "AG0": "agfi", "RB0": "rbfi",
+    "HC0": "hcfi", "SS0": "ssfi", "I0": "ifi", "J0": "jfi", "JM0": "jmfi",
+    "SF0": "sffi", "SM0": "smfi",
+}
+SINA_MARKET_NODES = {
+    "CU0": "tong_qh", "AL0": "lv_qh", "PB0": "qian_qh", "ZN0": "xing_qh",
+    "NI0": "ni_qh", "LC0": "lc_qh", "SN0": "xi_qh", "AU0": "hj_qh",
+    "AG0": "by_qh", "RB0": "lwg_qh", "HC0": "rzjb_qh", "SS0": "bxg_qh",
+    "I0": "tks_qh", "J0": "jt_qh", "JM0": "jm_qh", "SF0": "gt_qh",
+    "SM0": "mg_qh",
+}
 WRITE_LOCK = threading.Lock()
 SCAN_LOCK = threading.Lock()
+OI_FALLBACK_SEMAPHORE = threading.Semaphore(2)
+EASTMONEY_SEMAPHORE = threading.Semaphore(2)
+EASTMONEY_STATE_LOCK = threading.Lock()
+EASTMONEY_FAILURE_UNTIL = 0.0
 
 
 def load_config() -> dict[str, Any]:
@@ -140,6 +163,33 @@ def request_text(url: str) -> str:
     raise RuntimeError("行情请求失败")
 
 
+def request_eastmoney_text(url: str) -> str:
+    global EASTMONEY_FAILURE_UNTIL
+    with EASTMONEY_STATE_LOCK:
+        if time.time() < EASTMONEY_FAILURE_UNTIL:
+            raise RuntimeError("东方财富接口短暂熔断，转用全合约加总")
+    request = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36",
+            "Referer": "https://quote.eastmoney.com/",
+            "Accept": "application/json, text/plain, */*",
+        },
+    )
+    with EASTMONEY_SEMAPHORE:
+        for attempt in range(3):
+            try:
+                with urllib.request.urlopen(request, timeout=18) as response:
+                    return response.read().decode("utf-8", errors="replace")
+            except Exception:
+                if attempt == 2:
+                    with EASTMONEY_STATE_LOCK:
+                        EASTMONEY_FAILURE_UNTIL = time.time() + 300
+                    raise
+                time.sleep(1.5 * (attempt + 1))
+    raise RuntimeError("东方财富行情请求失败")
+
+
 def fetch_sina_minute_bars(symbol: str, period: str) -> list[dict[str, Any]]:
     query = urllib.parse.urlencode({"symbol": symbol, "type": period})
     return parse_sina_rows(request_text(f"{SINA_ENDPOINT}?{query}"), 35, f"{period}分钟")
@@ -149,12 +199,151 @@ def fetch_sina_bars(symbol: str) -> list[dict[str, Any]]:
     return fetch_sina_minute_bars(symbol, "5")
 
 
-def fetch_sina_daily_bars(symbol: str, now: datetime) -> list[dict[str, Any]]:
+def fetch_sina_daily_bars(symbol: str, now: datetime, minimum: int = 60) -> list[dict[str, Any]]:
     date_key = now.strftime("%Y_%m_%d")
     variable = urllib.parse.quote(f"{symbol}{date_key}", safe="")
     url = SINA_DAILY_ENDPOINT.format(variable=variable)
     query = urllib.parse.urlencode({"symbol": symbol, "type": date_key})
-    return parse_sina_rows(request_text(f"{url}?{query}"), 60, "日")
+    return parse_sina_rows(request_text(f"{url}?{query}"), minimum, "日")
+
+
+def fetch_sina_contract_table(node: str) -> list[dict[str, Any]]:
+    """Return live individual contracts for one variety, sorted by open interest."""
+    query = urllib.parse.urlencode({"page": 1, "num": 50, "sort": "position", "asc": 0, "node": node, "base": "futures"})
+    values = json.loads(request_text(f"{SINA_CONTRACT_TABLE_ENDPOINT}?{query}"))
+    rows: list[dict[str, Any]] = []
+    for row in values if isinstance(values, list) else []:
+        symbol = str(row.get("symbol") or "").upper()
+        if not re.fullmatch(r"[A-Z]+\d{3,4}", symbol):
+            continue
+        try:
+            position = float(row.get("position") or 0)
+        except (TypeError, ValueError):
+            continue
+        if position > 0:
+            rows.append({"symbol": symbol, "name": str(row.get("name") or symbol), "position": position})
+    return sorted(rows, key=lambda item: item["position"], reverse=True)
+
+
+def fetch_eastmoney_weighted_oi(symbol: str, now: datetime) -> dict[str, Any]:
+    """Read the vendor's variety-weighted series and use its aggregate OI field."""
+    code = EASTMONEY_WEIGHTED_CODES.get(symbol)
+    if not code:
+        raise ValueError(f"缺少{symbol}的加权合约代码")
+    query = urllib.parse.urlencode({
+        "secid": f"159.{code}", "klt": "101", "fqt": "1", "lmt": "120", "end": "20500000",
+        "iscca": "1", "fields1": "f1,f2,f3,f4,f5,f6,f7,f8",
+        "fields2": "f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61,f62,f63,f64",
+        "ut": "7eea3edcaed734bea9cbfc24409ed989", "forcect": "1",
+    })
+    payload = json.loads(request_eastmoney_text(f"{EASTMONEY_KLINE_ENDPOINT}?{query}"))
+    data = payload.get("data") or {}
+    rows: list[dict[str, Any]] = []
+    local_now = now.astimezone(ZoneInfo("Asia/Shanghai"))
+    for raw in data.get("klines") or []:
+        fields = raw.split(",")
+        try:
+            bar_date = datetime.fromisoformat(fields[0]).date()
+            completed = bar_date < local_now.date() or (bar_date == local_now.date() and local_now.time() >= dt_time(15, 5))
+            hold = float(fields[12])
+            if completed and hold > 0:
+                rows.append({"datetime": fields[0], "hold": hold})
+        except (IndexError, TypeError, ValueError):
+            continue
+    if len(rows) < 21:
+        raise ValueError(f"{data.get('name') or code}有效持仓历史不足: {len(rows)}")
+    holds = [row["hold"] for row in rows]
+    return {
+        "day": percentage_change(holds, 1), "week": percentage_change(holds, 5),
+        "month": percentage_change(holds, 20), "mode": "weighted_contract",
+        "series_name": str(data.get("name") or f"{symbol}加权"), "series_code": code,
+        "contract_count": None, "coverage_pct": 100.0, "constituents": [],
+        "as_of": rows[-1]["datetime"],
+        "method": "优先直接读取东方财富品种加权合约的持仓量字段；该字段为品种各分月合约汇总持仓，连续合约不重复计入",
+        "source": "东方财富期货加权合约日线",
+    }
+
+
+def aggregate_oi_change(contract_bars: list[dict[str, Any]], lag: int) -> float | None:
+    """Change in the sum of OI across all eligible listed contracts."""
+    eligible: list[tuple[float, float]] = []
+    for item in contract_bars:
+        bars = item.get("bars") or []
+        if len(bars) <= lag:
+            continue
+        previous = float(bars[-1 - lag].get("hold") or 0)
+        current = float(bars[-1].get("hold") or 0)
+        if previous > 0 and current >= 0:
+            eligible.append((previous, current))
+    previous_total = sum(previous for previous, _ in eligible)
+    current_total = sum(current for _, current in eligible)
+    return (current_total / previous_total - 1) * 100 if previous_total else None
+
+
+def _aggregate_open_interest_changes(symbol: str, now: datetime) -> dict[str, Any]:
+    """Build a rollover-resistant OI proxy by summing every listed individual contract."""
+    node = SINA_MARKET_NODES.get(symbol)
+    if not node:
+        raise ValueError(f"缺少{symbol}的新浪品种节点")
+    table = fetch_sina_contract_table(node)
+    if len(table) < 2:
+        raise ValueError(f"{symbol}有效分月合约不足2个")
+    total_position = sum(row["position"] for row in table)
+    series: list[dict[str, Any]] = []
+    failures: list[str] = []
+    for row in table:
+        try:
+            bars = fetch_sina_daily_bars(row["symbol"], now, 6)
+            series.append({**row, "bars": bars})
+        except Exception as exc:
+            failures.append(f"{row['symbol']}: {exc}")
+    if len(series) < 2:
+        raise ValueError("分月合约历史不足，无法形成全合约汇总口径")
+    covered = sum(row["position"] for row in series)
+    constituents = []
+    for row in series:
+        bars = row["bars"]
+        constituents.append({
+            "symbol": row["symbol"], "name": row["name"],
+            "latest_hold": bars[-1]["hold"],
+            "share_pct": row["position"] / covered * 100 if covered else None,
+            "week_change_pct": percentage_change([bar["hold"] for bar in bars], 5),
+            "as_of": bars[-1]["datetime"],
+        })
+    return {
+        "day": aggregate_oi_change(series, 1),
+        "week": aggregate_oi_change(series, 5),
+        "month": aggregate_oi_change(series, 20),
+        "mode": "aggregate_all_contracts",
+        "contract_count": len(series),
+        "coverage_pct": covered / total_position * 100 if total_position else None,
+        "constituents": constituents,
+        "as_of": min(row["bars"][-1]["datetime"] for row in series),
+        "method": "将当前挂牌且取得历史数据的全部分月合约持仓量逐日求和，再计算品种总持仓的1/5/20日变化；连续合约本身不重复计入",
+        "failures": failures,
+    }
+
+
+def aggregate_open_interest_changes(symbol: str, now: datetime) -> dict[str, Any]:
+    """Limit fallback concurrency because it requires one history call per listed contract."""
+    with OI_FALLBACK_SEMAPHORE:
+        return _aggregate_open_interest_changes(symbol, now)
+
+
+def cached_position_changes(asset_id: str, as_of: str) -> dict[str, Any] | None:
+    """Reuse a same-day aggregate after a transient vendor failure to avoid hammering contract endpoints."""
+    if not LATEST_PATH.exists():
+        return None
+    try:
+        with LATEST_PATH.open("r", encoding="utf-8") as handle:
+            payload = json.load(handle)
+        asset = next((row for row in payload.get("assets", []) if row.get("id") == asset_id), None)
+        position = (asset or {}).get("position_changes") or {}
+        if position.get("mode") in ("weighted_contract", "aggregate_all_contracts") and position.get("as_of") == as_of:
+            return dict(position)
+    except (OSError, ValueError):
+        pass
+    return None
 
 
 def fetch_csv_bars(relative_path: str, minimum: int = 35) -> list[dict[str, Any]]:
@@ -183,6 +372,18 @@ def fetch_csv_bars(relative_path: str, minimum: int = 35) -> list[dict[str, Any]
     if len(bars) < minimum:
         raise ValueError(f"CSV有效K线不足: {len(bars)}")
     return bars
+
+
+def load_cached_raw_bars(symbol: str, timeframe: str, minimum: int) -> tuple[list[dict[str, Any]], str]:
+    path = STATE_DIR / "raw" / f"{symbol}_{timeframe}.json"
+    if not path.exists():
+        raise FileNotFoundError(f"{symbol} {timeframe}无本地原始行情缓存")
+    with path.open("r", encoding="utf-8") as handle:
+        payload = json.load(handle)
+    bars = payload.get("bars") or []
+    if len(bars) < minimum:
+        raise ValueError(f"{symbol} {timeframe}缓存K线不足: {len(bars)}")
+    return bars, str(payload.get("retrieved_at") or "未知")
 
 
 def ema(values: list[float], period: int) -> list[float]:
@@ -439,8 +640,37 @@ def capital_bucket(price_month: float | None, position_week: float | None) -> st
     return "weak"
 
 
-def research_risk_levels(close: float, high20: float, low20: float, atr14: float) -> dict[str, float]:
+def research_risk_levels(
+    close: float,
+    high20: float,
+    low20: float,
+    atr14: float,
+    ma20: float | None = None,
+    boll_upper: float | None = None,
+    boll_lower: float | None = None,
+) -> dict[str, Any]:
     """Screenshot-compatible reference levels; these are not executable orders."""
+    raw_levels = [
+        ("20日低点", low20), ("MA20", ma20), ("布林下轨", boll_lower),
+        ("20日高点", high20), ("布林上轨", boll_upper),
+    ]
+
+    def select_levels(is_support: bool) -> list[dict[str, float | str]]:
+        candidates = [(name, float(value)) for name, value in raw_levels if value is not None and (value <= close if is_support else value >= close)]
+        candidates.sort(key=lambda item: item[1], reverse=is_support)
+        selected: list[dict[str, float | str]] = []
+        for name, value in candidates:
+            if any(abs(value - float(existing["value"])) <= max(abs(close) * 0.0001, 1e-9) for existing in selected):
+                continue
+            selected.append({"name": name, "value": value})
+            if len(selected) == 2:
+                break
+        fallback_name = "1×ATR下沿" if is_support else "1×ATR上沿"
+        fallback_value = close - atr14 if is_support else close + atr14
+        if not selected:
+            selected.append({"name": fallback_name, "value": fallback_value})
+        return selected
+
     return {
         "entry_reference": close,
         "long_atr_stop": close - 2 * atr14,
@@ -449,6 +679,39 @@ def research_risk_levels(close: float, high20: float, low20: float, atr14: float
         "short_break_even_trigger": close * 0.998,
         "long_fib_trail": close + max(0.0, high20 - close) * 0.618,
         "short_fib_trail": close - max(0.0, close - low20) * 0.618,
+        "supports": select_levels(True),
+        "resistances": select_levels(False),
+        "level_method": "按当前价就近筛选20日高低、MA20和布林带上下轨；突破区间时用1×ATR补充",
+    }
+
+
+def volatility_position_control(bars: list[dict[str, Any]], period: int = 14) -> dict[str, Any]:
+    """Convert daily ATR volatility into a discrete, auditable position multiplier."""
+    atr_values = rolling_atr(bars, period)
+    ratios = [
+        atr / bar["close"] * 100
+        for atr, bar in zip(atr_values, bars)
+        if atr is not None and bar["close"] > 0
+    ][-252:]
+    if not ratios:
+        return {"atr_pct": None, "percentile_252": None, "spike_ratio": None, "regime": "unknown", "regime_text": "数据不足", "position_multiplier": 0.0, "note": "波动率数据不足，暂不持仓"}
+    current = ratios[-1]
+    reference_window = ratios[-21:-1] or ratios[-1:]
+    reference = statistics.fmean(reference_window)
+    spike_ratio = current / reference if reference > 0 else 1.0
+    percentile = sum(value <= current for value in ratios) / len(ratios) * 100
+    if percentile >= 90 or spike_ratio >= 1.6:
+        regime, regime_text, multiplier, note = "surge", "波动飙升", 0.25, "方向保留，但目标仓位缩至25%，不因技术多头加仓"
+    elif percentile >= 75 or spike_ratio >= 1.3:
+        regime, regime_text, multiplier, note = "high", "高波动", 0.5, "目标仓位降至50%，等待波动回落"
+    elif percentile >= 60:
+        regime, regime_text, multiplier, note = "elevated", "波动偏高", 0.75, "目标仓位降至75%"
+    else:
+        regime, regime_text, multiplier, note = "normal", "正常波动", 1.0, "波动率未触发减仓"
+    return {
+        "atr_pct": current, "percentile_252": percentile, "spike_ratio": spike_ratio,
+        "regime": regime, "regime_text": regime_text, "position_multiplier": multiplier, "note": note,
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数",
     }
 
 
@@ -653,7 +916,9 @@ def aggregate_strategy_performance(results: list[dict[str, Any]], generated_at: 
 
 def update_paper_portfolio(results: list[dict[str, Any]], generated_at: datetime, config: dict[str, Any]) -> dict[str, Any]:
     """Forward-only paper ledger, persisted locally or through Actions cache."""
-    valid = [item for item in results if item.get("price") and item.get("strategy_comparison")]
+    all_valid = [item for item in results if item.get("price") and item.get("strategy_comparison")]
+    paper_asset_ids = set(config.get("paper_asset_ids", []))
+    valid = [item for item in all_valid if not paper_asset_ids or item["id"] in paper_asset_ids]
     strategy_names = {row["key"]: row["name"] for item in valid for row in item["strategy_comparison"] if row["key"] != "five_minute_momentum"}
     if PAPER_PATH.exists():
         try:
@@ -672,8 +937,9 @@ def update_paper_portfolio(results: list[dict[str, Any]], generated_at: datetime
     weight = 1 / max(1, len(valid))
     output = []
     position_output: list[dict[str, Any]] = []
-    recent_changes: list[dict[str, Any]] = []
-    asset_by_symbol = {item["symbol"]: item for item in valid}
+    asset_by_symbol = {item["symbol"]: item for item in all_valid}
+    paper_asset_by_symbol = {item["symbol"]: item for item in valid}
+    paper_symbols = {item["symbol"] for item in config["assets"] if item["id"] in paper_asset_ids}
     tick_by_symbol = {item["symbol"]: float(item["tick"]) for item in config["assets"]}
     for key, name in strategy_names.items():
         ledger = state["strategies"].setdefault(key, {"name": name, "equity": initial_cash, "positions": {}, "last_prices": {}, "last_bars": {}, "trades": 0, "history": []})
@@ -681,19 +947,49 @@ def update_paper_portfolio(results: list[dict[str, Any]], generated_at: datetime
         ledger.setdefault("entry_times", {})
         ledger.setdefault("change_history", [])
         pnl, friction, changed = 0.0, 0.0, False
+        # Close positions that are no longer in the explicitly approved paper scope.
+        for symbol, stored_position in list(ledger["positions"].items()):
+            prior_position = float(stored_position)
+            if not prior_position or symbol in paper_symbols:
+                continue
+            asset = asset_by_symbol.get(symbol)
+            prior_price = ledger["last_prices"].get(symbol)
+            price = float(asset["price"]) if asset else float(prior_price or 0)
+            current_bar = asset.get("bar_time") if asset else ledger["last_bars"].get(symbol)
+            if asset and prior_price and ledger["last_bars"].get(symbol) != current_bar:
+                pnl += weight * prior_position * (price / prior_price - 1)
+            if price:
+                friction += weight * abs(prior_position) * (fee + slip_ticks * tick_by_symbol.get(symbol, 0) / price)
+            change_record = {
+                "time": generated_at.isoformat(timespec="seconds"), "strategy_key": key, "strategy": name,
+                "asset_id": asset["id"] if asset else symbol, "asset": asset["name"] if asset else symbol,
+                "symbol": symbol, "from_position": prior_position, "to_position": 0,
+                "price": price or None, "bar_time": current_bar, "reason": "scope_removed",
+            }
+            ledger["change_history"].append(change_record)
+            ledger["trades"] += 1
+            ledger["positions"][symbol] = 0
+            if price:
+                ledger["last_prices"][symbol] = price
+            ledger["last_bars"][symbol] = current_bar
+            ledger["entry_prices"].pop(symbol, None)
+            ledger["entry_times"].pop(symbol, None)
+            changed = True
         for asset in valid:
             symbol, price = asset["symbol"], float(asset["price"])
             prior_price = ledger["last_prices"].get(symbol)
-            prior_position = int(ledger["positions"].get(symbol, 0))
+            prior_position = float(ledger["positions"].get(symbol, 0))
             target_row = next((row for row in asset["strategy_comparison"] if row["key"] == key), None)
-            target = int(target_row.get("latest_target", 0)) if target_row else 0
+            raw_target = int(target_row.get("latest_target", 0)) if target_row else 0
+            volatility_multiplier = float(asset.get("volatility_control", {}).get("position_multiplier", 0))
+            target = raw_target * volatility_multiplier
             if prior_price and ledger["last_bars"].get(symbol) != asset["bar_time"]:
                 pnl += weight * prior_position * (price / prior_price - 1)
                 changed = True
             turnover = abs(target - prior_position)
             if turnover:
                 friction += weight * turnover * (fee + slip_ticks * tick_by_symbol[symbol] / price)
-                ledger["trades"] += 1 if prior_position == 0 or target != 0 else 0
+                ledger["trades"] += 1
                 change_record = {
                     "time": generated_at.isoformat(timespec="seconds"),
                     "strategy_key": key,
@@ -705,20 +1001,28 @@ def update_paper_portfolio(results: list[dict[str, Any]], generated_at: datetime
                     "to_position": target,
                     "price": price,
                     "bar_time": asset["bar_time"],
+                    "reason": "open" if prior_position == 0 else "close" if target == 0 else "reverse" if prior_position * target < 0 else "vol_reduce" if abs(target) < abs(prior_position) else "vol_increase",
+                    "volatility_regime": asset.get("volatility_control", {}).get("regime"),
+                    "volatility_multiplier": volatility_multiplier,
                 }
                 ledger["change_history"].append(change_record)
-                recent_changes.append(change_record)
-                if target:
+                if target and (prior_position == 0 or prior_position * target < 0):
                     ledger["entry_prices"][symbol] = price
                     ledger["entry_times"][symbol] = generated_at.isoformat(timespec="seconds")
+                elif target and abs(target) > abs(prior_position):
+                    old_entry = float(ledger["entry_prices"].get(symbol) or price)
+                    added_size = abs(target) - abs(prior_position)
+                    ledger["entry_prices"][symbol] = (old_entry * abs(prior_position) + price * added_size) / abs(target)
+                    ledger["entry_times"].setdefault(symbol, generated_at.isoformat(timespec="seconds"))
                 else:
-                    ledger["entry_prices"].pop(symbol, None)
-                    ledger["entry_times"].pop(symbol, None)
+                    if not target:
+                        ledger["entry_prices"].pop(symbol, None)
+                        ledger["entry_times"].pop(symbol, None)
                 changed = True
             ledger["positions"][symbol] = target
             ledger["last_prices"][symbol] = price
             ledger["last_bars"][symbol] = asset["bar_time"]
-        ledger["change_history"] = ledger["change_history"][-200:]
+        ledger["change_history"] = ledger["change_history"][-2000:]
         if changed or not ledger["history"]:
             ledger["equity"] *= max(0.01, 1 + pnl - friction)
             ledger["history"].append({"time": generated_at.isoformat(timespec="seconds"), "equity": ledger["equity"]})
@@ -730,7 +1034,7 @@ def update_paper_portfolio(results: list[dict[str, Any]], generated_at: datetime
                 max_drawdown = min(max_drawdown, point["equity"] / peak - 1)
         active_positions = 0
         for symbol, side in ledger["positions"].items():
-            asset = asset_by_symbol.get(symbol)
+            asset = paper_asset_by_symbol.get(symbol)
             if not side or not asset:
                 continue
             active_positions += 1
@@ -744,22 +1048,37 @@ def update_paper_portfolio(results: list[dict[str, Any]], generated_at: datetime
                 "asset_id": asset["id"],
                 "asset": asset["name"],
                 "symbol": symbol,
-                "side": int(side),
+                "side": 1 if side > 0 else -1,
+                "position_size_pct": abs(float(side)) * 100,
                 "entry_price": entry_price,
                 "current_price": current_price,
-                "unrealized_pct": int(side) * (current_price / entry_price - 1) * 100 if entry_price else 0,
+                "unrealized_pct": (1 if side > 0 else -1) * (current_price / entry_price - 1) * 100 if entry_price else 0,
+                "volatility_control": asset.get("volatility_control"),
                 "entry_time": ledger["entry_times"][symbol],
                 "bar_time": asset["bar_time"],
             })
         output.append({"key": key, "name": name, "equity": ledger["equity"], "return_pct": (ledger["equity"] / initial_cash - 1) * 100, "max_drawdown_pct": max_drawdown * 100, "trades": ledger["trades"], "active_positions": active_positions, "observations": len(ledger["history"])})
     state["updated_at"] = generated_at.isoformat(timespec="seconds")
+    state["paper_asset_ids"] = sorted(paper_asset_ids)
     atomic_json(PAPER_PATH, state)
     output.sort(key=lambda row: row["return_pct"], reverse=True)
-    if not recent_changes:
-        recent_changes = [record for ledger in state["strategies"].values() for record in ledger.get("change_history", [])]
-    recent_changes.sort(key=lambda row: row["time"], reverse=True)
+    all_changes = [record for ledger in state["strategies"].values() for record in ledger.get("change_history", [])]
+    all_changes.sort(key=lambda row: row["time"], reverse=True)
     position_output.sort(key=lambda row: (row["strategy"], row["asset"]))
-    return {"mode": "forward_paper", "started_at": state["started_at"], "updated_at": state["updated_at"], "initial_cash": initial_cash, "strategies": output, "positions": position_output, "recent_changes": recent_changes[:30], "note": "无真实委托；按扫描时点最新价盯市，含开平各万1.2和每侧1跳。新加入品种从首次真实扫描建立仓位，不回填历史收益。"}
+    scope_rows = [{"id": asset["id"], "name": asset["name"], "symbol": asset["symbol"]} for asset in config["assets"] if asset["id"] in paper_asset_ids]
+    paper_report = {
+        "mode": "forward_paper", "started_at": state["started_at"], "updated_at": state["updated_at"],
+        "initial_cash": initial_cash, "scope": scope_rows, "strategies": output,
+        "positions": position_output, "position_changes": all_changes,
+        "equity_history": {key: ledger.get("history", []) for key, ledger in state["strategies"].items()},
+        "assumptions": "仅限指定10个品种；开平各万1.2、每侧1跳；方向由策略决定，仓位再按ATR14波动分位缩放为100%/75%/50%/25%；按扫描时点盯市，无真实委托。",
+    }
+    atomic_json(PAPER_REPORT_PATH, paper_report)
+    return {
+        **{key: paper_report[key] for key in ("mode", "started_at", "updated_at", "initial_cash", "scope", "strategies", "positions")},
+        "recent_changes": all_changes[:30], "history_count": len(all_changes), "history_url": "paper-history.json",
+        "note": "无真实委托；仅跟踪指定10个品种，含开平各万1.2和每侧1跳。方向与仓位分离，高波动可只减仓不改方向；完整净值与头寸变化可下载追溯，不回填历史收益。",
+    }
 
 
 def classify_signal_change(previous: dict[str, Any], current: dict[str, Any]) -> dict[str, str] | None:
@@ -847,10 +1166,22 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
     base = {key: asset[key] for key in ("id", "name", "short_name", "symbol", "exchange", "sector", "provider", "decimals", "unit", "bar_timezone")}
     try:
         if asset["provider"] == "sina":
-            raw_daily = fetch_sina_daily_bars(asset["symbol"], generated_at)
-            raw_hourly = fetch_sina_minute_bars(asset["symbol"], "60")
-            raw_five = fetch_sina_minute_bars(asset["symbol"], "5")
-            source_mode = "live/intraday + derived close"
+            cache_errors: dict[str, str] = {}
+            cache_times: dict[str, str] = {}
+
+            def live_or_cache(timeframe: str, minimum: int, fetcher: Any) -> list[dict[str, Any]]:
+                try:
+                    return fetcher()
+                except Exception as exc:
+                    bars, retrieved_at = load_cached_raw_bars(asset["symbol"], timeframe, minimum)
+                    cache_errors[timeframe] = str(exc)
+                    cache_times[timeframe] = retrieved_at
+                    return bars
+
+            raw_daily = live_or_cache("daily", 60, lambda: fetch_sina_daily_bars(asset["symbol"], generated_at))
+            raw_hourly = live_or_cache("60m", 35, lambda: fetch_sina_minute_bars(asset["symbol"], "60"))
+            raw_five = live_or_cache("5m", 35, lambda: fetch_sina_minute_bars(asset["symbol"], "5"))
+            source_mode = "cached_after_live_error" if cache_errors else "live/intraday + derived close"
             source = "新浪财经日线/60分钟/5分钟（AKShare同源接口）"
         else:
             raw_daily = fetch_csv_bars(asset["daily_file"], 60)
@@ -862,6 +1193,8 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
         hourly, hourly_quality = prepare_bars(raw_hourly, asset, generated_at, "hourly")
         five, five_quality = prepare_bars(raw_five, asset, generated_at, "5m")
         for timeframe, raw in (("daily", raw_daily), ("60m", raw_hourly), ("5m", raw_five)):
+            if asset["provider"] == "sina" and timeframe in cache_errors:
+                continue
             atomic_json(
                 STATE_DIR / "raw" / f"{asset['symbol']}_{timeframe}.json",
                 {
@@ -919,8 +1252,39 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
         daily_closes = [bar["close"] for bar in daily]
         holds = [bar["hold"] for bar in daily]
         returns = {"day": percentage_change(daily_closes, 1), "week": percentage_change(daily_closes, 5), "month": percentage_change(daily_closes, 20)}
-        position_changes = {"day": percentage_change(holds, 1), "week": percentage_change(holds, 5), "month": percentage_change(holds, 20)}
+        continuous_position_changes = {"day": percentage_change(holds, 1), "week": percentage_change(holds, 5), "month": percentage_change(holds, 20)}
+        try:
+            position_changes = fetch_eastmoney_weighted_oi(asset["symbol"], generated_at)
+            position_changes["continuous_proxy"] = continuous_position_changes
+        except Exception as weighted_exc:
+            position_changes = cached_position_changes(asset["id"], daily[-1]["datetime"])
+            if position_changes:
+                position_changes["cache_status"] = "same_day_reuse"
+                position_changes["weighted_contract_error"] = str(weighted_exc)
+                position_changes["continuous_proxy"] = continuous_position_changes
+            else:
+                try:
+                    position_changes = aggregate_open_interest_changes(asset["symbol"], generated_at)
+                    position_changes["weighted_contract_error"] = str(weighted_exc)
+                    position_changes["continuous_proxy"] = continuous_position_changes
+                except Exception as aggregate_exc:
+                    position_changes = {
+                        **continuous_position_changes,
+                        "mode": "continuous_fallback", "contract_count": 1, "coverage_pct": None,
+                        "constituents": [], "as_of": daily[-1]["datetime"],
+                        "method": "加权合约与全合约加总均不可用，明确降级为主力连续持仓变化",
+                        "error": f"加权合约: {weighted_exc}; 全合约加总: {aggregate_exc}",
+                    }
         technical = technical_snapshot(daily)
+        oi_week = position_changes.get("week")
+        oi_mode = "加权合约" if position_changes.get("mode") == "weighted_contract" else "全合约汇总" if position_changes.get("mode") == "aggregate_all_contracts" else "主连降级"
+        technical["groups"]["volume_position"].append({
+            "name": "OI 5日变化",
+            "value": "—" if oi_week is None else f"{oi_week:+.2f}%",
+            "signal": "long" if oi_week is not None and oi_week > 0.15 else "short" if oi_week is not None and oi_week < -0.15 else "neutral",
+            "note": f"{oi_mode} · {position_changes.get('contract_count', 0)}合约 · 覆盖率" + ("—" if position_changes.get("coverage_pct") is None else f"{position_changes['coverage_pct']:.1f}%"),
+        })
+        volatility_control = volatility_position_control(daily, int(config["atr_period"]))
         strategy_comparison = compare_strategies(daily, five, asset, config)
         result = {
             **base,
@@ -941,7 +1305,11 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             "position_changes": position_changes,
             "capital_bucket": capital_bucket(returns["month"], position_changes["week"]),
             "technical_methods": technical["groups"],
-            "risk_levels": research_risk_levels(daily_closes[-1], latest["prior_high"], latest["prior_low"], technical["values"]["atr14"]),
+            "volatility_control": volatility_control,
+            "risk_levels": research_risk_levels(
+                daily_closes[-1], latest["prior_high"], latest["prior_low"], technical["values"]["atr14"],
+                technical["values"]["ma20"], technical["values"]["boll_upper"], technical["values"]["boll_lower"],
+            ),
             "strategy_comparison": strategy_comparison,
             "timeframes": {"week": weekly_trend, "day": {"signal": latest["signal"], "vote": latest["long_count"] - latest["short_count"]}, "hour": hourly_trend, "five": {"signal": five_signal["signal"], "score": five_signal["score"]}},
             "sparkline": sparkline,
@@ -949,6 +1317,8 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             "quality": {
                 "source_mode": source_mode,
                 "daily": daily_quality, "hourly": hourly_quality, "five": five_quality,
+                "cache_errors": cache_errors if asset["provider"] == "sina" else {},
+                "cache_retrieved_at": cache_times if asset["provider"] == "sina" else {},
                 "last_actual_observation": five[-1]["datetime"],
                 "last_daily_close": daily[-1]["datetime"],
                 "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留",
@@ -977,7 +1347,7 @@ def scan_once() -> dict[str, Any]:
         config = load_config()
         generated_at = datetime.now(ZoneInfo(config["timezone"]))
         results: list[dict[str, Any]] = []
-        with ThreadPoolExecutor(max_workers=5) as pool:
+        with ThreadPoolExecutor(max_workers=4) as pool:
             breadth_future = pool.submit(fetch_market_breadth, generated_at)
             futures = {pool.submit(analyze_asset, asset, config, generated_at): asset for asset in config["assets"]}
             for future in as_completed(futures):
@@ -998,7 +1368,7 @@ def scan_once() -> dict[str, Any]:
         paper_trading = update_paper_portfolio(results, generated_at, config)
         signal_changes = update_signal_change_log(results, generated_at)
         payload = {
-            "schema_version": 5,
+            "schema_version": 7,
             "generated_at": generated_at.isoformat(timespec="seconds"),
             "interval_seconds": int(config["scan_interval_seconds"]),
             "summary": counts,
@@ -1013,16 +1383,17 @@ def scan_once() -> dict[str, Any]:
                 "factors": "mom5超过±3% / 突破20日高低 / 收盘相对MA20 / 日线RSI14区间",
                 "decision": "日线四因子至少3项同向触发，再结合周线与小时线给出综合结论",
                 "execution": "核心模型在交易日15:20后刷新；全市场行情在交易时段每15分钟刷新；5分钟策略不进入定时交易信号",
-                "allocation": "七板块按主力连续当日涨跌广度与等权平均涨幅排序，相对做多前2、做空后2、其余中性",
+                "allocation": "七板块按板块内全部主力连续等权汇总当日涨跌广度与平均涨幅；页面同时展开每个品种的方向和贡献",
+                "open_interest": "优先读取行情商的品种加权合约持仓字段；若无该序列，将全部挂牌分月合约持仓逐日求和；两者均失败才明确标记主连降级",
                 "technical": "主流指标层覆盖均线、MACD、ADX、ROC、RSI、KDJ、CCI、ATR、布林带、唐奇安、量比与OBV，仅作交叉验证",
-                "risk": "研究参考线采用2×ATR初始止损、0.618动态跟踪与±0.2%保本触发；不自动下单",
+                "risk": "支撑压力综合20日高低、MA20、布林带与ATR；方向信号与仓位分离，ATR波动率升至历史高分位时分档降至75%/50%/25%，不自动下单",
                 "cost": "所有策略对比统一按开仓万1.2、平仓万1.2，并在每一侧额外计1跳滑点",
             },
             "warnings": [
                 "主连换月可能产生跳空，生产使用前应接入后复权连续合约或固定主力合约。",
-                "持仓变化是主连持仓量代理，换月附近不可直接解释为资金净流入或流出。",
+                "品种加权合约或全分月合约汇总持仓可降低主力换月扰动，但仍不可直接解释为资金净流入或流出；页面展示数据口径与降级状态。",
                 "七板块配置是当日截面相对强弱，不等同于全部板块已经完成日线策略回测。",
-                "黑色板块覆盖螺纹钢、热卷、线材、不锈钢、铁矿石、焦炭、焦煤、硅铁与锰硅主力连续。",
+                "黑色板块覆盖螺纹钢、热卷、不锈钢、铁矿石、焦炭、焦煤、硅铁与锰硅主力连续；已按要求删除线材。",
                 "公开接口可能限流或中断；实盘研究建议切换至iFinD、Wind、CTP或交易所授权源。",
             ],
         }

@@ -1,0 +1,1022 @@
+{
+  "mode": "forward_paper",
+  "started_at": "2026-09-15T22:28:43+08:00",
+  "updated_at": "2026-09-16T00:28:46+08:00",
+  "initial_cash": 1000000.0,
+  "scope": [
+    {
+      "id": "copper",
+      "name": "沪铜",
+      "symbol": "CU0"
+    },
+    {
+      "id": "aluminium",
+      "name": "沪铝",
+      "symbol": "AL0"
+    },
+    {
+      "id": "lead",
+      "name": "沪铅",
+      "symbol": "PB0"
+    },
+    {
+      "id": "zinc",
+      "name": "沪锌",
+      "symbol": "ZN0"
+    },
+    {
+      "id": "nickel",
+      "name": "沪镍",
+      "symbol": "NI0"
+    },
+    {
+      "id": "lithium",
+      "name": "碳酸锂",
+      "symbol": "LC0"
+    },
+    {
+      "id": "tin",
+      "name": "沪锡",
+      "symbol": "SN0"
+    },
+    {
+      "id": "gold",
+      "name": "黄金",
+      "symbol": "AU0"
+    },
+    {
+      "id": "silver",
+      "name": "白银",
+      "symbol": "AG0"
+    },
+    {
+      "id": "stainless_steel",
+      "name": "不锈钢",
+      "symbol": "SS0"
+    }
+  ],
+  "strategies": [
+    {
+      "key": "ma_trend",
+      "name": "移动均线10/30/60",
+      "equity": 1001014.166900047,
+      "return_pct": 0.10141669000469644,
+      "max_drawdown_pct": -0.020053886161452983,
+      "trades": 13,
+      "active_positions": 7,
+      "observations": 10
+    },
+    {
+      "key": "fdt_channel",
+      "name": "FDT启发通道共振",
+      "equity": 1000427.7663282584,
+      "return_pct": 0.0427766328258361,
+      "max_drawdown_pct": -0.037362687118236426,
+      "trades": 6,
+      "active_positions": 5,
+      "observations": 10
+    },
+    {
+      "key": "daily_four_factor",
+      "name": "日线四因子",
+      "equity": 1000403.3051098831,
+      "return_pct": 0.040330510988306756,
+      "max_drawdown_pct": -0.02770745853760692,
+      "trades": 4,
+      "active_positions": 2,
+      "observations": 10
+    },
+    {
+      "key": "fibonacci_0618",
+      "name": "斐波那契0.618通道",
+      "equity": 1000371.4068159483,
+      "return_pct": 0.0371406815948383,
+      "max_drawdown_pct": -0.026910148835868064,
+      "trades": 6,
+      "active_positions": 4,
+      "observations": 10
+    }
+  ],
+  "positions": [
+    {
+      "strategy_key": "fdt_channel",
+      "strategy": "FDT启发通道共振",
+      "asset_id": "stainless_steel",
+      "asset": "不锈钢",
+      "symbol": "SS0",
+      "side": -1,
+      "position_size_pct": 100.0,
+      "entry_price": 13375.0,
+      "current_price": 13370.0,
+      "unrealized_pct": 0.037383177570093906,
+      "volatility_control": {
+        "atr_pct": 1.2558580380180084,
+        "percentile_252": 31.746031746031743,
+        "spike_ratio": 0.8495294341795233,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T23:00:25+08:00",
+      "bar_time": "2026-09-16 00:25:00"
+    },
+    {
+      "strategy_key": "fdt_channel",
+      "strategy": "FDT启发通道共振",
+      "asset_id": "lead",
+      "asset": "沪铅",
+      "symbol": "PB0",
+      "side": -1,
+      "position_size_pct": 100.0,
+      "entry_price": 15775.0,
+      "current_price": 15785.0,
+      "unrealized_pct": -0.06339144215530279,
+      "volatility_control": {
+        "atr_pct": 1.0912383971021056,
+        "percentile_252": 59.92063492063492,
+        "spike_ratio": 1.0643393958886596,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T22:28:43+08:00",
+      "bar_time": "2026-09-16 00:25:00"
+    },
+    {
+      "strategy_key": "fdt_channel",
+      "strategy": "FDT启发通道共振",
+      "asset_id": "tin",
+      "asset": "沪锡",
+      "symbol": "SN0",
+      "side": -1,
+      "position_size_pct": 100.0,
+      "entry_price": 393210.0,
+      "current_price": 394780.0,
+      "unrealized_pct": -0.3992777396302216,
+      "volatility_control": {
+        "atr_pct": 2.2279954767419454,
+        "percentile_252": 36.904761904761905,
+        "spike_ratio": 1.16511184695764,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T22:28:43+08:00",
+      "bar_time": "2026-09-16 00:25:00"
+    },
+    {
+      "strategy_key": "fdt_channel",
+      "strategy": "FDT启发通道共振",
+      "asset_id": "nickel",
+      "asset": "沪镍",
+      "symbol": "NI0",
+      "side": -1,
+      "position_size_pct": 100.0,
+      "entry_price": 121510.0,
+      "current_price": 121070.0,
+      "unrealized_pct": 0.3621101143938765,
+      "volatility_control": {
+        "atr_pct": 1.556503198294243,
+        "percentile_252": 33.33333333333333,
+        "spike_ratio": 0.9537060296796036,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T22:28:43+08:00",
+      "bar_time": "2026-09-16 00:25:00"
+    },
+    {
+      "strategy_key": "fdt_channel",
+      "strategy": "FDT启发通道共振",
+      "asset_id": "lithium",
+      "asset": "碳酸锂",
+      "symbol": "LC0",
+      "side": -1,
+      "position_size_pct": 100.0,
+      "entry_price": 129120.0,
+      "current_price": 129120.0,
+      "unrealized_pct": -0.0,
+      "volatility_control": {
+        "atr_pct": 4.552796955213312,
+        "percentile_252": 49.60317460317461,
+        "spike_ratio": 1.1465877670000781,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T22:28:43+08:00",
+      "bar_time": "2026-09-15 15:00:00"
+    },
+    {
+      "strategy_key": "fibonacci_0618",
+      "strategy": "斐波那契0.618通道",
+      "asset_id": "stainless_steel",
+      "asset": "不锈钢",
+      "symbol": "SS0",
+      "side": -1,
+      "position_size_pct": 100.0,
+      "entry_price": 13375.0,
+      "current_price": 13370.0,
+      "unrealized_pct": 0.037383177570093906,
+      "volatility_control": {
+        "atr_pct": 1.2558580380180084,
+        "percentile_252": 31.746031746031743,
+        "spike_ratio": 0.8495294341795233,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T23:00:25+08:00",
+      "bar_time": "2026-09-16 00:25:00"
+    },
+    {
+      "strategy_key": "fibonacci_0618",
+      "strategy": "斐波那契0.618通道",
+      "asset_id": "tin",
+      "asset": "沪锡",
+      "symbol": "SN0",
+      "side": -1,
+      "position_size_pct": 100.0,
+      "entry_price": 393210.0,
+      "current_price": 394780.0,
+      "unrealized_pct": -0.3992777396302216,
+      "volatility_control": {
+        "atr_pct": 2.2279954767419454,
+        "percentile_252": 36.904761904761905,
+        "spike_ratio": 1.16511184695764,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T22:28:43+08:00",
+      "bar_time": "2026-09-16 00:25:00"
+    },
+    {
+      "strategy_key": "fibonacci_0618",
+      "strategy": "斐波那契0.618通道",
+      "asset_id": "nickel",
+      "asset": "沪镍",
+      "symbol": "NI0",
+      "side": -1,
+      "position_size_pct": 100.0,
+      "entry_price": 121510.0,
+      "current_price": 121070.0,
+      "unrealized_pct": 0.3621101143938765,
+      "volatility_control": {
+        "atr_pct": 1.556503198294243,
+        "percentile_252": 33.33333333333333,
+        "spike_ratio": 0.9537060296796036,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T22:28:43+08:00",
+      "bar_time": "2026-09-16 00:25:00"
+    },
+    {
+      "strategy_key": "fibonacci_0618",
+      "strategy": "斐波那契0.618通道",
+      "asset_id": "lithium",
+      "asset": "碳酸锂",
+      "symbol": "LC0",
+      "side": -1,
+      "position_size_pct": 100.0,
+      "entry_price": 129120.0,
+      "current_price": 129120.0,
+      "unrealized_pct": -0.0,
+      "volatility_control": {
+        "atr_pct": 4.552796955213312,
+        "percentile_252": 49.60317460317461,
+        "spike_ratio": 1.1465877670000781,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T22:28:43+08:00",
+      "bar_time": "2026-09-15 15:00:00"
+    },
+    {
+      "strategy_key": "daily_four_factor",
+      "strategy": "日线四因子",
+      "asset_id": "tin",
+      "asset": "沪锡",
+      "symbol": "SN0",
+      "side": -1,
+      "position_size_pct": 100.0,
+      "entry_price": 393210.0,
+      "current_price": 394780.0,
+      "unrealized_pct": -0.3992777396302216,
+      "volatility_control": {
+        "atr_pct": 2.2279954767419454,
+        "percentile_252": 36.904761904761905,
+        "spike_ratio": 1.16511184695764,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T22:28:43+08:00",
+      "bar_time": "2026-09-16 00:25:00"
+    },
+    {
+      "strategy_key": "daily_four_factor",
+      "strategy": "日线四因子",
+      "asset_id": "nickel",
+      "asset": "沪镍",
+      "symbol": "NI0",
+      "side": -1,
+      "position_size_pct": 100.0,
+      "entry_price": 121510.0,
+      "current_price": 121070.0,
+      "unrealized_pct": 0.3621101143938765,
+      "volatility_control": {
+        "atr_pct": 1.556503198294243,
+        "percentile_252": 33.33333333333333,
+        "spike_ratio": 0.9537060296796036,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T22:28:43+08:00",
+      "bar_time": "2026-09-16 00:25:00"
+    },
+    {
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "stainless_steel",
+      "asset": "不锈钢",
+      "symbol": "SS0",
+      "side": -1,
+      "position_size_pct": 100.0,
+      "entry_price": 13375.0,
+      "current_price": 13370.0,
+      "unrealized_pct": 0.037383177570093906,
+      "volatility_control": {
+        "atr_pct": 1.2558580380180084,
+        "percentile_252": 31.746031746031743,
+        "spike_ratio": 0.8495294341795233,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T23:00:25+08:00",
+      "bar_time": "2026-09-16 00:25:00"
+    },
+    {
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "lead",
+      "asset": "沪铅",
+      "symbol": "PB0",
+      "side": 1,
+      "position_size_pct": 100.0,
+      "entry_price": 15775.0,
+      "current_price": 15785.0,
+      "unrealized_pct": 0.06339144215530279,
+      "volatility_control": {
+        "atr_pct": 1.0912383971021056,
+        "percentile_252": 59.92063492063492,
+        "spike_ratio": 1.0643393958886596,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T22:28:43+08:00",
+      "bar_time": "2026-09-16 00:25:00"
+    },
+    {
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "copper",
+      "asset": "沪铜",
+      "symbol": "CU0",
+      "side": 1,
+      "position_size_pct": 100.0,
+      "entry_price": 107030.0,
+      "current_price": 107260.0,
+      "unrealized_pct": 0.2148930206484101,
+      "volatility_control": {
+        "atr_pct": 1.2646654476048105,
+        "percentile_252": 32.142857142857146,
+        "spike_ratio": 1.1724019628598137,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T22:28:43+08:00",
+      "bar_time": "2026-09-16 00:25:00"
+    },
+    {
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "aluminium",
+      "asset": "沪铝",
+      "symbol": "AL0",
+      "side": 1,
+      "position_size_pct": 100.0,
+      "entry_price": 24110.0,
+      "current_price": 24140.0,
+      "unrealized_pct": 0.12442969722106234,
+      "volatility_control": {
+        "atr_pct": 1.0623166503689216,
+        "percentile_252": 30.555555555555557,
+        "spike_ratio": 1.0042549542757226,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T22:28:43+08:00",
+      "bar_time": "2026-09-16 00:25:00"
+    },
+    {
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "zinc",
+      "asset": "沪锌",
+      "symbol": "ZN0",
+      "side": 1,
+      "position_size_pct": 25.0,
+      "entry_price": 26085.0,
+      "current_price": 26195.0,
+      "unrealized_pct": 0.4216982940387304,
+      "volatility_control": {
+        "atr_pct": 2.0886266153047566,
+        "percentile_252": 93.65079365079364,
+        "spike_ratio": 1.3549309485243382,
+        "regime": "surge",
+        "regime_text": "波动飙升",
+        "position_multiplier": 0.25,
+        "note": "方向保留，但目标仓位缩至25%，不因技术多头加仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T22:28:43+08:00",
+      "bar_time": "2026-09-16 00:25:00"
+    },
+    {
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "nickel",
+      "asset": "沪镍",
+      "symbol": "NI0",
+      "side": -1,
+      "position_size_pct": 100.0,
+      "entry_price": 121510.0,
+      "current_price": 121070.0,
+      "unrealized_pct": 0.3621101143938765,
+      "volatility_control": {
+        "atr_pct": 1.556503198294243,
+        "percentile_252": 33.33333333333333,
+        "spike_ratio": 0.9537060296796036,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T22:28:43+08:00",
+      "bar_time": "2026-09-16 00:25:00"
+    },
+    {
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "lithium",
+      "asset": "碳酸锂",
+      "symbol": "LC0",
+      "side": -1,
+      "position_size_pct": 100.0,
+      "entry_price": 129120.0,
+      "current_price": 129120.0,
+      "unrealized_pct": -0.0,
+      "volatility_control": {
+        "atr_pct": 4.552796955213312,
+        "percentile_252": 49.60317460317461,
+        "spike_ratio": 1.1465877670000781,
+        "regime": "normal",
+        "regime_text": "正常波动",
+        "position_multiplier": 1.0,
+        "note": "波动率未触发减仓",
+        "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
+      },
+      "entry_time": "2026-09-15T22:28:43+08:00",
+      "bar_time": "2026-09-15 15:00:00"
+    }
+  ],
+  "position_changes": [
+    {
+      "time": "2026-09-16T00:16:11+08:00",
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "zinc",
+      "asset": "沪锌",
+      "symbol": "ZN0",
+      "from_position": 1.0,
+      "to_position": 0.25,
+      "price": 26180.0,
+      "bar_time": "2026-09-16 00:15:00",
+      "reason": "vol_reduce",
+      "volatility_regime": "surge",
+      "volatility_multiplier": 0.25
+    },
+    {
+      "time": "2026-09-15T23:38:44+08:00",
+      "strategy_key": "daily_four_factor",
+      "strategy": "日线四因子",
+      "asset_id": "iron_ore",
+      "asset": "铁矿石",
+      "symbol": "I0",
+      "from_position": -1,
+      "to_position": 0,
+      "price": 708.0,
+      "bar_time": "2026-09-15 23:00:00",
+      "reason": "scope_removed"
+    },
+    {
+      "time": "2026-09-15T23:38:44+08:00",
+      "strategy_key": "daily_four_factor",
+      "strategy": "日线四因子",
+      "asset_id": "coke",
+      "asset": "焦炭",
+      "symbol": "J0",
+      "from_position": -1,
+      "to_position": 0,
+      "price": 2048.0,
+      "bar_time": "2026-09-15 23:00:00",
+      "reason": "scope_removed"
+    },
+    {
+      "time": "2026-09-15T23:38:44+08:00",
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "hot_rolled_coil",
+      "asset": "热轧卷板",
+      "symbol": "HC0",
+      "from_position": 1,
+      "to_position": 0,
+      "price": 3316.0,
+      "bar_time": "2026-09-15 23:00:00",
+      "reason": "scope_removed"
+    },
+    {
+      "time": "2026-09-15T23:38:44+08:00",
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "coke",
+      "asset": "焦炭",
+      "symbol": "J0",
+      "from_position": 1,
+      "to_position": 0,
+      "price": 2048.0,
+      "bar_time": "2026-09-15 23:00:00",
+      "reason": "scope_removed"
+    },
+    {
+      "time": "2026-09-15T23:38:44+08:00",
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "coking_coal",
+      "asset": "焦煤",
+      "symbol": "JM0",
+      "from_position": 1,
+      "to_position": 0,
+      "price": 1594.0,
+      "bar_time": "2026-09-15 23:00:00",
+      "reason": "scope_removed"
+    },
+    {
+      "time": "2026-09-15T23:38:44+08:00",
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "ferrosilicon",
+      "asset": "硅铁",
+      "symbol": "SF0",
+      "from_position": 1,
+      "to_position": 0,
+      "price": 6020.0,
+      "bar_time": "2026-09-15 15:00:00",
+      "reason": "scope_removed"
+    },
+    {
+      "time": "2026-09-15T23:38:44+08:00",
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "ferromanganese",
+      "asset": "锰硅",
+      "symbol": "SM0",
+      "from_position": 1,
+      "to_position": 0,
+      "price": 5784.0,
+      "bar_time": "2026-09-15 15:00:00",
+      "reason": "scope_removed"
+    },
+    {
+      "time": "2026-09-15T23:38:44+08:00",
+      "strategy_key": "fibonacci_0618",
+      "strategy": "斐波那契0.618通道",
+      "asset_id": "iron_ore",
+      "asset": "铁矿石",
+      "symbol": "I0",
+      "from_position": -1,
+      "to_position": 0,
+      "price": 708.0,
+      "bar_time": "2026-09-15 23:00:00",
+      "reason": "scope_removed"
+    },
+    {
+      "time": "2026-09-15T23:38:44+08:00",
+      "strategy_key": "fibonacci_0618",
+      "strategy": "斐波那契0.618通道",
+      "asset_id": "ferromanganese",
+      "asset": "锰硅",
+      "symbol": "SM0",
+      "from_position": -1,
+      "to_position": 0,
+      "price": 5784.0,
+      "bar_time": "2026-09-15 15:00:00",
+      "reason": "scope_removed"
+    },
+    {
+      "time": "2026-09-15T23:38:44+08:00",
+      "strategy_key": "fdt_channel",
+      "strategy": "FDT启发通道共振",
+      "asset_id": "ferromanganese",
+      "asset": "锰硅",
+      "symbol": "SM0",
+      "from_position": -1,
+      "to_position": 0,
+      "price": 5784.0,
+      "bar_time": "2026-09-15 15:00:00",
+      "reason": "scope_removed"
+    },
+    {
+      "time": "2026-09-15T23:00:25+08:00",
+      "strategy_key": "daily_four_factor",
+      "strategy": "日线四因子",
+      "asset_id": "iron_ore",
+      "asset": "铁矿石",
+      "symbol": "I0",
+      "from_position": 0,
+      "to_position": -1,
+      "price": 708.0,
+      "bar_time": "2026-09-15 23:00:00"
+    },
+    {
+      "time": "2026-09-15T23:00:25+08:00",
+      "strategy_key": "daily_four_factor",
+      "strategy": "日线四因子",
+      "asset_id": "coke",
+      "asset": "焦炭",
+      "symbol": "J0",
+      "from_position": 0,
+      "to_position": -1,
+      "price": 2048.0,
+      "bar_time": "2026-09-15 23:00:00"
+    },
+    {
+      "time": "2026-09-15T23:00:25+08:00",
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "hot_rolled_coil",
+      "asset": "热轧卷板",
+      "symbol": "HC0",
+      "from_position": 0,
+      "to_position": 1,
+      "price": 3318.0,
+      "bar_time": "2026-09-15 23:00:00"
+    },
+    {
+      "time": "2026-09-15T23:00:25+08:00",
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "stainless_steel",
+      "asset": "不锈钢",
+      "symbol": "SS0",
+      "from_position": 0,
+      "to_position": -1,
+      "price": 13375.0,
+      "bar_time": "2026-09-15 23:00:00"
+    },
+    {
+      "time": "2026-09-15T23:00:25+08:00",
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "coke",
+      "asset": "焦炭",
+      "symbol": "J0",
+      "from_position": 0,
+      "to_position": 1,
+      "price": 2048.0,
+      "bar_time": "2026-09-15 23:00:00"
+    },
+    {
+      "time": "2026-09-15T23:00:25+08:00",
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "coking_coal",
+      "asset": "焦煤",
+      "symbol": "JM0",
+      "from_position": 0,
+      "to_position": 1,
+      "price": 1595.0,
+      "bar_time": "2026-09-15 23:00:00"
+    },
+    {
+      "time": "2026-09-15T23:00:25+08:00",
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "ferrosilicon",
+      "asset": "硅铁",
+      "symbol": "SF0",
+      "from_position": 0,
+      "to_position": 1,
+      "price": 6020.0,
+      "bar_time": "2026-09-15 15:00:00"
+    },
+    {
+      "time": "2026-09-15T23:00:25+08:00",
+      "strategy_key": "ma_trend",
+      "strategy": "移动均线10/30/60",
+      "asset_id": "ferromanganese",
+      "asset": "锰硅",
+      "symbol": "SM0",
+      "from_position": 0,
+      "to_position": 1,
+      "price": 5784.0,
+      "bar_time": "2026-09-15 15:00:00"
+    },
+    {
+      "time": "2026-09-15T23:00:25+08:00",
+      "strategy_key": "fibonacci_0618",
+      "strategy": "斐波那契0.618通道",
+      "asset_id": "stainless_steel",
+      "asset": "不锈钢",
+      "symbol": "SS0",
+      "from_position": 0,
+      "to_position": -1,
+      "price": 13375.0,
+      "bar_time": "2026-09-15 23:00:00"
+    },
+    {
+      "time": "2026-09-15T23:00:25+08:00",
+      "strategy_key": "fibonacci_0618",
+      "strategy": "斐波那契0.618通道",
+      "asset_id": "iron_ore",
+      "asset": "铁矿石",
+      "symbol": "I0",
+      "from_position": 0,
+      "to_position": -1,
+      "price": 708.0,
+      "bar_time": "2026-09-15 23:00:00"
+    },
+    {
+      "time": "2026-09-15T23:00:25+08:00",
+      "strategy_key": "fibonacci_0618",
+      "strategy": "斐波那契0.618通道",
+      "asset_id": "ferromanganese",
+      "asset": "锰硅",
+      "symbol": "SM0",
+      "from_position": 0,
+      "to_position": -1,
+      "price": 5784.0,
+      "bar_time": "2026-09-15 15:00:00"
+    },
+    {
+      "time": "2026-09-15T23:00:25+08:00",
+      "strategy_key": "fdt_channel",
+      "strategy": "FDT启发通道共振",
+      "asset_id": "stainless_steel",
+      "asset": "不锈钢",
+      "symbol": "SS0",
+      "from_position": 0,
+      "to_position": -1,
+      "price": 13375.0,
+      "bar_time": "2026-09-15 23:00:00"
+    },
+    {
+      "time": "2026-09-15T23:00:25+08:00",
+      "strategy_key": "fdt_channel",
+      "strategy": "FDT启发通道共振",
+      "asset_id": "ferromanganese",
+      "asset": "锰硅",
+      "symbol": "SM0",
+      "from_position": 0,
+      "to_position": -1,
+      "price": 5784.0,
+      "bar_time": "2026-09-15 15:00:00"
+    }
+  ],
+  "equity_history": {
+    "daily_four_factor": [
+      {
+        "time": "2026-09-15T22:28:43+08:00",
+        "equity": 999961.4421934984
+      },
+      {
+        "time": "2026-09-15T22:30:02+08:00",
+        "equity": 1000354.4305712833
+      },
+      {
+        "time": "2026-09-15T22:35:02+08:00",
+        "equity": 1000352.8214129716
+      },
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "equity": 1000680.5682634285
+      },
+      {
+        "time": "2026-09-15T23:09:02+08:00",
+        "equity": 1000558.8256811415
+      },
+      {
+        "time": "2026-09-15T23:38:44+08:00",
+        "equity": 1000580.482616323
+      },
+      {
+        "time": "2026-09-15T23:40:29+08:00",
+        "equity": 1000423.5655422765
+      },
+      {
+        "time": "2026-09-16T00:16:11+08:00",
+        "equity": 1000493.3539953227
+      },
+      {
+        "time": "2026-09-16T00:22:06+08:00",
+        "equity": 1000534.0145889277
+      },
+      {
+        "time": "2026-09-16T00:28:46+08:00",
+        "equity": 1000403.3051098831
+      }
+    ],
+    "ma_trend": [
+      {
+        "time": "2026-09-15T22:28:43+08:00",
+        "equity": 999803.8398930999
+      },
+      {
+        "time": "2026-09-15T22:30:02+08:00",
+        "equity": 999854.2310340452
+      },
+      {
+        "time": "2026-09-15T22:35:02+08:00",
+        "equity": 999891.3950012848
+      },
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "equity": 999988.5397360675
+      },
+      {
+        "time": "2026-09-15T23:09:02+08:00",
+        "equity": 1000107.1780019616
+      },
+      {
+        "time": "2026-09-15T23:38:44+08:00",
+        "equity": 1000793.2116737607
+      },
+      {
+        "time": "2026-09-15T23:40:29+08:00",
+        "equity": 1001051.1973892195
+      },
+      {
+        "time": "2026-09-16T00:16:11+08:00",
+        "equity": 1000850.4477216773
+      },
+      {
+        "time": "2026-09-16T00:22:06+08:00",
+        "equity": 1000925.4834017485
+      },
+      {
+        "time": "2026-09-16T00:28:46+08:00",
+        "equity": 1001014.166900047
+      }
+    ],
+    "fibonacci_0618": [
+      {
+        "time": "2026-09-15T22:28:43+08:00",
+        "equity": 999930.8983410958
+      },
+      {
+        "time": "2026-09-15T22:30:02+08:00",
+        "equity": 1000323.8747150388
+      },
+      {
+        "time": "2026-09-15T22:35:02+08:00",
+        "equity": 1000322.2656058789
+      },
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "equity": 1000614.9633560538
+      },
+      {
+        "time": "2026-09-15T23:09:02+08:00",
+        "equity": 1000537.2195652059
+      },
+      {
+        "time": "2026-09-15T23:38:44+08:00",
+        "equity": 1000623.540984872
+      },
+      {
+        "time": "2026-09-15T23:40:29+08:00",
+        "equity": 1000354.2717007062
+      },
+      {
+        "time": "2026-09-16T00:16:11+08:00",
+        "equity": 1000424.0553198899
+      },
+      {
+        "time": "2026-09-16T00:22:06+08:00",
+        "equity": 1000502.1121272644
+      },
+      {
+        "time": "2026-09-16T00:28:46+08:00",
+        "equity": 1000371.4068159483
+      }
+    ],
+    "fdt_channel": [
+      {
+        "time": "2026-09-15T22:28:43+08:00",
+        "equity": 999882.3809953777
+      },
+      {
+        "time": "2026-09-15T22:30:02+08:00",
+        "equity": 1000275.3383018326
+      },
+      {
+        "time": "2026-09-15T22:35:02+08:00",
+        "equity": 1000273.7292707477
+      },
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "equity": 1000689.5547017555
+      },
+      {
+        "time": "2026-09-15T23:09:02+08:00",
+        "equity": 1000574.4666495819
+      },
+      {
+        "time": "2026-09-15T23:38:44+08:00",
+        "equity": 1000648.3184273109
+      },
+      {
+        "time": "2026-09-15T23:40:29+08:00",
+        "equity": 1000315.6701944075
+      },
+      {
+        "time": "2026-09-16T00:16:11+08:00",
+        "equity": 1000480.4177983424
+      },
+      {
+        "time": "2026-09-16T00:22:06+08:00",
+        "equity": 1000558.4790033272
+      },
+      {
+        "time": "2026-09-16T00:28:46+08:00",
+        "equity": 1000427.7663282584
+      }
+    ],
+    "five_minute_momentum": [
+      {
+        "time": "2026-09-15T22:28:43+08:00",
+        "equity": 999977.5993326441
+      },
+      {
+        "time": "2026-09-15T22:30:02+08:00",
+        "equity": 1000214.9401313607
+      },
+      {
+        "time": "2026-09-15T22:35:02+08:00",
+        "equity": 1000085.624843955
+      }
+    ]
+  },
+  "assumptions": "仅限指定10个品种；开平各万1.2、每侧1跳；方向由策略决定，仓位再按ATR14波动分位缩放为100%/75%/50%/25%；按扫描时点盯市，无真实委托。"
+}

@@ -36,6 +36,7 @@ jobs:
             state/paper_portfolio.json
             state/signal_state.json
             state/cloud_latest.json
+            state/raw
           key: paper-ledger-${{ github.run_id }}
           restore-keys: paper-ledger-
       - name: Restore latest cloud snapshot
@@ -58,6 +59,7 @@ jobs:
             state/paper_portfolio.json
             state/signal_state.json
             state/cloud_latest.json
+            state/raw
           key: paper-ledger-${{ github.run_id }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
