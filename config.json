@@ -1,0 +1,31 @@
+{
+  "scan_interval_seconds": 300,
+  "timezone": "Asia/Shanghai",
+  "history_bars": 20,
+  "momentum_bars": 6,
+  "daily_momentum_bars": 5,
+  "daily_momentum_threshold_pct": 3.0,
+  "daily_breakout_bars": 20,
+  "daily_ma_period": 20,
+  "daily_required_factors": 3,
+  "rsi_period": 14,
+  "atr_period": 14,
+  "ema_fast": 8,
+  "ema_slow": 21,
+  "minimum_signal_score": 60,
+  "watch_score": 35,
+  "estimated_round_trip_cost_bps": 4,
+  "max_holding_bars": 10,
+  "assets": [
+    {"id":"copper","name":"沪铜","short_name":"铜","symbol":"CU0","exchange":"SHFE","provider":"sina","tick":10,"decimals":0,"unit":"元/吨","bar_timezone":"Asia/Shanghai"},
+    {"id":"aluminium","name":"沪铝","short_name":"铝","symbol":"AL0","exchange":"SHFE","provider":"sina","tick":5,"decimals":0,"unit":"元/吨","bar_timezone":"Asia/Shanghai"},
+    {"id":"lead","name":"沪铅","short_name":"铅","symbol":"PB0","exchange":"SHFE","provider":"sina","tick":5,"decimals":0,"unit":"元/吨","bar_timezone":"Asia/Shanghai"},
+    {"id":"zinc","name":"沪锌","short_name":"锌","symbol":"ZN0","exchange":"SHFE","provider":"sina","tick":5,"decimals":0,"unit":"元/吨","bar_timezone":"Asia/Shanghai"},
+    {"id":"nickel","name":"沪镍","short_name":"镍","symbol":"NI0","exchange":"SHFE","provider":"sina","tick":10,"decimals":0,"unit":"元/吨","bar_timezone":"Asia/Shanghai"},
+    {"id":"cobalt","name":"LME钴","short_name":"钴","symbol":"CO","exchange":"LME","provider":"csv","daily_file":"data/cobalt_daily.csv","hourly_file":"data/cobalt_60m.csv","five_file":"data/cobalt_5m.csv","tick":5,"decimals":0,"unit":"美元/吨","bar_timezone":"Europe/London"},
+    {"id":"lithium","name":"碳酸锂","short_name":"锂","symbol":"LC0","exchange":"GFEX","provider":"sina","tick":20,"decimals":0,"unit":"元/吨","bar_timezone":"Asia/Shanghai"},
+    {"id":"tin","name":"沪锡","short_name":"锡","symbol":"SN0","exchange":"SHFE","provider":"sina","tick":10,"decimals":0,"unit":"元/吨","bar_timezone":"Asia/Shanghai"},
+    {"id":"gold","name":"黄金","short_name":"金","symbol":"AU0","exchange":"SHFE","provider":"sina","tick":0.02,"decimals":2,"unit":"元/克","bar_timezone":"Asia/Shanghai"},
+    {"id":"silver","name":"白银","short_name":"银","symbol":"AG0","exchange":"SHFE","provider":"sina","tick":1,"decimals":0,"unit":"元/千克","bar_timezone":"Asia/Shanghai"}
+  ]
+}

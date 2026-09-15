@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="铜铝铅锌镍钴锂锡金银日线四因子与多周期动量监控">
+  <title>金属多周期动量工作台</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="rail">
+    <div class="brand"><span class="brand-mark">MTF</span><div><b>动量工作台</b><small>METALS MOMENTUM</small></div></div>
+    <nav aria-label="主导航">
+      <button class="nav-item active" data-scroll="overview"><span>01</span> 全市场</button>
+      <button class="nav-item" data-scroll="matrix"><span>02</span> 信号矩阵</button>
+      <button class="nav-item" data-scroll="detail"><span>03</span> 因子拆解</button>
+      <button class="nav-item" data-scroll="method"><span>04</span> 模型口径</button>
+    </nav>
+    <div class="rail-foot"><i></i><span>日线主模型</span><small>周/时确认 · 5分钟巡检</small></div>
+  </aside>
+
+  <main>
+    <header class="topbar" id="overview">
+      <div>
+        <p class="eyebrow">DAILY CORE / MULTI-TIMEFRAME</p>
+        <h1>金属多周期动量工作台</h1>
+      </div>
+      <div class="top-actions">
+        <div class="clock"><span id="marketState" class="state-dot"></span><div><b id="nowClock">--:--:--</b><small id="scanTime">等待首次扫描</small></div></div>
+        <button id="refreshButton" class="refresh">立即扫描 <span id="countdown">05:00</span></button>
+      </div>
+    </header>
+
+    <section class="signal-strip" aria-label="信号摘要">
+      <div><small>综合做多</small><b id="longCount">—</b></div>
+      <div><small>综合做空</small><b id="shortCount">—</b></div>
+      <div><small>观察名单</small><b id="watchCount">—</b></div>
+      <div><small>数据健康度</small><b id="healthCount">—</b></div>
+      <div class="spectrum"><span>空</span><div><i id="spectrumNeedle"></i></div><span>多</span></div>
+    </section>
+
+    <section class="workspace" id="matrix">
+      <div class="section-head">
+        <div><p class="eyebrow">SIGNAL MATRIX</p><h2>十种金属</h2></div>
+        <div class="filters" role="group" aria-label="筛选信号">
+          <button class="filter active" data-filter="all">全部</button>
+          <button class="filter" data-filter="long">偏多</button>
+          <button class="filter" data-filter="short">偏空</button>
+          <button class="filter" data-filter="watch">观察</button>
+          <button class="filter" data-filter="missing">异常</button>
+        </div>
+      </div>
+      <div id="cards" class="cards" aria-live="polite"></div>
+    </section>
+
+    <section class="detail-grid" id="detail">
+      <article class="detail-panel">
+        <div class="section-head compact"><div><p class="eyebrow">DAILY FOUR FACTORS</p><h2 id="detailTitle">选择品种查看因子</h2></div><span id="detailBadge" class="detail-badge">—</span></div>
+        <div id="detailContent" class="empty-detail">点击品种卡片，查看日线四因子、多周期结论和快速回测。</div>
+      </article>
+      <article class="ranking-panel">
+        <div class="section-head compact"><div><p class="eyebrow">CROSS-SECTION</p><h2>动量强弱排名</h2></div></div>
+        <div id="ranking" class="ranking"></div>
+      </article>
+    </section>
+
+    <section class="method-panel" id="method">
+      <div><p class="eyebrow">MODEL SPECIFICATION</p><h2>模型口径</h2></div>
+      <div id="methodList" class="method-list"></div>
+      <div id="warnings" class="warnings"></div>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>

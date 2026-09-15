@@ -1,0 +1,732 @@
+#!/usr/bin/env python3
+"""Daily-core, multi-timeframe futures momentum monitor.
+
+No third-party Python package is required. Domestic futures bars are read from
+the same Sina endpoints used by AKShare. Daily bars drive the four-factor
+model; 60-minute and weekly bars confirm the trend; 5-minute bars are alerts.
+Cobalt is intentionally a CSV adapter because there is no comparable Chinese
+cobalt futures symbol.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import math
+import os
+import re
+import statistics
+import sys
+import threading
+import time
+import traceback
+import urllib.parse
+import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, time as dt_time
+from http import HTTPStatus
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+from typing import Any
+from zoneinfo import ZoneInfo
+
+
+ROOT = Path(__file__).resolve().parent
+DIST = ROOT / "dist"
+STATE_DIR = ROOT / "state"
+CONFIG_PATH = ROOT / "config.json"
+LATEST_PATH = DIST / "latest.json"
+HISTORY_PATH = STATE_DIR / "scan_history.jsonl"
+SINA_ENDPOINT = (
+    "https://stock2.finance.sina.com.cn/futures/api/jsonp.php/=/"
+    "InnerFuturesNewService.getFewMinLine"
+)
+SINA_DAILY_ENDPOINT = (
+    "https://stock2.finance.sina.com.cn/futures/api/jsonp.php/"
+    "var%20_{variable}=/InnerFuturesNewService.getDailyKLine"
+)
+WRITE_LOCK = threading.Lock()
+SCAN_LOCK = threading.Lock()
+
+
+def load_config() -> dict[str, Any]:
+    with CONFIG_PATH.open("r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+def atomic_json(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    with WRITE_LOCK:
+        with temporary.open("w", encoding="utf-8", newline="\n") as handle:
+            json.dump(payload, handle, ensure_ascii=False, indent=2)
+        os.replace(temporary, path)
+
+
+def append_history(payload: dict[str, Any]) -> None:
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    compact = {
+        "generated_at": payload["generated_at"],
+        "assets": [
+            {
+                "id": item["id"],
+                "bar_time": item.get("bar_time"),
+                "price": item.get("price"),
+                "score": item.get("score"),
+                "signal": item.get("signal"),
+                "status": item.get("status"),
+            }
+            for item in payload["assets"]
+        ],
+    }
+    with WRITE_LOCK, HISTORY_PATH.open("a", encoding="utf-8", newline="\n") as handle:
+        handle.write(json.dumps(compact, ensure_ascii=False) + "\n")
+
+
+def parse_sina_rows(raw: str, minimum: int, label: str) -> list[dict[str, Any]]:
+    match = re.search(r"=\((.*)\);?\s*$", raw, flags=re.S)
+    if not match:
+        raise ValueError("行情接口返回格式异常")
+    values = json.loads(match.group(1))
+    bars: list[dict[str, Any]] = []
+    for row in values:
+        if isinstance(row, dict):
+            data = {
+                "datetime": row.get("d"), "open": row.get("o"), "high": row.get("h"),
+                "low": row.get("l"), "close": row.get("c"), "volume": row.get("v", 0),
+                "hold": row.get("p", 0), "settle": row.get("s"),
+            }
+        else:
+            data = dict(zip(("datetime", "open", "high", "low", "close", "volume", "hold", "settle"), row))
+        try:
+            bars.append({
+                "datetime": str(data["datetime"]), "open": float(data["open"]),
+                "high": float(data["high"]), "low": float(data["low"]),
+                "close": float(data["close"]), "volume": float(data.get("volume") or 0),
+                "hold": float(data.get("hold") or 0),
+                "settle": float(data.get("settle") or 0),
+            })
+        except (TypeError, ValueError, KeyError):
+            continue
+    bars.sort(key=lambda row: row["datetime"])
+    if len(bars) < minimum:
+        raise ValueError(f"有效{label}K线不足: {len(bars)}")
+    return bars
+
+
+def request_text(url: str) -> str:
+    request = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "Mozilla/5.0 MomentumResearchMonitor/1.0",
+            "Referer": "https://vip.stock.finance.sina.com.cn/",
+        },
+    )
+    with urllib.request.urlopen(request, timeout=18) as response:
+        return response.read().decode("utf-8", errors="replace")
+
+
+def fetch_sina_minute_bars(symbol: str, period: str) -> list[dict[str, Any]]:
+    query = urllib.parse.urlencode({"symbol": symbol, "type": period})
+    return parse_sina_rows(request_text(f"{SINA_ENDPOINT}?{query}"), 35, f"{period}分钟")
+
+
+def fetch_sina_bars(symbol: str) -> list[dict[str, Any]]:
+    return fetch_sina_minute_bars(symbol, "5")
+
+
+def fetch_sina_daily_bars(symbol: str, now: datetime) -> list[dict[str, Any]]:
+    date_key = now.strftime("%Y_%m_%d")
+    variable = urllib.parse.quote(f"{symbol}{date_key}", safe="")
+    url = SINA_DAILY_ENDPOINT.format(variable=variable)
+    query = urllib.parse.urlencode({"symbol": symbol, "type": date_key})
+    return parse_sina_rows(request_text(f"{url}?{query}"), 60, "日")
+
+
+def fetch_csv_bars(relative_path: str, minimum: int = 35) -> list[dict[str, Any]]:
+    path = ROOT / relative_path
+    if not path.exists():
+        raise FileNotFoundError(f"等待外部5分钟数据: {relative_path}")
+    bars: list[dict[str, Any]] = []
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        for row in csv.DictReader(handle):
+            try:
+                bars.append(
+                    {
+                        "datetime": row["datetime"],
+                        "open": float(row["open"]),
+                        "high": float(row["high"]),
+                        "low": float(row["low"]),
+                        "close": float(row["close"]),
+                        "volume": float(row.get("volume") or 0),
+                        "hold": float(row.get("hold") or 0),
+                        "settle": float(row.get("settle") or 0),
+                    }
+                )
+            except (KeyError, TypeError, ValueError):
+                continue
+    bars.sort(key=lambda row: row["datetime"])
+    if len(bars) < minimum:
+        raise ValueError(f"CSV有效K线不足: {len(bars)}")
+    return bars
+
+
+def ema(values: list[float], period: int) -> list[float]:
+    alpha = 2 / (period + 1)
+    result = [values[0]]
+    for value in values[1:]:
+        result.append(alpha * value + (1 - alpha) * result[-1])
+    return result
+
+
+def rolling_atr(bars: list[dict[str, Any]], period: int) -> list[float | None]:
+    true_ranges: list[float] = []
+    result: list[float | None] = []
+    for index, bar in enumerate(bars):
+        previous = bars[index - 1]["close"] if index else bar["close"]
+        true_ranges.append(max(bar["high"] - bar["low"], abs(bar["high"] - previous), abs(bar["low"] - previous)))
+        window = true_ranges[max(0, index - period + 1) : index + 1]
+        result.append(statistics.fmean(window) if len(window) >= period else None)
+    return result
+
+
+def rolling_rsi(closes: list[float], period: int) -> list[float | None]:
+    result: list[float | None] = [None] * len(closes)
+    for index in range(period, len(closes)):
+        changes = [closes[j] - closes[j - 1] for j in range(index - period + 1, index + 1)]
+        gains = sum(max(change, 0) for change in changes) / period
+        losses = sum(max(-change, 0) for change in changes) / period
+        result[index] = 100.0 if losses == 0 else 100 - (100 / (1 + gains / losses))
+    return result
+
+
+def clamp(value: float, low: float, high: float) -> float:
+    return max(low, min(high, value))
+
+
+def daily_four_factor(bars: list[dict[str, Any]], index: int, config: dict[str, Any]) -> dict[str, Any] | None:
+    """Screenshot-compatible daily model: mom5, 20D breakout, MA20, RSI14."""
+    momentum_bars = int(config["daily_momentum_bars"])
+    lookback = int(config["daily_breakout_bars"])
+    ma_period = int(config["daily_ma_period"])
+    rsi_period = int(config["rsi_period"])
+    if index < max(momentum_bars, lookback, ma_period, rsi_period):
+        return None
+    closes = [bar["close"] for bar in bars[: index + 1]]
+    close = closes[-1]
+    momentum = close / closes[-momentum_bars - 1] - 1
+    threshold = float(config["daily_momentum_threshold_pct"]) / 100
+    prior = bars[index - lookback : index]
+    prior_high = max(bar["high"] for bar in prior)
+    prior_low = min(bar["low"] for bar in prior)
+    ma20 = statistics.fmean(closes[-ma_period:])
+    changes = [closes[j] - closes[j - 1] for j in range(len(closes) - rsi_period, len(closes))]
+    gains = sum(max(change, 0) for change in changes) / rsi_period
+    losses = sum(max(-change, 0) for change in changes) / rsi_period
+    rsi = 100.0 if losses == 0 else 100 - (100 / (1 + gains / losses))
+    long_factors = {
+        "momentum": momentum > threshold,
+        "breakout": close > prior_high,
+        "trend": close > ma20,
+        "rsi": 50 <= rsi <= 70,
+    }
+    short_factors = {
+        "momentum": momentum < -threshold,
+        "breakout": close < prior_low,
+        "trend": close < ma20,
+        "rsi": 30 <= rsi <= 50,
+    }
+    long_count = sum(long_factors.values())
+    short_count = sum(short_factors.values())
+    required = int(config["daily_required_factors"])
+    if long_count >= required:
+        signal = "long"
+    elif short_count >= required:
+        signal = "short"
+    elif long_count == required - 1 and long_count > short_count:
+        signal = "watch_long"
+    elif short_count == required - 1 and short_count > long_count:
+        signal = "watch_short"
+    else:
+        signal = "neutral"
+    score = int(clamp((long_count - short_count) * 25, -100, 100))
+    return {
+        "score": score,
+        "signal": signal,
+        "momentum_pct": momentum * 100,
+        "threshold_pct": threshold * 100,
+        "ma20": ma20,
+        "rsi": rsi,
+        "prior_high": prior_high,
+        "prior_low": prior_low,
+        "long_factors": long_factors,
+        "short_factors": short_factors,
+        "long_count": long_count,
+        "short_count": short_count,
+    }
+
+
+def aggregate_weekly(daily_bars: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    weeks: list[dict[str, Any]] = []
+    current_key: tuple[int, int] | None = None
+    for bar in daily_bars:
+        day = datetime.fromisoformat(bar["datetime"])
+        iso = day.isocalendar()
+        key = (iso.year, iso.week)
+        if key != current_key:
+            weeks.append(dict(bar))
+            current_key = key
+        else:
+            week = weeks[-1]
+            week["high"] = max(week["high"], bar["high"])
+            week["low"] = min(week["low"], bar["low"])
+            week["close"] = bar["close"]
+            week["volume"] += bar["volume"]
+            week["hold"] = bar["hold"]
+            week["settle"] = bar.get("settle", 0)
+            week["datetime"] = bar["datetime"]
+    return weeks
+
+
+def timeframe_trend(bars: list[dict[str, Any]], label: str) -> dict[str, Any]:
+    closes = [bar["close"] for bar in bars]
+    if len(closes) < 25:
+        raise ValueError(f"{label}趋势数据不足")
+    fast = ema(closes, 8)[-1]
+    slow = ema(closes, 21)[-1]
+    rsi = rolling_rsi(closes, 14)[-1]
+    momentum = closes[-1] / closes[-6] - 1
+    direction_votes = [1 if momentum > 0 else -1 if momentum < 0 else 0,
+                       1 if closes[-1] > fast > slow else -1 if closes[-1] < fast < slow else 0,
+                       1 if rsi is not None and rsi >= 55 else -1 if rsi is not None and rsi <= 45 else 0]
+    score = sum(direction_votes)
+    if score >= 2:
+        signal = "strong_long"
+    elif score == 1:
+        signal = "long"
+    elif score <= -2:
+        signal = "strong_short"
+    elif score == -1:
+        signal = "short"
+    else:
+        signal = "neutral"
+    return {"signal": signal, "vote": score, "momentum_pct": momentum * 100, "ema8": fast, "ema21": slow, "rsi": rsi}
+
+
+def percentage_change(values: list[float], bars: int) -> float | None:
+    if len(values) <= bars or values[-bars - 1] == 0:
+        return None
+    return (values[-1] / values[-bars - 1] - 1) * 100
+
+
+def prepare_bars(
+    raw_bars: list[dict[str, Any]], asset: dict[str, Any], generated_at: datetime, timeframe: str
+) -> tuple[list[dict[str, Any]], dict[str, int]]:
+    raw_count = len(raw_bars)
+    unique = sorted({bar["datetime"]: bar for bar in raw_bars}.values(), key=lambda row: row["datetime"])
+    local_now = generated_at.astimezone(ZoneInfo(asset["bar_timezone"]))
+    if timeframe == "daily":
+        today = local_now.date()
+        after_close = local_now.time() >= dt_time(15, 5) and asset["exchange"] != "LME"
+        bars = [bar for bar in unique if datetime.fromisoformat(bar["datetime"]).date() < today or
+                (after_close and datetime.fromisoformat(bar["datetime"]).date() == today)]
+    else:
+        cutoff = local_now.replace(tzinfo=None)
+        bars = [bar for bar in unique if datetime.fromisoformat(bar["datetime"]) <= cutoff]
+    return bars, {"duplicate_bars_removed": raw_count - len(unique), "incomplete_bars_excluded": len(unique) - len(bars)}
+
+
+def point_signal(
+    bars: list[dict[str, Any]],
+    index: int,
+    config: dict[str, Any],
+    ema_fast_values: list[float],
+    ema_slow_values: list[float],
+    atr_values: list[float | None],
+    rsi_values: list[float | None],
+) -> dict[str, Any] | None:
+    lookback = int(config["history_bars"])
+    momentum_bars = int(config["momentum_bars"])
+    if index < max(lookback + 1, momentum_bars, int(config["atr_period"])):
+        return None
+    close = bars[index]["close"]
+    atr = atr_values[index]
+    rsi = rsi_values[index]
+    if atr is None or rsi is None or atr <= 0 or close <= 0:
+        return None
+    previous = bars[index - momentum_bars]["close"]
+    momentum = close / previous - 1
+    atr_pct = atr / close
+    dynamic_threshold = max(0.0008, 0.85 * atr_pct * math.sqrt(momentum_bars))
+    prior = bars[index - lookback : index]
+    prior_high = max(bar["high"] for bar in prior)
+    prior_low = min(bar["low"] for bar in prior)
+    channel_width = max(prior_high - prior_low, atr)
+    channel_position = (close - prior_low) / channel_width
+    volumes = [bar["volume"] for bar in bars[index - lookback : index]]
+    typical_volume = statistics.median(volumes) if volumes else 0
+    volume_ratio = bars[index]["volume"] / typical_volume if typical_volume > 0 else 1
+
+    long_factors = {
+        "momentum": momentum > dynamic_threshold,
+        "breakout": close > prior_high,
+        "trend": close > ema_fast_values[index] > ema_slow_values[index],
+        "rsi": 55 <= rsi <= 75,
+    }
+    short_factors = {
+        "momentum": momentum < -dynamic_threshold,
+        "breakout": close < prior_low,
+        "trend": close < ema_fast_values[index] < ema_slow_values[index],
+        "rsi": 25 <= rsi <= 45,
+    }
+
+    momentum_component = 30 * clamp(momentum / (dynamic_threshold * 2), -1, 1)
+    trend_component = 25 * clamp((ema_fast_values[index] - ema_slow_values[index]) / (atr * 1.5), -1, 1)
+    breakout_component = 20 * clamp((channel_position - 0.5) * 2, -1, 1)
+    rsi_component = 15 * clamp((rsi - 50) / 20, -1, 1)
+    direction = 1 if momentum >= 0 else -1
+    volume_component = 10 * direction * clamp((volume_ratio - 0.8) / 1.2, 0, 1)
+    score = round(clamp(momentum_component + trend_component + breakout_component + rsi_component + volume_component, -100, 100))
+    long_count = sum(long_factors.values())
+    short_count = sum(short_factors.values())
+    minimum = int(config["minimum_signal_score"])
+    watch = int(config["watch_score"])
+    if score >= minimum and long_count >= 3:
+        signal = "long"
+    elif score <= -minimum and short_count >= 3:
+        signal = "short"
+    elif abs(score) >= watch:
+        signal = "watch_long" if score > 0 else "watch_short"
+    else:
+        signal = "neutral"
+    return {
+        "score": score,
+        "signal": signal,
+        "momentum_pct": momentum * 100,
+        "threshold_pct": dynamic_threshold * 100,
+        "ema_fast": ema_fast_values[index],
+        "ema_slow": ema_slow_values[index],
+        "rsi": rsi,
+        "atr": atr,
+        "atr_pct": atr_pct * 100,
+        "prior_high": prior_high,
+        "prior_low": prior_low,
+        "volume_ratio": volume_ratio,
+        "long_factors": long_factors,
+        "short_factors": short_factors,
+        "long_count": long_count,
+        "short_count": short_count,
+    }
+
+
+def run_backtest(
+    bars: list[dict[str, Any]],
+    signals: list[dict[str, Any] | None],
+    asset: dict[str, Any],
+    config: dict[str, Any],
+) -> dict[str, Any]:
+    maximum_hold = int(config["max_holding_bars"])
+    cost = float(config["estimated_round_trip_cost_bps"]) / 10000
+    tick = float(asset["tick"])
+    returns: list[float] = []
+    cursor = 1
+    while cursor < len(bars) - 2:
+        signal = signals[cursor]
+        if not signal or signal["signal"] not in ("long", "short"):
+            cursor += 1
+            continue
+        direction = 1 if signal["signal"] == "long" else -1
+        entry_index = cursor + 1
+        exit_index = min(entry_index + maximum_hold, len(bars) - 1)
+        for probe in range(entry_index + 1, exit_index + 1):
+            candidate = signals[probe]
+            if candidate and ((direction == 1 and candidate["score"] <= -35) or (direction == -1 and candidate["score"] >= 35)):
+                exit_index = probe
+                break
+        entry = bars[entry_index]["open"]
+        exit_price = bars[exit_index]["close"]
+        slippage = (2 * tick / entry) if entry else 0
+        trade_return = direction * (exit_price / entry - 1) - cost - slippage
+        returns.append(trade_return)
+        cursor = exit_index + 1
+    equity = 1.0
+    peak = 1.0
+    max_drawdown = 0.0
+    for value in returns:
+        equity *= 1 + value
+        peak = max(peak, equity)
+        max_drawdown = min(max_drawdown, equity / peak - 1)
+    return {
+        "trades": len(returns),
+        "win_rate_pct": (sum(value > 0 for value in returns) / len(returns) * 100) if returns else None,
+        "net_return_pct": (equity - 1) * 100 if returns else None,
+        "max_drawdown_pct": max_drawdown * 100 if returns else None,
+        "avg_trade_pct": statistics.fmean(returns) * 100 if returns else None,
+        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。",
+    }
+
+
+def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: datetime) -> dict[str, Any]:
+    base = {key: asset[key] for key in ("id", "name", "short_name", "symbol", "exchange", "provider", "decimals", "unit", "bar_timezone")}
+    try:
+        if asset["provider"] == "sina":
+            raw_daily = fetch_sina_daily_bars(asset["symbol"], generated_at)
+            raw_hourly = fetch_sina_minute_bars(asset["symbol"], "60")
+            raw_five = fetch_sina_minute_bars(asset["symbol"], "5")
+            source_mode = "live/intraday + derived close"
+            source = "新浪财经日线/60分钟/5分钟（AKShare同源接口）"
+        else:
+            raw_daily = fetch_csv_bars(asset["daily_file"], 60)
+            raw_hourly = fetch_csv_bars(asset["hourly_file"], 35)
+            raw_five = fetch_csv_bars(asset["five_file"], 35)
+            source_mode = "manual"
+            source = "LME授权数据CSV"
+        daily, daily_quality = prepare_bars(raw_daily, asset, generated_at, "daily")
+        hourly, hourly_quality = prepare_bars(raw_hourly, asset, generated_at, "hourly")
+        five, five_quality = prepare_bars(raw_five, asset, generated_at, "5m")
+        for timeframe, raw in (("daily", raw_daily), ("60m", raw_hourly), ("5m", raw_five)):
+            atomic_json(
+                STATE_DIR / "raw" / f"{asset['symbol']}_{timeframe}.json",
+                {
+                    "retrieved_at": generated_at.isoformat(timespec="seconds"),
+                    "source_mode": source_mode,
+                    "source": SINA_DAILY_ENDPOINT if timeframe == "daily" and asset["provider"] == "sina" else
+                              SINA_ENDPOINT if asset["provider"] == "sina" else asset.get(f"{timeframe}_file", "CSV"),
+                    "symbol": asset["symbol"], "bar_timezone": asset["bar_timezone"], "bars": raw,
+                },
+            )
+        if len(daily) < 60 or len(hourly) < 35 or len(five) < 35:
+            raise ValueError("多周期指标预热数据不足")
+        # Keep the full source response in state/raw, but bound model work to a
+        # reproducible recent window so scheduled scans finish well within 5m.
+        daily = daily[-600:]
+        hourly = hourly[-600:]
+        five = five[-1000:]
+
+        daily_signals = [daily_four_factor(daily, index, config) for index in range(len(daily))]
+        latest = daily_signals[-1]
+        if latest is None:
+            raise ValueError("日线四因子预热数据不足")
+        hourly_trend = timeframe_trend(hourly, "小时")
+        weekly = aggregate_weekly(daily)
+        weekly_trend = timeframe_trend(weekly, "周")
+        five_closes = [bar["close"] for bar in five]
+        five_fast = ema(five_closes, int(config["ema_fast"]))
+        five_slow = ema(five_closes, int(config["ema_slow"]))
+        five_atr = rolling_atr(five, int(config["atr_period"]))
+        five_rsi = rolling_rsi(five_closes, int(config["rsi_period"]))
+        five_signal = point_signal(five, len(five) - 1, config, five_fast, five_slow, five_atr, five_rsi)
+        if five_signal is None:
+            raise ValueError("5分钟预警指标预热数据不足")
+
+        confirmation = hourly_trend["vote"] + weekly_trend["vote"]
+        if latest["signal"] == "long" and confirmation >= 0:
+            overall_signal = "long"
+        elif latest["signal"] == "short" and confirmation <= 0:
+            overall_signal = "short"
+        elif latest["signal"] == "watch_long" or confirmation >= 3:
+            overall_signal = "watch_long"
+        elif latest["signal"] == "watch_short" or confirmation <= -3:
+            overall_signal = "watch_short"
+        else:
+            overall_signal = "neutral"
+        overall_score = round(clamp(latest["score"] * 0.6 + hourly_trend["vote"] / 3 * 20 + weekly_trend["vote"] / 3 * 20, -100, 100))
+
+        bar_time = datetime.fromisoformat(five[-1]["datetime"]).replace(tzinfo=ZoneInfo(asset["bar_timezone"]))
+        age_minutes = max(0, (generated_at - bar_time.astimezone(generated_at.tzinfo)).total_seconds() / 60)
+        status = "ok" if age_minutes <= 20 else "closed" if not in_research_session(generated_at) else "stale"
+        sparkline = [
+            {"time": bar["datetime"], "value": round(bar["close"], int(asset["decimals"]) + 2)}
+            for bar in daily[-60:]
+        ]
+        daily_closes = [bar["close"] for bar in daily]
+        holds = [bar["hold"] for bar in daily]
+        result = {
+            **base,
+            **latest,
+            "score": overall_score,
+            "daily_score": latest["score"],
+            "daily_signal": latest["signal"],
+            "signal": overall_signal,
+            "status": status,
+            "status_text": "实时" if status == "ok" else "休市快照" if status == "closed" else "行情陈旧",
+            "price": five_closes[-1],
+            "bar_time": five[-1]["datetime"],
+            "daily_date": daily[-1]["datetime"],
+            "age_minutes": round(age_minutes, 1),
+            "bars": {"daily": len(daily), "hourly": len(hourly), "five": len(five), "weekly": len(weekly)},
+            "change_pct": (five_closes[-1] / daily_closes[-1] - 1) * 100,
+            "returns": {"day": percentage_change(daily_closes, 1), "week": percentage_change(daily_closes, 5), "month": percentage_change(daily_closes, 20)},
+            "position_changes": {"day": percentage_change(holds, 1), "week": percentage_change(holds, 5), "month": percentage_change(holds, 20)},
+            "timeframes": {"week": weekly_trend, "day": {"signal": latest["signal"], "vote": latest["long_count"] - latest["short_count"]}, "hour": hourly_trend, "five": {"signal": five_signal["signal"], "score": five_signal["score"]}},
+            "sparkline": sparkline,
+            "source": source,
+            "quality": {
+                "source_mode": source_mode,
+                "daily": daily_quality, "hourly": hourly_quality, "five": five_quality,
+                "last_actual_observation": five[-1]["datetime"],
+                "last_daily_close": daily[-1]["datetime"],
+                "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留",
+            },
+            "backtest": run_backtest(daily, daily_signals, asset, config),
+        }
+        return result
+    except Exception as exc:
+        return {
+            **base,
+            "status": "missing",
+            "status_text": "缺少数据",
+            "signal": "missing",
+            "score": None,
+            "price": None,
+            "bar_time": None,
+            "error": str(exc),
+            "source": "待接入LME钴日线/60分钟/5分钟CSV" if asset["provider"] == "csv" else "新浪财经多周期行情",
+        }
+
+
+def scan_once() -> dict[str, Any]:
+    if not SCAN_LOCK.acquire(blocking=False):
+        raise RuntimeError("扫描已在进行中")
+    try:
+        config = load_config()
+        generated_at = datetime.now(ZoneInfo(config["timezone"]))
+        results: list[dict[str, Any]] = []
+        with ThreadPoolExecutor(max_workers=5) as pool:
+            futures = {pool.submit(analyze_asset, asset, config, generated_at): asset for asset in config["assets"]}
+            for future in as_completed(futures):
+                results.append(future.result())
+        order = {asset["id"]: index for index, asset in enumerate(config["assets"])}
+        results.sort(key=lambda item: order[item["id"]])
+        counts = {key: sum(item.get("signal") == key for item in results) for key in ("long", "short", "watch_long", "watch_short", "neutral", "missing")}
+        payload = {
+            "schema_version": 2,
+            "generated_at": generated_at.isoformat(timespec="seconds"),
+            "interval_seconds": int(config["scan_interval_seconds"]),
+            "summary": counts,
+            "assets": results,
+            "methodology": {
+                "bar": "日线四因子为主；周线和60分钟确认趋势；5分钟仅作盘中预警",
+                "factors": "mom5超过±3% / 突破20日高低 / 收盘相对MA20 / 日线RSI14区间",
+                "decision": "日线四因子至少3项同向触发，再结合周线与小时线给出综合结论",
+                "execution": "日线回测在下一交易日开盘入场，最长持有10个交易日；扫描每5分钟运行",
+            },
+            "warnings": [
+                "主连换月可能产生跳空，生产使用前应接入后复权连续合约或固定主力合约。",
+                "持仓变化是主连持仓量代理，换月附近不可直接解释为资金净流入或流出。",
+                "钴采用LME CO外部CSV适配，不用国内现货价格冒充期货行情。",
+                "公开接口可能限流或中断；实盘研究建议切换至iFinD、Wind、CTP或交易所授权源。",
+            ],
+        }
+        atomic_json(LATEST_PATH, payload)
+        append_history(payload)
+        return payload
+    finally:
+        SCAN_LOCK.release()
+
+
+def in_research_session(now: datetime | None = None) -> bool:
+    now = now or datetime.now()
+    if now.weekday() >= 5:
+        return False
+    current = now.time()
+    windows = (
+        (dt_time(8, 55), dt_time(11, 35)),
+        (dt_time(13, 25), dt_time(15, 5)),
+        (dt_time(20, 55), dt_time(23, 59, 59)),
+        (dt_time(0, 0), dt_time(2, 35)),
+    )
+    return any(start <= current <= end for start, end in windows)
+
+
+class MonitorHandler(SimpleHTTPRequestHandler):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, directory=str(DIST), **kwargs)
+
+    def log_message(self, format: str, *args: Any) -> None:
+        sys.stdout.write("[%s] %s\n" % (self.log_date_time_string(), format % args))
+
+    def do_GET(self) -> None:
+        if self.path.split("?", 1)[0] == "/api/status":
+            self.send_json(read_latest())
+            return
+        super().do_GET()
+
+    def do_POST(self) -> None:
+        if self.path.split("?", 1)[0] != "/api/scan":
+            self.send_error(HTTPStatus.NOT_FOUND)
+            return
+        try:
+            self.send_json(scan_once())
+        except RuntimeError as exc:
+            self.send_json({"error": str(exc)}, status=HTTPStatus.CONFLICT)
+        except Exception as exc:
+            self.send_json({"error": str(exc)}, status=HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def send_json(self, payload: dict[str, Any], status: HTTPStatus = HTTPStatus.OK) -> None:
+        body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        self.wfile.write(body)
+
+
+def read_latest() -> dict[str, Any]:
+    if not LATEST_PATH.exists():
+        return scan_once()
+    with LATEST_PATH.open("r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+def scheduler_loop(interval: int) -> None:
+    while True:
+        delay = interval - (time.time() % interval) + 2
+        time.sleep(delay)
+        if in_research_session():
+            try:
+                scan_once()
+                print(f"[{datetime.now().isoformat(timespec='seconds')}] scheduled scan complete")
+            except Exception:
+                traceback.print_exc()
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="期货5分钟动量扫描器")
+    parser.add_argument("--scan", action="store_true", help="立即扫描一次")
+    parser.add_argument("--serve", action="store_true", help="启动本地看板")
+    parser.add_argument("--schedule", action="store_true", help="服务运行时每5分钟自动扫描")
+    parser.add_argument("--respect-session", action="store_true", help="非研究时段跳过单次扫描")
+    parser.add_argument("--host", default="127.0.0.1")
+    parser.add_argument("--port", default=8765, type=int)
+    args = parser.parse_args()
+    if not args.scan and not args.serve:
+        args.scan = True
+    if args.scan:
+        if args.respect_session and not in_research_session():
+            print("当前不在扫描时段，已跳过。")
+        else:
+            payload = scan_once()
+            print(json.dumps({"generated_at": payload["generated_at"], "summary": payload["summary"]}, ensure_ascii=False))
+    if args.serve:
+        config = load_config()
+        if not LATEST_PATH.exists():
+            scan_once()
+        if args.schedule:
+            thread = threading.Thread(target=scheduler_loop, args=(int(config["scan_interval_seconds"]),), daemon=True)
+            thread.start()
+        server = ThreadingHTTPServer((args.host, args.port), MonitorHandler)
+        print(f"Momentum monitor: http://{args.host}:{args.port}")
+        try:
+            server.serve_forever()
+        except KeyboardInterrupt:
+            pass
+        finally:
+            server.server_close()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,3223 @@
+{
+  "schema_version": 2,
+  "generated_at": "2026-09-15T16:07:14+08:00",
+  "interval_seconds": 300,
+  "summary": {
+    "long": 0,
+    "short": 2,
+    "watch_long": 1,
+    "watch_short": 5,
+    "neutral": 1,
+    "missing": 1
+  },
+  "assets": [
+    {
+      "id": "copper",
+      "name": "沪铜",
+      "short_name": "铜",
+      "symbol": "CU0",
+      "exchange": "SHFE",
+      "provider": "sina",
+      "decimals": 0,
+      "unit": "元/吨",
+      "bar_timezone": "Asia/Shanghai",
+      "score": -17,
+      "signal": "watch_short",
+      "momentum_pct": -1.4349693812265807,
+      "threshold_pct": 3.0,
+      "ma20": 108751.5,
+      "rsi": 49.40878378378379,
+      "prior_high": 112330.0,
+      "prior_low": 106150.0,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": false
+      },
+      "short_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": true,
+        "rsi": true
+      },
+      "long_count": 0,
+      "short_count": 2,
+      "daily_score": -50,
+      "daily_signal": "watch_short",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 107030.0,
+      "bar_time": "2026-09-15 15:00:00",
+      "daily_date": "2026-09-14",
+      "age_minutes": 67.2,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": -0.7511127596439127,
+      "returns": {
+        "day": -1.0551426736397862,
+        "week": -1.4349693812265807,
+        "month": -1.5519444951615835
+      },
+      "position_changes": {
+        "day": -5.5656668242013545,
+        "week": -12.413674113658724,
+        "month": -10.933447139436181
+      },
+      "timeframes": {
+        "week": {
+          "signal": "strong_long",
+          "vote": 3,
+          "momentum_pct": 0.13928869904356045,
+          "ema8": 107625.52041543076,
+          "ema21": 105214.4963296882,
+          "rsi": 60.77235772357724
+        },
+        "day": {
+          "signal": "watch_short",
+          "vote": -2
+        },
+        "hour": {
+          "signal": "short",
+          "vote": -1,
+          "momentum_pct": 0.17783601647323177,
+          "ema8": 107209.79794301643,
+          "ema21": 107925.78485923789,
+          "rsi": 25.324675324675326
+        },
+        "five": {
+          "signal": "watch_short",
+          "score": -43
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-23",
+          "value": 103580.0
+        },
+        {
+          "time": "2026-06-24",
+          "value": 103550.0
+        },
+        {
+          "time": "2026-06-25",
+          "value": 101220.0
+        },
+        {
+          "time": "2026-06-26",
+          "value": 101560.0
+        },
+        {
+          "time": "2026-06-29",
+          "value": 103160.0
+        },
+        {
+          "time": "2026-06-30",
+          "value": 103290.0
+        },
+        {
+          "time": "2026-07-01",
+          "value": 101920.0
+        },
+        {
+          "time": "2026-07-02",
+          "value": 101950.0
+        },
+        {
+          "time": "2026-07-03",
+          "value": 102980.0
+        },
+        {
+          "time": "2026-07-06",
+          "value": 102960.0
+        },
+        {
+          "time": "2026-07-07",
+          "value": 102970.0
+        },
+        {
+          "time": "2026-07-08",
+          "value": 102850.0
+        },
+        {
+          "time": "2026-07-09",
+          "value": 103160.0
+        },
+        {
+          "time": "2026-07-10",
+          "value": 103710.0
+        },
+        {
+          "time": "2026-07-13",
+          "value": 103060.0
+        },
+        {
+          "time": "2026-07-14",
+          "value": 104340.0
+        },
+        {
+          "time": "2026-07-15",
+          "value": 104140.0
+        },
+        {
+          "time": "2026-07-16",
+          "value": 104350.0
+        },
+        {
+          "time": "2026-07-17",
+          "value": 103370.0
+        },
+        {
+          "time": "2026-07-20",
+          "value": 103790.0
+        },
+        {
+          "time": "2026-07-21",
+          "value": 105460.0
+        },
+        {
+          "time": "2026-07-22",
+          "value": 105820.0
+        },
+        {
+          "time": "2026-07-23",
+          "value": 105890.0
+        },
+        {
+          "time": "2026-07-24",
+          "value": 104750.0
+        },
+        {
+          "time": "2026-07-27",
+          "value": 105050.0
+        },
+        {
+          "time": "2026-07-28",
+          "value": 104810.0
+        },
+        {
+          "time": "2026-07-29",
+          "value": 104890.0
+        },
+        {
+          "time": "2026-07-30",
+          "value": 104690.0
+        },
+        {
+          "time": "2026-07-31",
+          "value": 105460.0
+        },
+        {
+          "time": "2026-08-03",
+          "value": 106120.0
+        },
+        {
+          "time": "2026-08-04",
+          "value": 106650.0
+        },
+        {
+          "time": "2026-08-05",
+          "value": 107340.0
+        },
+        {
+          "time": "2026-08-06",
+          "value": 107330.0
+        },
+        {
+          "time": "2026-08-07",
+          "value": 108400.0
+        },
+        {
+          "time": "2026-08-10",
+          "value": 107850.0
+        },
+        {
+          "time": "2026-08-11",
+          "value": 107950.0
+        },
+        {
+          "time": "2026-08-12",
+          "value": 108390.0
+        },
+        {
+          "time": "2026-08-13",
+          "value": 107410.0
+        },
+        {
+          "time": "2026-08-14",
+          "value": 107690.0
+        },
+        {
+          "time": "2026-08-17",
+          "value": 109540.0
+        },
+        {
+          "time": "2026-08-18",
+          "value": 107930.0
+        },
+        {
+          "time": "2026-08-19",
+          "value": 106850.0
+        },
+        {
+          "time": "2026-08-20",
+          "value": 107200.0
+        },
+        {
+          "time": "2026-08-21",
+          "value": 107520.0
+        },
+        {
+          "time": "2026-08-24",
+          "value": 107910.0
+        },
+        {
+          "time": "2026-08-25",
+          "value": 107980.0
+        },
+        {
+          "time": "2026-08-26",
+          "value": 108750.0
+        },
+        {
+          "time": "2026-08-27",
+          "value": 108300.0
+        },
+        {
+          "time": "2026-08-28",
+          "value": 108900.0
+        },
+        {
+          "time": "2026-08-31",
+          "value": 109100.0
+        },
+        {
+          "time": "2026-09-01",
+          "value": 109220.0
+        },
+        {
+          "time": "2026-09-02",
+          "value": 108040.0
+        },
+        {
+          "time": "2026-09-03",
+          "value": 108410.0
+        },
+        {
+          "time": "2026-09-04",
+          "value": 108780.0
+        },
+        {
+          "time": "2026-09-07",
+          "value": 109410.0
+        },
+        {
+          "time": "2026-09-08",
+          "value": 110620.0
+        },
+        {
+          "time": "2026-09-09",
+          "value": 111080.0
+        },
+        {
+          "time": "2026-09-10",
+          "value": 112200.0
+        },
+        {
+          "time": "2026-09-11",
+          "value": 108990.0
+        },
+        {
+          "time": "2026-09-14",
+          "value": 107840.0
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "last_actual_observation": "2026-09-15 15:00:00",
+        "last_daily_close": "2026-09-14",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 30,
+        "win_rate_pct": 40.0,
+        "net_return_pct": -0.4716457982815281,
+        "max_drawdown_pct": -13.388652586403992,
+        "avg_trade_pct": 0.05952651022220559,
+        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+      }
+    },
+    {
+      "id": "aluminium",
+      "name": "沪铝",
+      "short_name": "铝",
+      "symbol": "AL0",
+      "exchange": "SHFE",
+      "provider": "sina",
+      "decimals": 0,
+      "unit": "元/吨",
+      "bar_timezone": "Asia/Shanghai",
+      "score": 27,
+      "signal": "watch_long",
+      "momentum_pct": -1.5765765765765716,
+      "threshold_pct": 3.0,
+      "ma20": 24055.0,
+      "rsi": 59.271523178807946,
+      "prior_high": 24675.0,
+      "prior_low": 23465.0,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": true
+      },
+      "short_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": true,
+        "rsi": false
+      },
+      "long_count": 1,
+      "short_count": 1,
+      "daily_score": 0,
+      "daily_signal": "neutral",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 24105.0,
+      "bar_time": "2026-09-15 15:00:00",
+      "daily_date": "2026-09-14",
+      "age_minutes": 67.2,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": 0.2912419388391818,
+      "returns": {
+        "day": -0.825252733649684,
+        "week": -1.5765765765765716,
+        "month": 0.0
+      },
+      "position_changes": {
+        "day": -8.857561852500117,
+        "week": -25.323255813953494,
+        "month": -21.371407116592454
+      },
+      "timeframes": {
+        "week": {
+          "signal": "strong_long",
+          "vote": 2,
+          "momentum_pct": 0.6280092108017499,
+          "ema8": 23960.6474745724,
+          "ema21": 23849.044220293395,
+          "rsi": 48.23848238482385
+        },
+        "day": {
+          "signal": "neutral",
+          "vote": 0
+        },
+        "hour": {
+          "signal": "strong_long",
+          "vote": 2,
+          "momentum_pct": 0.41657987919183626,
+          "ema8": 24060.601341380338,
+          "ema21": 24100.06035023238,
+          "rsi": 63.291139240506325
+        },
+        "five": {
+          "signal": "neutral",
+          "score": 23
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-23",
+          "value": 23520.0
+        },
+        {
+          "time": "2026-06-24",
+          "value": 23455.0
+        },
+        {
+          "time": "2026-06-25",
+          "value": 22865.0
+        },
+        {
+          "time": "2026-06-26",
+          "value": 23000.0
+        },
+        {
+          "time": "2026-06-29",
+          "value": 23085.0
+        },
+        {
+          "time": "2026-06-30",
+          "value": 22565.0
+        },
+        {
+          "time": "2026-07-01",
+          "value": 22370.0
+        },
+        {
+          "time": "2026-07-02",
+          "value": 22400.0
+        },
+        {
+          "time": "2026-07-03",
+          "value": 22840.0
+        },
+        {
+          "time": "2026-07-06",
+          "value": 22885.0
+        },
+        {
+          "time": "2026-07-07",
+          "value": 22940.0
+        },
+        {
+          "time": "2026-07-08",
+          "value": 23075.0
+        },
+        {
+          "time": "2026-07-09",
+          "value": 23060.0
+        },
+        {
+          "time": "2026-07-10",
+          "value": 23055.0
+        },
+        {
+          "time": "2026-07-13",
+          "value": 22945.0
+        },
+        {
+          "time": "2026-07-14",
+          "value": 23335.0
+        },
+        {
+          "time": "2026-07-15",
+          "value": 23205.0
+        },
+        {
+          "time": "2026-07-16",
+          "value": 23240.0
+        },
+        {
+          "time": "2026-07-17",
+          "value": 23190.0
+        },
+        {
+          "time": "2026-07-20",
+          "value": 23010.0
+        },
+        {
+          "time": "2026-07-21",
+          "value": 23160.0
+        },
+        {
+          "time": "2026-07-22",
+          "value": 23190.0
+        },
+        {
+          "time": "2026-07-23",
+          "value": 23345.0
+        },
+        {
+          "time": "2026-07-24",
+          "value": 23225.0
+        },
+        {
+          "time": "2026-07-27",
+          "value": 23195.0
+        },
+        {
+          "time": "2026-07-28",
+          "value": 23220.0
+        },
+        {
+          "time": "2026-07-29",
+          "value": 23455.0
+        },
+        {
+          "time": "2026-07-30",
+          "value": 23625.0
+        },
+        {
+          "time": "2026-07-31",
+          "value": 23630.0
+        },
+        {
+          "time": "2026-08-03",
+          "value": 23640.0
+        },
+        {
+          "time": "2026-08-04",
+          "value": 23810.0
+        },
+        {
+          "time": "2026-08-05",
+          "value": 23785.0
+        },
+        {
+          "time": "2026-08-06",
+          "value": 23810.0
+        },
+        {
+          "time": "2026-08-07",
+          "value": 24040.0
+        },
+        {
+          "time": "2026-08-10",
+          "value": 24165.0
+        },
+        {
+          "time": "2026-08-11",
+          "value": 24250.0
+        },
+        {
+          "time": "2026-08-12",
+          "value": 24285.0
+        },
+        {
+          "time": "2026-08-13",
+          "value": 24090.0
+        },
+        {
+          "time": "2026-08-14",
+          "value": 23885.0
+        },
+        {
+          "time": "2026-08-17",
+          "value": 24035.0
+        },
+        {
+          "time": "2026-08-18",
+          "value": 23955.0
+        },
+        {
+          "time": "2026-08-19",
+          "value": 23675.0
+        },
+        {
+          "time": "2026-08-20",
+          "value": 23595.0
+        },
+        {
+          "time": "2026-08-21",
+          "value": 23710.0
+        },
+        {
+          "time": "2026-08-24",
+          "value": 23765.0
+        },
+        {
+          "time": "2026-08-25",
+          "value": 23755.0
+        },
+        {
+          "time": "2026-08-26",
+          "value": 23760.0
+        },
+        {
+          "time": "2026-08-27",
+          "value": 23820.0
+        },
+        {
+          "time": "2026-08-28",
+          "value": 23920.0
+        },
+        {
+          "time": "2026-08-31",
+          "value": 24075.0
+        },
+        {
+          "time": "2026-09-01",
+          "value": 24110.0
+        },
+        {
+          "time": "2026-09-02",
+          "value": 24100.0
+        },
+        {
+          "time": "2026-09-03",
+          "value": 24370.0
+        },
+        {
+          "time": "2026-09-04",
+          "value": 24290.0
+        },
+        {
+          "time": "2026-09-07",
+          "value": 24420.0
+        },
+        {
+          "time": "2026-09-08",
+          "value": 24460.0
+        },
+        {
+          "time": "2026-09-09",
+          "value": 24560.0
+        },
+        {
+          "time": "2026-09-10",
+          "value": 24490.0
+        },
+        {
+          "time": "2026-09-11",
+          "value": 24235.0
+        },
+        {
+          "time": "2026-09-14",
+          "value": 24035.0
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "last_actual_observation": "2026-09-15 15:00:00",
+        "last_daily_close": "2026-09-14",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 27,
+        "win_rate_pct": 44.44444444444444,
+        "net_return_pct": -8.063787896502228,
+        "max_drawdown_pct": -15.122503312256208,
+        "avg_trade_pct": -0.27008677017195165,
+        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+      }
+    },
+    {
+      "id": "lead",
+      "name": "沪铅",
+      "short_name": "铅",
+      "symbol": "PB0",
+      "exchange": "SHFE",
+      "provider": "sina",
+      "decimals": 0,
+      "unit": "元/吨",
+      "bar_timezone": "Asia/Shanghai",
+      "score": -63,
+      "signal": "watch_short",
+      "momentum_pct": -2.3750771128932757,
+      "threshold_pct": 3.0,
+      "ma20": 16113.25,
+      "rsi": 36.199095022624434,
+      "prior_high": 16380.0,
+      "prior_low": 15750.0,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": false
+      },
+      "short_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": true,
+        "rsi": true
+      },
+      "long_count": 0,
+      "short_count": 2,
+      "daily_score": -50,
+      "daily_signal": "watch_short",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 15775.0,
+      "bar_time": "2026-09-15 15:00:00",
+      "daily_date": "2026-09-14",
+      "age_minutes": 67.2,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": -0.3159557661927326,
+      "returns": {
+        "day": -1.9212891230244833,
+        "week": -2.3750771128932757,
+        "month": -0.7836990595611271
+      },
+      "position_changes": {
+        "day": 1.655413456191912,
+        "week": -0.9994894249067854,
+        "month": -15.181601272534461
+      },
+      "timeframes": {
+        "week": {
+          "signal": "strong_short",
+          "vote": -2,
+          "momentum_pct": -0.031585596967786955,
+          "ema8": 16005.313390321846,
+          "ema21": 16161.177139336876,
+          "rsi": 45.7089552238806
+        },
+        "day": {
+          "signal": "watch_short",
+          "vote": -2
+        },
+        "hour": {
+          "signal": "strong_short",
+          "vote": -3,
+          "momentum_pct": -0.4731861198738141,
+          "ema8": 15824.232683887089,
+          "ema21": 15914.926914105501,
+          "rsi": 16.04938271604938
+        },
+        "five": {
+          "signal": "watch_short",
+          "score": -60
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-23",
+          "value": 16350.0
+        },
+        {
+          "time": "2026-06-24",
+          "value": 16330.0
+        },
+        {
+          "time": "2026-06-25",
+          "value": 16205.0
+        },
+        {
+          "time": "2026-06-26",
+          "value": 16280.0
+        },
+        {
+          "time": "2026-06-29",
+          "value": 16230.0
+        },
+        {
+          "time": "2026-06-30",
+          "value": 15995.0
+        },
+        {
+          "time": "2026-07-01",
+          "value": 15875.0
+        },
+        {
+          "time": "2026-07-02",
+          "value": 15765.0
+        },
+        {
+          "time": "2026-07-03",
+          "value": 15885.0
+        },
+        {
+          "time": "2026-07-06",
+          "value": 15895.0
+        },
+        {
+          "time": "2026-07-07",
+          "value": 15905.0
+        },
+        {
+          "time": "2026-07-08",
+          "value": 16065.0
+        },
+        {
+          "time": "2026-07-09",
+          "value": 16140.0
+        },
+        {
+          "time": "2026-07-10",
+          "value": 16015.0
+        },
+        {
+          "time": "2026-07-13",
+          "value": 15920.0
+        },
+        {
+          "time": "2026-07-14",
+          "value": 15885.0
+        },
+        {
+          "time": "2026-07-15",
+          "value": 15570.0
+        },
+        {
+          "time": "2026-07-16",
+          "value": 15710.0
+        },
+        {
+          "time": "2026-07-17",
+          "value": 15875.0
+        },
+        {
+          "time": "2026-07-20",
+          "value": 15810.0
+        },
+        {
+          "time": "2026-07-21",
+          "value": 15885.0
+        },
+        {
+          "time": "2026-07-22",
+          "value": 15725.0
+        },
+        {
+          "time": "2026-07-23",
+          "value": 15905.0
+        },
+        {
+          "time": "2026-07-24",
+          "value": 15725.0
+        },
+        {
+          "time": "2026-07-27",
+          "value": 15635.0
+        },
+        {
+          "time": "2026-07-28",
+          "value": 15625.0
+        },
+        {
+          "time": "2026-07-29",
+          "value": 15810.0
+        },
+        {
+          "time": "2026-07-30",
+          "value": 15740.0
+        },
+        {
+          "time": "2026-07-31",
+          "value": 15550.0
+        },
+        {
+          "time": "2026-08-03",
+          "value": 15430.0
+        },
+        {
+          "time": "2026-08-04",
+          "value": 15445.0
+        },
+        {
+          "time": "2026-08-05",
+          "value": 15755.0
+        },
+        {
+          "time": "2026-08-06",
+          "value": 15650.0
+        },
+        {
+          "time": "2026-08-07",
+          "value": 15730.0
+        },
+        {
+          "time": "2026-08-10",
+          "value": 15870.0
+        },
+        {
+          "time": "2026-08-11",
+          "value": 15925.0
+        },
+        {
+          "time": "2026-08-12",
+          "value": 15925.0
+        },
+        {
+          "time": "2026-08-13",
+          "value": 15940.0
+        },
+        {
+          "time": "2026-08-14",
+          "value": 15830.0
+        },
+        {
+          "time": "2026-08-17",
+          "value": 15950.0
+        },
+        {
+          "time": "2026-08-18",
+          "value": 15905.0
+        },
+        {
+          "time": "2026-08-19",
+          "value": 15930.0
+        },
+        {
+          "time": "2026-08-20",
+          "value": 15935.0
+        },
+        {
+          "time": "2026-08-21",
+          "value": 16130.0
+        },
+        {
+          "time": "2026-08-24",
+          "value": 16165.0
+        },
+        {
+          "time": "2026-08-25",
+          "value": 16130.0
+        },
+        {
+          "time": "2026-08-26",
+          "value": 16120.0
+        },
+        {
+          "time": "2026-08-27",
+          "value": 16110.0
+        },
+        {
+          "time": "2026-08-28",
+          "value": 16245.0
+        },
+        {
+          "time": "2026-08-31",
+          "value": 16370.0
+        },
+        {
+          "time": "2026-09-01",
+          "value": 16160.0
+        },
+        {
+          "time": "2026-09-02",
+          "value": 16155.0
+        },
+        {
+          "time": "2026-09-03",
+          "value": 16120.0
+        },
+        {
+          "time": "2026-09-04",
+          "value": 16130.0
+        },
+        {
+          "time": "2026-09-07",
+          "value": 16210.0
+        },
+        {
+          "time": "2026-09-08",
+          "value": 16135.0
+        },
+        {
+          "time": "2026-09-09",
+          "value": 16185.0
+        },
+        {
+          "time": "2026-09-10",
+          "value": 16170.0
+        },
+        {
+          "time": "2026-09-11",
+          "value": 16135.0
+        },
+        {
+          "time": "2026-09-14",
+          "value": 15825.0
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "last_actual_observation": "2026-09-15 15:00:00",
+        "last_daily_close": "2026-09-14",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 25,
+        "win_rate_pct": 36.0,
+        "net_return_pct": -4.903151150574181,
+        "max_drawdown_pct": -14.862261038783364,
+        "avg_trade_pct": -0.14736153491024667,
+        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+      }
+    },
+    {
+      "id": "zinc",
+      "name": "沪锌",
+      "short_name": "锌",
+      "symbol": "ZN0",
+      "exchange": "SHFE",
+      "provider": "sina",
+      "decimals": 0,
+      "unit": "元/吨",
+      "bar_timezone": "Asia/Shanghai",
+      "score": 0,
+      "signal": "neutral",
+      "momentum_pct": -2.804945561911787,
+      "threshold_pct": 3.0,
+      "ma20": 26480.0,
+      "rsi": 53.12868949232586,
+      "prior_high": 27895.0,
+      "prior_low": 25260.0,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": true
+      },
+      "short_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": true,
+        "rsi": false
+      },
+      "long_count": 1,
+      "short_count": 1,
+      "daily_score": 0,
+      "daily_signal": "neutral",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 26145.0,
+      "bar_time": "2026-09-15 15:00:00",
+      "daily_date": "2026-09-14",
+      "age_minutes": 67.2,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": -0.721473324473132,
+      "returns": {
+        "day": -1.7534042156314156,
+        "week": -2.804945561911787,
+        "month": 1.8171273922288789
+      },
+      "position_changes": {
+        "day": 5.473760572436648,
+        "week": -18.37575757575758,
+        "month": -11.53808924595876
+      },
+      "timeframes": {
+        "week": {
+          "signal": "strong_long",
+          "vote": 3,
+          "momentum_pct": 2.4907569566063437,
+          "ema8": 26082.818579631552,
+          "ema21": 25308.583429146613,
+          "rsi": 66.55490360435876
+        },
+        "day": {
+          "signal": "neutral",
+          "vote": 0
+        },
+        "hour": {
+          "signal": "strong_short",
+          "vote": -3,
+          "momentum_pct": -0.22896393817973815,
+          "ema8": 26188.548136542282,
+          "ema21": 26445.792647386676,
+          "rsi": 23.33333333333333
+        },
+        "five": {
+          "signal": "neutral",
+          "score": 34
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-23",
+          "value": 24570.0
+        },
+        {
+          "time": "2026-06-24",
+          "value": 24330.0
+        },
+        {
+          "time": "2026-06-25",
+          "value": 23945.0
+        },
+        {
+          "time": "2026-06-26",
+          "value": 23945.0
+        },
+        {
+          "time": "2026-06-29",
+          "value": 24470.0
+        },
+        {
+          "time": "2026-06-30",
+          "value": 24350.0
+        },
+        {
+          "time": "2026-07-01",
+          "value": 24400.0
+        },
+        {
+          "time": "2026-07-02",
+          "value": 24130.0
+        },
+        {
+          "time": "2026-07-03",
+          "value": 24295.0
+        },
+        {
+          "time": "2026-07-06",
+          "value": 24515.0
+        },
+        {
+          "time": "2026-07-07",
+          "value": 24740.0
+        },
+        {
+          "time": "2026-07-08",
+          "value": 24665.0
+        },
+        {
+          "time": "2026-07-09",
+          "value": 24795.0
+        },
+        {
+          "time": "2026-07-10",
+          "value": 24865.0
+        },
+        {
+          "time": "2026-07-13",
+          "value": 24700.0
+        },
+        {
+          "time": "2026-07-14",
+          "value": 24840.0
+        },
+        {
+          "time": "2026-07-15",
+          "value": 24805.0
+        },
+        {
+          "time": "2026-07-16",
+          "value": 24700.0
+        },
+        {
+          "time": "2026-07-17",
+          "value": 24465.0
+        },
+        {
+          "time": "2026-07-20",
+          "value": 24365.0
+        },
+        {
+          "time": "2026-07-21",
+          "value": 24515.0
+        },
+        {
+          "time": "2026-07-22",
+          "value": 24565.0
+        },
+        {
+          "time": "2026-07-23",
+          "value": 24910.0
+        },
+        {
+          "time": "2026-07-24",
+          "value": 24785.0
+        },
+        {
+          "time": "2026-07-27",
+          "value": 24885.0
+        },
+        {
+          "time": "2026-07-28",
+          "value": 24780.0
+        },
+        {
+          "time": "2026-07-29",
+          "value": 24765.0
+        },
+        {
+          "time": "2026-07-30",
+          "value": 24700.0
+        },
+        {
+          "time": "2026-07-31",
+          "value": 24890.0
+        },
+        {
+          "time": "2026-08-03",
+          "value": 25380.0
+        },
+        {
+          "time": "2026-08-04",
+          "value": 25075.0
+        },
+        {
+          "time": "2026-08-05",
+          "value": 25425.0
+        },
+        {
+          "time": "2026-08-06",
+          "value": 25585.0
+        },
+        {
+          "time": "2026-08-07",
+          "value": 25945.0
+        },
+        {
+          "time": "2026-08-10",
+          "value": 25615.0
+        },
+        {
+          "time": "2026-08-11",
+          "value": 25665.0
+        },
+        {
+          "time": "2026-08-12",
+          "value": 25830.0
+        },
+        {
+          "time": "2026-08-13",
+          "value": 25590.0
+        },
+        {
+          "time": "2026-08-14",
+          "value": 25695.0
+        },
+        {
+          "time": "2026-08-17",
+          "value": 25865.0
+        },
+        {
+          "time": "2026-08-18",
+          "value": 25705.0
+        },
+        {
+          "time": "2026-08-19",
+          "value": 25325.0
+        },
+        {
+          "time": "2026-08-20",
+          "value": 25350.0
+        },
+        {
+          "time": "2026-08-21",
+          "value": 25710.0
+        },
+        {
+          "time": "2026-08-24",
+          "value": 25905.0
+        },
+        {
+          "time": "2026-08-25",
+          "value": 26070.0
+        },
+        {
+          "time": "2026-08-26",
+          "value": 26240.0
+        },
+        {
+          "time": "2026-08-27",
+          "value": 26140.0
+        },
+        {
+          "time": "2026-08-28",
+          "value": 26485.0
+        },
+        {
+          "time": "2026-08-31",
+          "value": 26710.0
+        },
+        {
+          "time": "2026-09-01",
+          "value": 27070.0
+        },
+        {
+          "time": "2026-09-02",
+          "value": 26585.0
+        },
+        {
+          "time": "2026-09-03",
+          "value": 26610.0
+        },
+        {
+          "time": "2026-09-04",
+          "value": 26745.0
+        },
+        {
+          "time": "2026-09-07",
+          "value": 27095.0
+        },
+        {
+          "time": "2026-09-08",
+          "value": 27505.0
+        },
+        {
+          "time": "2026-09-09",
+          "value": 27735.0
+        },
+        {
+          "time": "2026-09-10",
+          "value": 27475.0
+        },
+        {
+          "time": "2026-09-11",
+          "value": 26805.0
+        },
+        {
+          "time": "2026-09-14",
+          "value": 26335.0
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "last_actual_observation": "2026-09-15 15:00:00",
+        "last_daily_close": "2026-09-14",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 29,
+        "win_rate_pct": 44.827586206896555,
+        "net_return_pct": -12.952679282002421,
+        "max_drawdown_pct": -21.047818797872797,
+        "avg_trade_pct": -0.4177509845603538,
+        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+      }
+    },
+    {
+      "id": "nickel",
+      "name": "沪镍",
+      "short_name": "镍",
+      "symbol": "NI0",
+      "exchange": "SHFE",
+      "provider": "sina",
+      "decimals": 0,
+      "unit": "元/吨",
+      "bar_timezone": "Asia/Shanghai",
+      "score": -85,
+      "signal": "short",
+      "momentum_pct": -2.6599906117978356,
+      "threshold_pct": 3.0,
+      "ma20": 128026.5,
+      "rsi": 32.03363914373088,
+      "prior_high": 131480.0,
+      "prior_low": 125070.0,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": false
+      },
+      "short_factors": {
+        "momentum": false,
+        "breakout": true,
+        "trend": true,
+        "rsi": true
+      },
+      "long_count": 0,
+      "short_count": 3,
+      "daily_score": -75,
+      "daily_signal": "short",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 123950.0,
+      "bar_time": "2026-09-15 15:00:00",
+      "daily_date": "2026-09-14",
+      "age_minutes": 67.2,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": -0.3777527728661023,
+      "returns": {
+        "day": -1.316624365482233,
+        "week": -2.6599906117978356,
+        "month": -3.3330743531971074
+      },
+      "position_changes": {
+        "day": 4.389859408679997,
+        "week": 6.274615768830816,
+        "month": -0.7554787502485172
+      },
+      "timeframes": {
+        "week": {
+          "signal": "strong_short",
+          "vote": -3,
+          "momentum_pct": -2.0623425692695263,
+          "ema8": 127808.39941728197,
+          "ema21": 131004.09351104341,
+          "rsi": 33.89560789306174
+        },
+        "day": {
+          "signal": "short",
+          "vote": -3
+        },
+        "hour": {
+          "signal": "strong_short",
+          "vote": -3,
+          "momentum_pct": -0.33770201817158174,
+          "ema8": 124230.85947690015,
+          "ema21": 125019.06752599789,
+          "rsi": 32.35955056179776
+        },
+        "five": {
+          "signal": "neutral",
+          "score": -22
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-23",
+          "value": 133250.0
+        },
+        {
+          "time": "2026-06-24",
+          "value": 130700.0
+        },
+        {
+          "time": "2026-06-25",
+          "value": 130860.0
+        },
+        {
+          "time": "2026-06-26",
+          "value": 129060.0
+        },
+        {
+          "time": "2026-06-29",
+          "value": 129480.0
+        },
+        {
+          "time": "2026-06-30",
+          "value": 127140.0
+        },
+        {
+          "time": "2026-07-01",
+          "value": 125580.0
+        },
+        {
+          "time": "2026-07-02",
+          "value": 125190.0
+        },
+        {
+          "time": "2026-07-03",
+          "value": 127380.0
+        },
+        {
+          "time": "2026-07-06",
+          "value": 126890.0
+        },
+        {
+          "time": "2026-07-07",
+          "value": 126700.0
+        },
+        {
+          "time": "2026-07-08",
+          "value": 125640.0
+        },
+        {
+          "time": "2026-07-09",
+          "value": 127980.0
+        },
+        {
+          "time": "2026-07-10",
+          "value": 128180.0
+        },
+        {
+          "time": "2026-07-13",
+          "value": 127710.0
+        },
+        {
+          "time": "2026-07-14",
+          "value": 129550.0
+        },
+        {
+          "time": "2026-07-15",
+          "value": 128120.0
+        },
+        {
+          "time": "2026-07-16",
+          "value": 132940.0
+        },
+        {
+          "time": "2026-07-17",
+          "value": 128890.0
+        },
+        {
+          "time": "2026-07-20",
+          "value": 129920.0
+        },
+        {
+          "time": "2026-07-21",
+          "value": 130620.0
+        },
+        {
+          "time": "2026-07-22",
+          "value": 131480.0
+        },
+        {
+          "time": "2026-07-23",
+          "value": 133160.0
+        },
+        {
+          "time": "2026-07-24",
+          "value": 133710.0
+        },
+        {
+          "time": "2026-07-27",
+          "value": 132850.0
+        },
+        {
+          "time": "2026-07-28",
+          "value": 131010.0
+        },
+        {
+          "time": "2026-07-29",
+          "value": 131660.0
+        },
+        {
+          "time": "2026-07-30",
+          "value": 131280.0
+        },
+        {
+          "time": "2026-07-31",
+          "value": 131680.0
+        },
+        {
+          "time": "2026-08-03",
+          "value": 129430.0
+        },
+        {
+          "time": "2026-08-04",
+          "value": 132470.0
+        },
+        {
+          "time": "2026-08-05",
+          "value": 130800.0
+        },
+        {
+          "time": "2026-08-06",
+          "value": 127460.0
+        },
+        {
+          "time": "2026-08-07",
+          "value": 130460.0
+        },
+        {
+          "time": "2026-08-10",
+          "value": 129740.0
+        },
+        {
+          "time": "2026-08-11",
+          "value": 129270.0
+        },
+        {
+          "time": "2026-08-12",
+          "value": 128710.0
+        },
+        {
+          "time": "2026-08-13",
+          "value": 128000.0
+        },
+        {
+          "time": "2026-08-14",
+          "value": 127040.0
+        },
+        {
+          "time": "2026-08-17",
+          "value": 128710.0
+        },
+        {
+          "time": "2026-08-18",
+          "value": 128740.0
+        },
+        {
+          "time": "2026-08-19",
+          "value": 127850.0
+        },
+        {
+          "time": "2026-08-20",
+          "value": 129460.0
+        },
+        {
+          "time": "2026-08-21",
+          "value": 129200.0
+        },
+        {
+          "time": "2026-08-24",
+          "value": 129860.0
+        },
+        {
+          "time": "2026-08-25",
+          "value": 129120.0
+        },
+        {
+          "time": "2026-08-26",
+          "value": 129310.0
+        },
+        {
+          "time": "2026-08-27",
+          "value": 128680.0
+        },
+        {
+          "time": "2026-08-28",
+          "value": 128310.0
+        },
+        {
+          "time": "2026-08-31",
+          "value": 127000.0
+        },
+        {
+          "time": "2026-09-01",
+          "value": 128070.0
+        },
+        {
+          "time": "2026-09-02",
+          "value": 126910.0
+        },
+        {
+          "time": "2026-09-03",
+          "value": 128890.0
+        },
+        {
+          "time": "2026-09-04",
+          "value": 127780.0
+        },
+        {
+          "time": "2026-09-07",
+          "value": 127820.0
+        },
+        {
+          "time": "2026-09-08",
+          "value": 127400.0
+        },
+        {
+          "time": "2026-09-09",
+          "value": 127360.0
+        },
+        {
+          "time": "2026-09-10",
+          "value": 128270.0
+        },
+        {
+          "time": "2026-09-11",
+          "value": 126080.0
+        },
+        {
+          "time": "2026-09-14",
+          "value": 124420.0
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "last_actual_observation": "2026-09-15 15:00:00",
+        "last_daily_close": "2026-09-14",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 34,
+        "win_rate_pct": 35.294117647058826,
+        "net_return_pct": -32.51459946377192,
+        "max_drawdown_pct": -40.55583179929131,
+        "avg_trade_pct": -1.0572153178115797,
+        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+      }
+    },
+    {
+      "id": "cobalt",
+      "name": "LME钴",
+      "short_name": "钴",
+      "symbol": "CO",
+      "exchange": "LME",
+      "provider": "csv",
+      "decimals": 0,
+      "unit": "美元/吨",
+      "bar_timezone": "Europe/London",
+      "status": "missing",
+      "status_text": "缺少数据",
+      "signal": "missing",
+      "score": null,
+      "price": null,
+      "bar_time": null,
+      "error": "等待外部5分钟数据: data/cobalt_daily.csv",
+      "source": "待接入LME钴日线/60分钟/5分钟CSV"
+    },
+    {
+      "id": "lithium",
+      "name": "碳酸锂",
+      "short_name": "锂",
+      "symbol": "LC0",
+      "exchange": "GFEX",
+      "provider": "sina",
+      "decimals": 0,
+      "unit": "元/吨",
+      "bar_timezone": "Asia/Shanghai",
+      "score": -70,
+      "signal": "watch_short",
+      "momentum_pct": -6.933895921237698,
+      "threshold_pct": 3.0,
+      "ma20": 149571.0,
+      "rsi": 29.01263453439401,
+      "prior_high": 162860.0,
+      "prior_low": 128080.0,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": false
+      },
+      "short_factors": {
+        "momentum": true,
+        "breakout": false,
+        "trend": true,
+        "rsi": false
+      },
+      "long_count": 0,
+      "short_count": 2,
+      "daily_score": -50,
+      "daily_signal": "watch_short",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 129120.0,
+      "bar_time": "2026-09-15 15:00:00",
+      "daily_date": "2026-09-14",
+      "age_minutes": 67.2,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": -2.433126794619922,
+      "returns": {
+        "day": -1.8394896899569746,
+        "week": -6.933895921237698,
+        "month": -13.785016286644947
+      },
+      "position_changes": {
+        "day": 0.9776933796541654,
+        "week": 4.197764027990147,
+        "month": 35.97849860247524
+      },
+      "timeframes": {
+        "week": {
+          "signal": "strong_short",
+          "vote": -3,
+          "momentum_pct": -14.751352744138114,
+          "ema8": 144440.29111014982,
+          "ema21": 150858.60378624912,
+          "rsi": 32.64382676147382
+        },
+        "day": {
+          "signal": "watch_short",
+          "vote": -2
+        },
+        "hour": {
+          "signal": "strong_short",
+          "vote": -3,
+          "momentum_pct": -2.4920706841866758,
+          "ema8": 131678.25000239178,
+          "ema21": 135885.22473093815,
+          "rsi": 24.6422893481717
+        },
+        "five": {
+          "signal": "watch_short",
+          "score": -36
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-23",
+          "value": 157220.0
+        },
+        {
+          "time": "2026-06-24",
+          "value": 162740.0
+        },
+        {
+          "time": "2026-06-25",
+          "value": 150840.0
+        },
+        {
+          "time": "2026-06-26",
+          "value": 150220.0
+        },
+        {
+          "time": "2026-06-29",
+          "value": 153920.0
+        },
+        {
+          "time": "2026-06-30",
+          "value": 163360.0
+        },
+        {
+          "time": "2026-07-01",
+          "value": 164560.0
+        },
+        {
+          "time": "2026-07-02",
+          "value": 164040.0
+        },
+        {
+          "time": "2026-07-03",
+          "value": 168780.0
+        },
+        {
+          "time": "2026-07-06",
+          "value": 164560.0
+        },
+        {
+          "time": "2026-07-07",
+          "value": 163360.0
+        },
+        {
+          "time": "2026-07-08",
+          "value": 158440.0
+        },
+        {
+          "time": "2026-07-09",
+          "value": 153020.0
+        },
+        {
+          "time": "2026-07-10",
+          "value": 151600.0
+        },
+        {
+          "time": "2026-07-13",
+          "value": 152240.0
+        },
+        {
+          "time": "2026-07-14",
+          "value": 153180.0
+        },
+        {
+          "time": "2026-07-15",
+          "value": 149240.0
+        },
+        {
+          "time": "2026-07-16",
+          "value": 151660.0
+        },
+        {
+          "time": "2026-07-17",
+          "value": 150140.0
+        },
+        {
+          "time": "2026-07-20",
+          "value": 143900.0
+        },
+        {
+          "time": "2026-07-21",
+          "value": 141620.0
+        },
+        {
+          "time": "2026-07-22",
+          "value": 143300.0
+        },
+        {
+          "time": "2026-07-23",
+          "value": 145000.0
+        },
+        {
+          "time": "2026-07-24",
+          "value": 144280.0
+        },
+        {
+          "time": "2026-07-27",
+          "value": 147220.0
+        },
+        {
+          "time": "2026-07-28",
+          "value": 143480.0
+        },
+        {
+          "time": "2026-07-29",
+          "value": 147900.0
+        },
+        {
+          "time": "2026-07-30",
+          "value": 141060.0
+        },
+        {
+          "time": "2026-07-31",
+          "value": 137760.0
+        },
+        {
+          "time": "2026-08-03",
+          "value": 138900.0
+        },
+        {
+          "time": "2026-08-04",
+          "value": 139380.0
+        },
+        {
+          "time": "2026-08-05",
+          "value": 143220.0
+        },
+        {
+          "time": "2026-08-06",
+          "value": 141460.0
+        },
+        {
+          "time": "2026-08-07",
+          "value": 140000.0
+        },
+        {
+          "time": "2026-08-10",
+          "value": 146360.0
+        },
+        {
+          "time": "2026-08-11",
+          "value": 145860.0
+        },
+        {
+          "time": "2026-08-12",
+          "value": 149700.0
+        },
+        {
+          "time": "2026-08-13",
+          "value": 152120.0
+        },
+        {
+          "time": "2026-08-14",
+          "value": 155240.0
+        },
+        {
+          "time": "2026-08-17",
+          "value": 153500.0
+        },
+        {
+          "time": "2026-08-18",
+          "value": 155400.0
+        },
+        {
+          "time": "2026-08-19",
+          "value": 150660.0
+        },
+        {
+          "time": "2026-08-20",
+          "value": 152160.0
+        },
+        {
+          "time": "2026-08-21",
+          "value": 158680.0
+        },
+        {
+          "time": "2026-08-24",
+          "value": 158860.0
+        },
+        {
+          "time": "2026-08-25",
+          "value": 150280.0
+        },
+        {
+          "time": "2026-08-26",
+          "value": 152160.0
+        },
+        {
+          "time": "2026-08-27",
+          "value": 152020.0
+        },
+        {
+          "time": "2026-08-28",
+          "value": 159600.0
+        },
+        {
+          "time": "2026-08-31",
+          "value": 161000.0
+        },
+        {
+          "time": "2026-09-01",
+          "value": 157860.0
+        },
+        {
+          "time": "2026-09-02",
+          "value": 154780.0
+        },
+        {
+          "time": "2026-09-03",
+          "value": 149880.0
+        },
+        {
+          "time": "2026-09-04",
+          "value": 141940.0
+        },
+        {
+          "time": "2026-09-07",
+          "value": 142200.0
+        },
+        {
+          "time": "2026-09-08",
+          "value": 143480.0
+        },
+        {
+          "time": "2026-09-09",
+          "value": 142000.0
+        },
+        {
+          "time": "2026-09-10",
+          "value": 141300.0
+        },
+        {
+          "time": "2026-09-11",
+          "value": 134820.0
+        },
+        {
+          "time": "2026-09-14",
+          "value": 132340.0
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "last_actual_observation": "2026-09-15 15:00:00",
+        "last_daily_close": "2026-09-14",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 45,
+        "win_rate_pct": 51.11111111111111,
+        "net_return_pct": 6.142921614422736,
+        "max_drawdown_pct": -45.797247161341524,
+        "avg_trade_pct": 0.47498362475320655,
+        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+      }
+    },
+    {
+      "id": "tin",
+      "name": "沪锡",
+      "short_name": "锡",
+      "symbol": "SN0",
+      "exchange": "SHFE",
+      "provider": "sina",
+      "decimals": 0,
+      "unit": "元/吨",
+      "bar_timezone": "Asia/Shanghai",
+      "score": -78,
+      "signal": "short",
+      "momentum_pct": -6.220312686478103,
+      "threshold_pct": 3.0,
+      "ma20": 418415.5,
+      "rsi": 28.955922506826155,
+      "prior_high": 431490.0,
+      "prior_low": 397820.0,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": false
+      },
+      "short_factors": {
+        "momentum": true,
+        "breakout": true,
+        "trend": true,
+        "rsi": false
+      },
+      "long_count": 0,
+      "short_count": 3,
+      "daily_score": -75,
+      "daily_signal": "short",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 392890.0,
+      "bar_time": "2026-09-15 15:00:00",
+      "daily_date": "2026-09-15",
+      "age_minutes": 67.2,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": 0.0,
+      "returns": {
+        "day": -1.2963195578444942,
+        "week": -6.220312686478103,
+        "month": -7.759308822838895
+      },
+      "position_changes": {
+        "day": -2.3826033894544185,
+        "week": -1.3731644434480494,
+        "month": -11.92031433791325
+      },
+      "timeframes": {
+        "week": {
+          "signal": "strong_short",
+          "vote": -2,
+          "momentum_pct": -8.070101548972808,
+          "ema8": 412753.61798165645,
+          "ema21": 407502.2014812366,
+          "rsi": 44.962636776087535
+        },
+        "day": {
+          "signal": "short",
+          "vote": -3
+        },
+        "hour": {
+          "signal": "strong_short",
+          "vote": -3,
+          "momentum_pct": -0.5845141700404843,
+          "ema8": 395117.88765813253,
+          "ema21": 400967.7226275244,
+          "rsi": 15.5579399141631
+        },
+        "five": {
+          "signal": "watch_short",
+          "score": -51
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-24",
+          "value": 396110.0
+        },
+        {
+          "time": "2026-06-25",
+          "value": 385570.0
+        },
+        {
+          "time": "2026-06-26",
+          "value": 387220.0
+        },
+        {
+          "time": "2026-06-29",
+          "value": 393060.0
+        },
+        {
+          "time": "2026-06-30",
+          "value": 396270.0
+        },
+        {
+          "time": "2026-07-01",
+          "value": 389610.0
+        },
+        {
+          "time": "2026-07-02",
+          "value": 393260.0
+        },
+        {
+          "time": "2026-07-03",
+          "value": 402180.0
+        },
+        {
+          "time": "2026-07-06",
+          "value": 410360.0
+        },
+        {
+          "time": "2026-07-07",
+          "value": 409250.0
+        },
+        {
+          "time": "2026-07-08",
+          "value": 411580.0
+        },
+        {
+          "time": "2026-07-09",
+          "value": 416230.0
+        },
+        {
+          "time": "2026-07-10",
+          "value": 415680.0
+        },
+        {
+          "time": "2026-07-13",
+          "value": 409700.0
+        },
+        {
+          "time": "2026-07-14",
+          "value": 417520.0
+        },
+        {
+          "time": "2026-07-15",
+          "value": 411620.0
+        },
+        {
+          "time": "2026-07-16",
+          "value": 412650.0
+        },
+        {
+          "time": "2026-07-17",
+          "value": 403970.0
+        },
+        {
+          "time": "2026-07-20",
+          "value": 412480.0
+        },
+        {
+          "time": "2026-07-21",
+          "value": 418150.0
+        },
+        {
+          "time": "2026-07-22",
+          "value": 416970.0
+        },
+        {
+          "time": "2026-07-23",
+          "value": 418740.0
+        },
+        {
+          "time": "2026-07-24",
+          "value": 413940.0
+        },
+        {
+          "time": "2026-07-27",
+          "value": 421350.0
+        },
+        {
+          "time": "2026-07-28",
+          "value": 411610.0
+        },
+        {
+          "time": "2026-07-29",
+          "value": 417990.0
+        },
+        {
+          "time": "2026-07-30",
+          "value": 416770.0
+        },
+        {
+          "time": "2026-07-31",
+          "value": 425570.0
+        },
+        {
+          "time": "2026-08-03",
+          "value": 426750.0
+        },
+        {
+          "time": "2026-08-04",
+          "value": 429290.0
+        },
+        {
+          "time": "2026-08-05",
+          "value": 434030.0
+        },
+        {
+          "time": "2026-08-06",
+          "value": 430980.0
+        },
+        {
+          "time": "2026-08-07",
+          "value": 434910.0
+        },
+        {
+          "time": "2026-08-10",
+          "value": 428000.0
+        },
+        {
+          "time": "2026-08-11",
+          "value": 423900.0
+        },
+        {
+          "time": "2026-08-12",
+          "value": 431480.0
+        },
+        {
+          "time": "2026-08-13",
+          "value": 425650.0
+        },
+        {
+          "time": "2026-08-14",
+          "value": 427380.0
+        },
+        {
+          "time": "2026-08-17",
+          "value": 432090.0
+        },
+        {
+          "time": "2026-08-18",
+          "value": 425940.0
+        },
+        {
+          "time": "2026-08-19",
+          "value": 420160.0
+        },
+        {
+          "time": "2026-08-20",
+          "value": 426250.0
+        },
+        {
+          "time": "2026-08-21",
+          "value": 429030.0
+        },
+        {
+          "time": "2026-08-24",
+          "value": 427590.0
+        },
+        {
+          "time": "2026-08-25",
+          "value": 425460.0
+        },
+        {
+          "time": "2026-08-26",
+          "value": 425260.0
+        },
+        {
+          "time": "2026-08-27",
+          "value": 419420.0
+        },
+        {
+          "time": "2026-08-28",
+          "value": 423870.0
+        },
+        {
+          "time": "2026-08-31",
+          "value": 419000.0
+        },
+        {
+          "time": "2026-09-01",
+          "value": 423500.0
+        },
+        {
+          "time": "2026-09-02",
+          "value": 412960.0
+        },
+        {
+          "time": "2026-09-03",
+          "value": 416090.0
+        },
+        {
+          "time": "2026-09-04",
+          "value": 416460.0
+        },
+        {
+          "time": "2026-09-07",
+          "value": 418870.0
+        },
+        {
+          "time": "2026-09-08",
+          "value": 418950.0
+        },
+        {
+          "time": "2026-09-09",
+          "value": 418440.0
+        },
+        {
+          "time": "2026-09-10",
+          "value": 425770.0
+        },
+        {
+          "time": "2026-09-11",
+          "value": 410290.0
+        },
+        {
+          "time": "2026-09-14",
+          "value": 398050.0
+        },
+        {
+          "time": "2026-09-15",
+          "value": 392890.0
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "last_actual_observation": "2026-09-15 15:00:00",
+        "last_daily_close": "2026-09-15",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 38,
+        "win_rate_pct": 36.84210526315789,
+        "net_return_pct": -43.525157108749426,
+        "max_drawdown_pct": -49.058841871286276,
+        "avg_trade_pct": -1.2775708191393365,
+        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+      }
+    },
+    {
+      "id": "gold",
+      "name": "黄金",
+      "short_name": "金",
+      "symbol": "AU0",
+      "exchange": "SHFE",
+      "provider": "sina",
+      "decimals": 2,
+      "unit": "元/克",
+      "bar_timezone": "Asia/Shanghai",
+      "score": -48,
+      "signal": "watch_short",
+      "momentum_pct": -2.184404901796211,
+      "threshold_pct": 3.0,
+      "ma20": 966.356,
+      "rsi": 26.2336963829501,
+      "prior_high": 1015.38,
+      "prior_low": 930.22,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": false
+      },
+      "short_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": true,
+        "rsi": false
+      },
+      "long_count": 0,
+      "short_count": 1,
+      "daily_score": -25,
+      "daily_signal": "neutral",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 932.3,
+      "bar_time": "2026-09-15 15:00:00",
+      "daily_date": "2026-09-15",
+      "age_minutes": 67.2,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": 0.0,
+      "returns": {
+        "day": -0.5652730375426684,
+        "week": -2.184404901796211,
+        "month": -2.519866164784612
+      },
+      "position_changes": {
+        "day": 2.474998637115289,
+        "week": 12.002886518765688,
+        "month": -15.422495075640164
+      },
+      "timeframes": {
+        "week": {
+          "signal": "strong_short",
+          "vote": -2,
+          "momentum_pct": -1.151448322659998,
+          "ema8": 947.1931351624976,
+          "ema21": 955.3147311487055,
+          "rsi": 53.09321526863706
+        },
+        "day": {
+          "signal": "neutral",
+          "vote": -1
+        },
+        "hour": {
+          "signal": "strong_short",
+          "vote": -3,
+          "momentum_pct": -0.42295943434516037,
+          "ema8": 933.8344396256443,
+          "ema21": 937.6775037174139,
+          "rsi": 37.64236902050101
+        },
+        "five": {
+          "signal": "neutral",
+          "score": -20
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-24",
+          "value": 896.04
+        },
+        {
+          "time": "2026-06-25",
+          "value": 872.0
+        },
+        {
+          "time": "2026-06-26",
+          "value": 883.3
+        },
+        {
+          "time": "2026-06-29",
+          "value": 888.72
+        },
+        {
+          "time": "2026-06-30",
+          "value": 881.24
+        },
+        {
+          "time": "2026-07-01",
+          "value": 869.82
+        },
+        {
+          "time": "2026-07-02",
+          "value": 890.66
+        },
+        {
+          "time": "2026-07-03",
+          "value": 911.4
+        },
+        {
+          "time": "2026-07-06",
+          "value": 907.82
+        },
+        {
+          "time": "2026-07-07",
+          "value": 903.76
+        },
+        {
+          "time": "2026-07-08",
+          "value": 902.76
+        },
+        {
+          "time": "2026-07-09",
+          "value": 898.86
+        },
+        {
+          "time": "2026-07-10",
+          "value": 897.94
+        },
+        {
+          "time": "2026-07-13",
+          "value": 885.94
+        },
+        {
+          "time": "2026-07-14",
+          "value": 880.26
+        },
+        {
+          "time": "2026-07-15",
+          "value": 880.1
+        },
+        {
+          "time": "2026-07-16",
+          "value": 879.18
+        },
+        {
+          "time": "2026-07-17",
+          "value": 876.24
+        },
+        {
+          "time": "2026-07-20",
+          "value": 876.64
+        },
+        {
+          "time": "2026-07-21",
+          "value": 892.4
+        },
+        {
+          "time": "2026-07-22",
+          "value": 901.74
+        },
+        {
+          "time": "2026-07-23",
+          "value": 901.76
+        },
+        {
+          "time": "2026-07-24",
+          "value": 883.8
+        },
+        {
+          "time": "2026-07-27",
+          "value": 895.78
+        },
+        {
+          "time": "2026-07-28",
+          "value": 885.1
+        },
+        {
+          "time": "2026-07-29",
+          "value": 884.2
+        },
+        {
+          "time": "2026-07-30",
+          "value": 881.4
+        },
+        {
+          "time": "2026-07-31",
+          "value": 888.3
+        },
+        {
+          "time": "2026-08-03",
+          "value": 886.64
+        },
+        {
+          "time": "2026-08-04",
+          "value": 886.48
+        },
+        {
+          "time": "2026-08-05",
+          "value": 910.4
+        },
+        {
+          "time": "2026-08-06",
+          "value": 926.9
+        },
+        {
+          "time": "2026-08-07",
+          "value": 936.76
+        },
+        {
+          "time": "2026-08-10",
+          "value": 948.2
+        },
+        {
+          "time": "2026-08-11",
+          "value": 949.94
+        },
+        {
+          "time": "2026-08-12",
+          "value": 958.54
+        },
+        {
+          "time": "2026-08-13",
+          "value": 952.96
+        },
+        {
+          "time": "2026-08-14",
+          "value": 943.16
+        },
+        {
+          "time": "2026-08-17",
+          "value": 955.72
+        },
+        {
+          "time": "2026-08-18",
+          "value": 956.4
+        },
+        {
+          "time": "2026-08-19",
+          "value": 945.56
+        },
+        {
+          "time": "2026-08-20",
+          "value": 972.94
+        },
+        {
+          "time": "2026-08-21",
+          "value": 987.44
+        },
+        {
+          "time": "2026-08-24",
+          "value": 1006.82
+        },
+        {
+          "time": "2026-08-25",
+          "value": 1004.22
+        },
+        {
+          "time": "2026-08-26",
+          "value": 1003.0
+        },
+        {
+          "time": "2026-08-27",
+          "value": 995.3
+        },
+        {
+          "time": "2026-08-28",
+          "value": 999.28
+        },
+        {
+          "time": "2026-08-31",
+          "value": 961.92
+        },
+        {
+          "time": "2026-09-01",
+          "value": 959.94
+        },
+        {
+          "time": "2026-09-02",
+          "value": 938.22
+        },
+        {
+          "time": "2026-09-03",
+          "value": 958.38
+        },
+        {
+          "time": "2026-09-04",
+          "value": 965.96
+        },
+        {
+          "time": "2026-09-07",
+          "value": 950.78
+        },
+        {
+          "time": "2026-09-08",
+          "value": 953.12
+        },
+        {
+          "time": "2026-09-09",
+          "value": 952.22
+        },
+        {
+          "time": "2026-09-10",
+          "value": 957.18
+        },
+        {
+          "time": "2026-09-11",
+          "value": 944.94
+        },
+        {
+          "time": "2026-09-14",
+          "value": 937.6
+        },
+        {
+          "time": "2026-09-15",
+          "value": 932.3
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "last_actual_observation": "2026-09-15 15:00:00",
+        "last_daily_close": "2026-09-15",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 30,
+        "win_rate_pct": 46.666666666666664,
+        "net_return_pct": 9.848448102715523,
+        "max_drawdown_pct": -16.26294055842602,
+        "avg_trade_pct": 0.460636878197326,
+        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+      }
+    },
+    {
+      "id": "silver",
+      "name": "白银",
+      "short_name": "银",
+      "symbol": "AG0",
+      "exchange": "SHFE",
+      "provider": "sina",
+      "decimals": 0,
+      "unit": "元/千克",
+      "bar_timezone": "Asia/Shanghai",
+      "score": -63,
+      "signal": "watch_short",
+      "momentum_pct": -2.8893058161350793,
+      "threshold_pct": 3.0,
+      "ma20": 16251.65,
+      "rsi": 37.525446731508715,
+      "prior_high": 17388.0,
+      "prior_low": 15320.0,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": false
+      },
+      "short_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": true,
+        "rsi": true
+      },
+      "long_count": 0,
+      "short_count": 2,
+      "daily_score": -50,
+      "daily_signal": "watch_short",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 15452.0,
+      "bar_time": "2026-09-15 15:00:00",
+      "daily_date": "2026-09-14",
+      "age_minutes": 67.2,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": -0.489438433797007,
+      "returns": {
+        "day": -0.3721288335685857,
+        "week": -2.8893058161350793,
+        "month": -3.8097007991079734
+      },
+      "position_changes": {
+        "day": 8.738477286710689,
+        "week": 0.0972362841705321,
+        "month": -37.0665422963962
+      },
+      "timeframes": {
+        "week": {
+          "signal": "strong_short",
+          "vote": -2,
+          "momentum_pct": -1.2339397023279464,
+          "ema8": 15842.24573682328,
+          "ema21": 16234.016752043883,
+          "rsi": 47.96591533809786
+        },
+        "day": {
+          "signal": "watch_short",
+          "vote": -2
+        },
+        "hour": {
+          "signal": "strong_short",
+          "vote": -3,
+          "momentum_pct": -0.9233136701718436,
+          "ema8": 15500.832387092045,
+          "ema21": 15592.276138151314,
+          "rsi": 34.65045592705167
+        },
+        "five": {
+          "signal": "watch_short",
+          "score": -38
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-23",
+          "value": 14997.0
+        },
+        {
+          "time": "2026-06-24",
+          "value": 14950.0
+        },
+        {
+          "time": "2026-06-25",
+          "value": 13811.0
+        },
+        {
+          "time": "2026-06-26",
+          "value": 14212.0
+        },
+        {
+          "time": "2026-06-29",
+          "value": 14272.0
+        },
+        {
+          "time": "2026-06-30",
+          "value": 14410.0
+        },
+        {
+          "time": "2026-07-01",
+          "value": 14032.0
+        },
+        {
+          "time": "2026-07-02",
+          "value": 14650.0
+        },
+        {
+          "time": "2026-07-03",
+          "value": 15256.0
+        },
+        {
+          "time": "2026-07-06",
+          "value": 15083.0
+        },
+        {
+          "time": "2026-07-07",
+          "value": 14880.0
+        },
+        {
+          "time": "2026-07-08",
+          "value": 14860.0
+        },
+        {
+          "time": "2026-07-09",
+          "value": 14403.0
+        },
+        {
+          "time": "2026-07-10",
+          "value": 14656.0
+        },
+        {
+          "time": "2026-07-13",
+          "value": 14135.0
+        },
+        {
+          "time": "2026-07-14",
+          "value": 14217.0
+        },
+        {
+          "time": "2026-07-15",
+          "value": 14241.0
+        },
+        {
+          "time": "2026-07-16",
+          "value": 13937.0
+        },
+        {
+          "time": "2026-07-17",
+          "value": 13545.0
+        },
+        {
+          "time": "2026-07-20",
+          "value": 13753.0
+        },
+        {
+          "time": "2026-07-21",
+          "value": 14420.0
+        },
+        {
+          "time": "2026-07-22",
+          "value": 14531.0
+        },
+        {
+          "time": "2026-07-23",
+          "value": 14614.0
+        },
+        {
+          "time": "2026-07-24",
+          "value": 14154.0
+        },
+        {
+          "time": "2026-07-27",
+          "value": 14558.0
+        },
+        {
+          "time": "2026-07-28",
+          "value": 14088.0
+        },
+        {
+          "time": "2026-07-29",
+          "value": 14268.0
+        },
+        {
+          "time": "2026-07-30",
+          "value": 14032.0
+        },
+        {
+          "time": "2026-07-31",
+          "value": 14264.0
+        },
+        {
+          "time": "2026-08-03",
+          "value": 14218.0
+        },
+        {
+          "time": "2026-08-04",
+          "value": 14373.0
+        },
+        {
+          "time": "2026-08-05",
+          "value": 15105.0
+        },
+        {
+          "time": "2026-08-06",
+          "value": 15091.0
+        },
+        {
+          "time": "2026-08-07",
+          "value": 15635.0
+        },
+        {
+          "time": "2026-08-10",
+          "value": 15705.0
+        },
+        {
+          "time": "2026-08-11",
+          "value": 15748.0
+        },
+        {
+          "time": "2026-08-12",
+          "value": 16154.0
+        },
+        {
+          "time": "2026-08-13",
+          "value": 15823.0
+        },
+        {
+          "time": "2026-08-14",
+          "value": 15722.0
+        },
+        {
+          "time": "2026-08-17",
+          "value": 16143.0
+        },
+        {
+          "time": "2026-08-18",
+          "value": 15961.0
+        },
+        {
+          "time": "2026-08-19",
+          "value": 15432.0
+        },
+        {
+          "time": "2026-08-20",
+          "value": 16361.0
+        },
+        {
+          "time": "2026-08-21",
+          "value": 16771.0
+        },
+        {
+          "time": "2026-08-24",
+          "value": 16843.0
+        },
+        {
+          "time": "2026-08-25",
+          "value": 16631.0
+        },
+        {
+          "time": "2026-08-26",
+          "value": 16756.0
+        },
+        {
+          "time": "2026-08-27",
+          "value": 16728.0
+        },
+        {
+          "time": "2026-08-28",
+          "value": 17215.0
+        },
+        {
+          "time": "2026-08-31",
+          "value": 16293.0
+        },
+        {
+          "time": "2026-09-01",
+          "value": 16245.0
+        },
+        {
+          "time": "2026-09-02",
+          "value": 15631.0
+        },
+        {
+          "time": "2026-09-03",
+          "value": 16045.0
+        },
+        {
+          "time": "2026-09-04",
+          "value": 16250.0
+        },
+        {
+          "time": "2026-09-07",
+          "value": 15990.0
+        },
+        {
+          "time": "2026-09-08",
+          "value": 16125.0
+        },
+        {
+          "time": "2026-09-09",
+          "value": 16224.0
+        },
+        {
+          "time": "2026-09-10",
+          "value": 16418.0
+        },
+        {
+          "time": "2026-09-11",
+          "value": 15586.0
+        },
+        {
+          "time": "2026-09-14",
+          "value": 15528.0
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "last_actual_observation": "2026-09-15 15:00:00",
+        "last_daily_close": "2026-09-14",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 44,
+        "win_rate_pct": 45.45454545454545,
+        "net_return_pct": -0.4359678794859545,
+        "max_drawdown_pct": -52.371464050838554,
+        "avg_trade_pct": 0.57138576271115,
+        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+      }
+    }
+  ],
+  "methodology": {
+    "bar": "日线四因子为主；周线和60分钟确认趋势；5分钟仅作盘中预警",
+    "factors": "mom5超过±3% / 突破20日高低 / 收盘相对MA20 / 日线RSI14区间",
+    "decision": "日线四因子至少3项同向触发，再结合周线与小时线给出综合结论",
+    "execution": "日线回测在下一交易日开盘入场，最长持有10个交易日；扫描每5分钟运行"
+  },
+  "warnings": [
+    "主连换月可能产生跳空，生产使用前应接入后复权连续合约或固定主力合约。",
+    "持仓变化是主连持仓量代理，换月附近不可直接解释为资金净流入或流出。",
+    "钴采用LME CO外部CSV适配，不用国内现货价格冒充期货行情。",
+    "公开接口可能限流或中断；实盘研究建议切换至iFinD、Wind、CTP或交易所授权源。"
+  ]
+}
