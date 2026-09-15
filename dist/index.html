@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <meta name="description" content="铜铝铅锌镍钴锂锡金银日线四因子、价格持仓结构与多周期技术指标监控">
-  <title>金属多周期技术研究工作台</title>
+  <meta name="description" content="国内金属与黑色期货日线四因子、模拟盘持仓、信号反转和多周期技术指标监控">
+  <title>金属与黑色多周期技术研究工作台</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -14,19 +14,21 @@
     <nav aria-label="主导航">
       <button class="nav-item active" data-scroll="overview"><span>01</span> 总览</button>
       <button class="nav-item" data-scroll="market"><span>02</span> 全市场</button>
-      <button class="nav-item" data-scroll="capital"><span>03</span> 资金结构</button>
-      <button class="nav-item" data-scroll="performance"><span>04</span> 策略回测</button>
-      <button class="nav-item" data-scroll="paper"><span>05</span> 模拟盘</button>
-      <button class="nav-item" data-scroll="matrix"><span>06</span> 信号矩阵</button>
-      <button class="nav-item" data-scroll="technical"><span>07</span> 技术全景</button>
-      <button class="nav-item" data-scroll="method"><span>08</span> 模型口径</button>
+      <button class="nav-item" data-scroll="allocation"><span>03</span> 板块配置</button>
+      <button class="nav-item" data-scroll="capital"><span>04</span> 资金结构</button>
+      <button class="nav-item" data-scroll="performance"><span>05</span> 策略回测</button>
+      <button class="nav-item" data-scroll="paper"><span>06</span> 模拟盘持仓</button>
+      <button class="nav-item" data-scroll="changes"><span>07</span> 信号变化</button>
+      <button class="nav-item" data-scroll="matrix"><span>08</span> 信号矩阵</button>
+      <button class="nav-item" data-scroll="technical"><span>09</span> 技术全景</button>
+      <button class="nav-item" data-scroll="method"><span>10</span> 模型口径</button>
     </nav>
     <div class="rail-foot"><i></i><span>日线主模型</span><small>周 / 60分确认 · 5分仅对照</small></div>
   </aside>
 
   <main>
     <header class="topbar" id="overview">
-      <div><p class="eyebrow">COMMODITY MONITOR / DAILY CORE</p><h1>金属多周期技术研究工作台</h1><p class="subtitle">日线收盘定方向，周线与小时线确认；5分钟策略保留研究对照、不进入定时交易信号</p></div>
+      <div><p class="eyebrow">COMMODITY MONITOR / DAILY CORE</p><h1>金属与黑色多周期研究工作台</h1><p class="subtitle">日线收盘定方向，周线与小时线确认；5分钟策略保留研究对照、不进入定时交易信号</p></div>
       <div class="top-actions"><div class="clock"><span id="marketState" class="state-dot"></span><div><b id="nowClock">--:--:--</b><small id="scanTime">等待数据</small></div></div><button id="refreshButton" class="refresh">立即扫描 <span id="countdown">05:00</span></button></div>
     </header>
 
@@ -35,6 +37,8 @@
       <div class="spectrum"><span>空</span><div><i id="spectrumNeedle"></i></div><span>多</span></div>
     </section>
 
+    <section id="majorAlert" class="major-alert" hidden aria-live="assertive"></section>
+
     <section class="panel market-panel" id="market">
       <div class="section-head"><div><p class="eyebrow">DOMESTIC FUTURES BREADTH</p><h2>国内期货全市场</h2></div><span id="marketScope" class="scope-note">加载中</span></div>
       <div id="breadthStats" class="breadth-stats"></div>
@@ -42,6 +46,13 @@
       <div id="categoryBreadth" class="category-breadth"></div>
       <details class="metal-details"><summary>贵金属 / 有色 / 黑色明细</summary><div class="table-scroll"><table><thead><tr><th>类别</th><th>品种</th><th>交易所</th><th>最新价</th><th>涨跌幅</th><th>成交量</th><th>持仓量</th></tr></thead><tbody id="metalDetailRows"></tbody></table></div></details>
       <p id="marketFoot" class="panel-note"></p>
+    </section>
+
+    <section class="panel allocation-panel" id="allocation">
+      <div class="section-head"><div><p class="eyebrow">CROSS-SECTOR LONG / SHORT</p><h2>七大板块多空配置</h2></div><span id="allocationTime" class="scope-note">等待行情</span></div>
+      <div id="allocationLead" class="allocation-lead"></div>
+      <div id="allocationCards" class="allocation-cards"></div>
+      <p id="allocationNote" class="panel-note"></p>
     </section>
 
     <section class="panel capital-panel" id="capital">
@@ -59,12 +70,22 @@
     </section>
 
     <section class="panel paper-panel" id="paper">
-      <div class="section-head"><div><p class="eyebrow">FORWARD PAPER TRADING</p><h2>前向模拟盘</h2></div><span id="paperTime" class="scope-note">等待首次记账</span></div>
-      <div id="paperCards" class="paper-cards"></div><p id="paperNote" class="panel-note"></p>
+      <div class="section-head"><div><p class="eyebrow">FORWARD PAPER TRADING</p><h2>模拟盘持仓与变化</h2></div><span id="paperTime" class="scope-note">等待首次记账</span></div>
+      <div id="paperCards" class="paper-cards"></div>
+      <h3 class="subsection-title">当前持仓</h3>
+      <div class="table-scroll"><table class="position-table"><thead><tr><th>策略</th><th>品种</th><th>方向</th><th>入场参考</th><th>最新价</th><th>浮动收益</th><th>入场时间</th></tr></thead><tbody id="paperPositionRows"></tbody></table></div>
+      <h3 class="subsection-title">最近开仓 / 平仓 / 换向</h3>
+      <div id="paperChangeLog" class="change-log"></div><p id="paperNote" class="panel-note"></p>
+    </section>
+
+    <section class="panel change-panel" id="changes">
+      <div class="section-head"><div><p class="eyebrow">SIGNAL REVERSAL LEDGER</p><h2>多空信号变化</h2></div><span id="changeTime" class="scope-note">等待基线</span></div>
+      <div id="signalChangeList" class="signal-change-list"></div>
+      <p id="changeNote" class="panel-note"></p>
     </section>
 
     <section class="panel" id="matrix">
-      <div class="section-head"><div><p class="eyebrow">SIGNAL MATRIX</p><h2>十种金属信号矩阵</h2></div><div class="filters" role="group" aria-label="筛选信号"><button class="filter active" data-filter="all">全部</button><button class="filter" data-filter="long">偏多</button><button class="filter" data-filter="short">偏空</button><button class="filter" data-filter="watch">观察</button><button class="filter" data-filter="missing">异常</button></div></div>
+      <div class="section-head"><div><p class="eyebrow">SIGNAL MATRIX</p><h2>金属与黑色信号矩阵</h2></div><div class="filters" role="group" aria-label="筛选信号"><button class="filter active" data-filter="all">全部</button><button class="filter" data-filter="metals">金属</button><button class="filter" data-filter="ferrous">黑色</button><button class="filter" data-filter="long">偏多</button><button class="filter" data-filter="short">偏空</button><button class="filter" data-filter="watch">观察</button><button class="filter" data-filter="missing">异常</button></div></div>
       <div id="cards" class="cards" aria-live="polite"></div>
     </section>
 

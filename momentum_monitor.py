@@ -4,8 +4,8 @@
 No third-party Python package is required. Domestic futures bars are read from
 the same Sina endpoints used by AKShare. Daily bars drive the four-factor
 model; 60-minute and weekly bars confirm the trend; 5-minute bars are alerts.
-Cobalt is intentionally a CSV adapter because there is no comparable Chinese
-cobalt futures symbol.
+The monitored universe covers domestic precious, non-ferrous, new-energy and
+ferrous main continuous futures.
 """
 
 from __future__ import annotations
@@ -42,6 +42,7 @@ CONFIG_PATH = ROOT / "config.json"
 LATEST_PATH = DIST / "latest.json"
 HISTORY_PATH = STATE_DIR / "scan_history.jsonl"
 PAPER_PATH = STATE_DIR / "paper_portfolio.json"
+SIGNAL_STATE_PATH = STATE_DIR / "signal_state.json"
 PERFORMANCE_PATH = DIST / "performance-report.json"
 SINA_ENDPOINT = (
     "https://stock2.finance.sina.com.cn/futures/api/jsonp.php/=/"
@@ -670,8 +671,15 @@ def update_paper_portfolio(results: list[dict[str, Any]], generated_at: datetime
     slip_ticks = float(config.get("slippage_ticks_per_side", 1))
     weight = 1 / max(1, len(valid))
     output = []
+    position_output: list[dict[str, Any]] = []
+    recent_changes: list[dict[str, Any]] = []
+    asset_by_symbol = {item["symbol"]: item for item in valid}
+    tick_by_symbol = {item["symbol"]: float(item["tick"]) for item in config["assets"]}
     for key, name in strategy_names.items():
         ledger = state["strategies"].setdefault(key, {"name": name, "equity": initial_cash, "positions": {}, "last_prices": {}, "last_bars": {}, "trades": 0, "history": []})
+        ledger.setdefault("entry_prices", {})
+        ledger.setdefault("entry_times", {})
+        ledger.setdefault("change_history", [])
         pnl, friction, changed = 0.0, 0.0, False
         for asset in valid:
             symbol, price = asset["symbol"], float(asset["price"])
@@ -684,12 +692,33 @@ def update_paper_portfolio(results: list[dict[str, Any]], generated_at: datetime
                 changed = True
             turnover = abs(target - prior_position)
             if turnover:
-                friction += weight * turnover * (fee + slip_ticks * float(next(cfg["tick"] for cfg in config["assets"] if cfg["symbol"] == symbol)) / price)
+                friction += weight * turnover * (fee + slip_ticks * tick_by_symbol[symbol] / price)
                 ledger["trades"] += 1 if prior_position == 0 or target != 0 else 0
+                change_record = {
+                    "time": generated_at.isoformat(timespec="seconds"),
+                    "strategy_key": key,
+                    "strategy": name,
+                    "asset_id": asset["id"],
+                    "asset": asset["name"],
+                    "symbol": symbol,
+                    "from_position": prior_position,
+                    "to_position": target,
+                    "price": price,
+                    "bar_time": asset["bar_time"],
+                }
+                ledger["change_history"].append(change_record)
+                recent_changes.append(change_record)
+                if target:
+                    ledger["entry_prices"][symbol] = price
+                    ledger["entry_times"][symbol] = generated_at.isoformat(timespec="seconds")
+                else:
+                    ledger["entry_prices"].pop(symbol, None)
+                    ledger["entry_times"].pop(symbol, None)
                 changed = True
             ledger["positions"][symbol] = target
             ledger["last_prices"][symbol] = price
             ledger["last_bars"][symbol] = asset["bar_time"]
+        ledger["change_history"] = ledger["change_history"][-200:]
         if changed or not ledger["history"]:
             ledger["equity"] *= max(0.01, 1 + pnl - friction)
             ledger["history"].append({"time": generated_at.isoformat(timespec="seconds"), "equity": ledger["equity"]})
@@ -699,15 +728,123 @@ def update_paper_portfolio(results: list[dict[str, Any]], generated_at: datetime
             peak = max(peak, point["equity"])
             if peak:
                 max_drawdown = min(max_drawdown, point["equity"] / peak - 1)
-        output.append({"key": key, "name": name, "equity": ledger["equity"], "return_pct": (ledger["equity"] / initial_cash - 1) * 100, "max_drawdown_pct": max_drawdown * 100, "trades": ledger["trades"], "active_positions": sum(value != 0 for value in ledger["positions"].values()), "observations": len(ledger["history"])})
+        active_positions = 0
+        for symbol, side in ledger["positions"].items():
+            asset = asset_by_symbol.get(symbol)
+            if not side or not asset:
+                continue
+            active_positions += 1
+            entry_price = float(ledger["entry_prices"].get(symbol) or asset["price"])
+            current_price = float(asset["price"])
+            ledger["entry_prices"].setdefault(symbol, entry_price)
+            ledger["entry_times"].setdefault(symbol, state["started_at"])
+            position_output.append({
+                "strategy_key": key,
+                "strategy": name,
+                "asset_id": asset["id"],
+                "asset": asset["name"],
+                "symbol": symbol,
+                "side": int(side),
+                "entry_price": entry_price,
+                "current_price": current_price,
+                "unrealized_pct": int(side) * (current_price / entry_price - 1) * 100 if entry_price else 0,
+                "entry_time": ledger["entry_times"][symbol],
+                "bar_time": asset["bar_time"],
+            })
+        output.append({"key": key, "name": name, "equity": ledger["equity"], "return_pct": (ledger["equity"] / initial_cash - 1) * 100, "max_drawdown_pct": max_drawdown * 100, "trades": ledger["trades"], "active_positions": active_positions, "observations": len(ledger["history"])})
     state["updated_at"] = generated_at.isoformat(timespec="seconds")
     atomic_json(PAPER_PATH, state)
     output.sort(key=lambda row: row["return_pct"], reverse=True)
-    return {"mode": "forward_paper", "started_at": state["started_at"], "updated_at": state["updated_at"], "initial_cash": initial_cash, "strategies": output, "note": "无真实委托；按扫描时点最新价盯市，含开平各万1.2和每侧1跳，首次运行仅建立仓位并计成本。"}
+    if not recent_changes:
+        recent_changes = [record for ledger in state["strategies"].values() for record in ledger.get("change_history", [])]
+    recent_changes.sort(key=lambda row: row["time"], reverse=True)
+    position_output.sort(key=lambda row: (row["strategy"], row["asset"]))
+    return {"mode": "forward_paper", "started_at": state["started_at"], "updated_at": state["updated_at"], "initial_cash": initial_cash, "strategies": output, "positions": position_output, "recent_changes": recent_changes[:30], "note": "无真实委托；按扫描时点最新价盯市，含开平各万1.2和每侧1跳。新加入品种从首次真实扫描建立仓位，不回填历史收益。"}
+
+
+def classify_signal_change(previous: dict[str, Any], current: dict[str, Any]) -> dict[str, str] | None:
+    """Classify a cross-scan signal change without inventing observations."""
+    prior_signal, signal = previous.get("signal"), current.get("signal")
+    prior_daily, daily = previous.get("daily_signal"), current.get("daily_signal")
+    prior_score, score = previous.get("score"), current.get("score")
+    score_delta = abs(float(score) - float(prior_score)) if score is not None and prior_score is not None else 0
+    side = lambda value: 1 if value in ("long", "watch_long") else -1 if value in ("short", "watch_short") else 0
+    hard_side = lambda value: 1 if value == "long" else -1 if value == "short" else 0
+    if side(prior_signal) * side(signal) == -1:
+        return {"severity": "major", "reason": "综合信号多空直接反转"}
+    if hard_side(prior_daily) * hard_side(daily) == -1:
+        return {"severity": "major", "reason": "日线主模型多空直接反转"}
+    if score_delta >= 50:
+        return {"severity": "major", "reason": f"综合评分跃迁 {score_delta:.0f} 分"}
+    if prior_signal != signal:
+        return {"severity": "important" if side(prior_signal) != side(signal) else "normal", "reason": "综合信号状态变化"}
+    if prior_daily != daily:
+        return {"severity": "important", "reason": "日线主模型状态变化"}
+    if score_delta >= 25:
+        return {"severity": "important", "reason": f"综合评分变化 {score_delta:.0f} 分"}
+    return None
+
+
+def update_signal_change_log(results: list[dict[str, Any]], generated_at: datetime) -> dict[str, Any]:
+    """Persist real cross-scan reversals; the first observation is only a baseline."""
+    state: dict[str, Any] = {}
+    if SIGNAL_STATE_PATH.exists():
+        try:
+            with SIGNAL_STATE_PATH.open("r", encoding="utf-8") as handle:
+                state = json.load(handle)
+        except (OSError, ValueError):
+            state = {}
+    state.setdefault("current", {})
+    state.setdefault("events", [])
+    if not state["current"] and LATEST_PATH.exists():
+        try:
+            with LATEST_PATH.open("r", encoding="utf-8") as handle:
+                previous_payload = json.load(handle)
+            state["current"] = {
+                item["id"]: {key: item.get(key) for key in ("signal", "daily_signal", "score", "bar_time", "daily_date")}
+                for item in previous_payload.get("assets", []) if item.get("signal") not in (None, "missing")
+            }
+        except (OSError, ValueError):
+            pass
+    new_events: list[dict[str, Any]] = []
+    for asset in results:
+        if asset.get("signal") in (None, "missing"):
+            continue
+        current = {key: asset.get(key) for key in ("signal", "daily_signal", "score", "bar_time", "daily_date")}
+        previous = state["current"].get(asset["id"])
+        observation_changed = previous and (previous.get("bar_time"), previous.get("daily_date")) != (current.get("bar_time"), current.get("daily_date"))
+        classification = classify_signal_change(previous, current) if observation_changed else None
+        if classification:
+            event = {
+                "event_id": f"{asset['id']}:{current.get('bar_time')}:{previous.get('signal')}>{current.get('signal')}",
+                "time": generated_at.isoformat(timespec="seconds"),
+                "observation": current.get("bar_time"),
+                "asset_id": asset["id"], "asset": asset["name"], "symbol": asset["symbol"],
+                "from_signal": previous.get("signal"), "to_signal": current.get("signal"),
+                "from_score": previous.get("score"), "to_score": current.get("score"),
+                "score_delta": (current.get("score") or 0) - (previous.get("score") or 0),
+                "daily_from": previous.get("daily_signal"), "daily_to": current.get("daily_signal"),
+                **classification,
+            }
+            if not any(existing.get("event_id") == event["event_id"] for existing in state["events"]):
+                state["events"].append(event)
+                new_events.append(event)
+        state["current"][asset["id"]] = current
+    state["events"] = state["events"][-200:]
+    state["updated_at"] = generated_at.isoformat(timespec="seconds")
+    atomic_json(SIGNAL_STATE_PATH, state)
+    recent = list(reversed(state["events"][-30:]))
+    return {
+        "updated_at": state["updated_at"],
+        "current_changes": new_events,
+        "recent_events": recent,
+        "major_count": sum(event["severity"] == "major" for event in new_events),
+        "note": "仅比较不同真实行情时点；首次扫描建立基线，不生成虚构反转记录。",
+    }
 
 
 def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: datetime) -> dict[str, Any]:
-    base = {key: asset[key] for key in ("id", "name", "short_name", "symbol", "exchange", "provider", "decimals", "unit", "bar_timezone")}
+    base = {key: asset[key] for key in ("id", "name", "short_name", "symbol", "exchange", "sector", "provider", "decimals", "unit", "bar_timezone")}
     try:
         if asset["provider"] == "sina":
             raw_daily = fetch_sina_daily_bars(asset["symbol"], generated_at)
@@ -829,7 +966,7 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             "price": None,
             "bar_time": None,
             "error": str(exc),
-            "source": "待接入LME钴日线/60分钟/5分钟CSV" if asset["provider"] == "csv" else "新浪财经多周期行情",
+            "source": "新浪财经多周期行情" if asset["provider"] == "sina" else "外部授权CSV",
         }
 
 
@@ -859,8 +996,9 @@ def scan_once() -> dict[str, Any]:
         }
         performance_report = aggregate_strategy_performance(results, generated_at, config)
         paper_trading = update_paper_portfolio(results, generated_at, config)
+        signal_changes = update_signal_change_log(results, generated_at)
         payload = {
-            "schema_version": 4,
+            "schema_version": 5,
             "generated_at": generated_at.isoformat(timespec="seconds"),
             "interval_seconds": int(config["scan_interval_seconds"]),
             "summary": counts,
@@ -868,12 +1006,14 @@ def scan_once() -> dict[str, Any]:
             "market_breadth": market_breadth,
             "performance": {key: performance_report[key] for key in ("assumptions", "strategies", "frequency_assessment", "sources")},
             "paper_trading": paper_trading,
+            "signal_changes": signal_changes,
             "assets": results,
             "methodology": {
                 "bar": "日线四因子为主；周线和60分钟确认趋势；5分钟仅作盘中预警",
                 "factors": "mom5超过±3% / 突破20日高低 / 收盘相对MA20 / 日线RSI14区间",
                 "decision": "日线四因子至少3项同向触发，再结合周线与小时线给出综合结论",
                 "execution": "核心模型在交易日15:20后刷新；全市场行情在交易时段每15分钟刷新；5分钟策略不进入定时交易信号",
+                "allocation": "七板块按主力连续当日涨跌广度与等权平均涨幅排序，相对做多前2、做空后2、其余中性",
                 "technical": "主流指标层覆盖均线、MACD、ADX、ROC、RSI、KDJ、CCI、ATR、布林带、唐奇安、量比与OBV，仅作交叉验证",
                 "risk": "研究参考线采用2×ATR初始止损、0.618动态跟踪与±0.2%保本触发；不自动下单",
                 "cost": "所有策略对比统一按开仓万1.2、平仓万1.2，并在每一侧额外计1跳滑点",
@@ -881,7 +1021,8 @@ def scan_once() -> dict[str, Any]:
             "warnings": [
                 "主连换月可能产生跳空，生产使用前应接入后复权连续合约或固定主力合约。",
                 "持仓变化是主连持仓量代理，换月附近不可直接解释为资金净流入或流出。",
-                "钴采用LME CO外部CSV适配，不用国内现货价格冒充期货行情。",
+                "七板块配置是当日截面相对强弱，不等同于全部板块已经完成日线策略回测。",
+                "黑色板块覆盖螺纹钢、热卷、线材、不锈钢、铁矿石、焦炭、焦煤、硅铁与锰硅主力连续。",
                 "公开接口可能限流或中断；实盘研究建议切换至iFinD、Wind、CTP或交易所授权源。",
             ],
         }

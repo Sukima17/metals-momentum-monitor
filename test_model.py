@@ -2,6 +2,7 @@
 
 from momentum_monitor import (
     capital_bucket,
+    classify_signal_change,
     daily_four_factor,
     ema,
     load_config,
@@ -76,4 +77,17 @@ if __name__ == "__main__":
     assert friction_test["trades"] == 1 and friction_test["net_return_pct"] is not None
     assert {row[2] for row in UNIVERSE} >= {"SHFE", "SHFE/INE", "DCE", "CZCE", "GFEX", "CFFEX"}
     assert {row[3] for row in UNIVERSE} >= {"precious", "nonferrous", "ferrous", "energy", "agriculture", "new_energy", "financial"}
+    assert len(config["assets"]) == 18
+    assert "cobalt" not in {asset["id"] for asset in config["assets"]}
+    assert sum(asset["sector"] == "ferrous" for asset in config["assets"]) == 9
+    direct_reversal = classify_signal_change(
+        {"signal": "long", "daily_signal": "long", "score": 70},
+        {"signal": "short", "daily_signal": "short", "score": -65},
+    )
+    score_jump = classify_signal_change(
+        {"signal": "neutral", "daily_signal": "neutral", "score": 0},
+        {"signal": "watch_long", "daily_signal": "neutral", "score": 55},
+    )
+    assert direct_reversal and direct_reversal["severity"] == "major"
+    assert score_jump and score_jump["severity"] == "major"
     print("signal, strategy comparison, market universe and risk checks OK")

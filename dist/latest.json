@@ -1,79 +1,88 @@
 {
-  "schema_version": 4,
-  "generated_at": "2026-09-15T22:35:02+08:00",
+  "schema_version": 5,
+  "generated_at": "2026-09-15T23:09:02+08:00",
   "interval_seconds": 900,
   "summary": {
     "long": 0,
-    "short": 5,
+    "short": 7,
     "watch_long": 1,
-    "watch_short": 3,
-    "neutral": 0,
+    "watch_short": 8,
+    "neutral": 1,
     "missing": 1
   },
   "operation_summary": {
-    "trend_long": [],
+    "trend_long": [
+      "rebar"
+    ],
     "avoid": [
       "aluminium",
-      "zinc"
+      "zinc",
+      "hot_rolled_coil",
+      "coke",
+      "coking_coal",
+      "ferrosilicon"
     ],
     "accumulate": [
       "lead",
       "lithium",
       "gold",
-      "silver"
+      "silver",
+      "stainless_steel"
     ],
     "divergence": [],
     "weak": [
       "copper",
       "nickel",
-      "tin"
+      "tin",
+      "iron_ore",
+      "ferromanganese"
     ]
   },
   "market_breadth": {
-    "generated_at": "2026-09-15T22:35:02+08:00",
+    "generated_at": "2026-09-15T23:10:02+08:00",
     "source": "新浪财经国内期货实时行情（主力连续，每品种一条）",
     "scope": "SHFE/INE、DCE、CZCE、GFEX、CFFEX；覆盖商品、新能源与金融期货",
     "universe": 86,
     "valid": 81,
-    "up": 34,
-    "down": 40,
-    "flat": 7,
+    "up": 31,
+    "down": 41,
+    "flat": 9,
     "top_gainers": [
       {
         "symbol": "EG0",
         "name": "乙二醇",
         "exchange": "DCE",
         "category": "energy",
-        "price": 6191.0,
+        "price": 6225.0,
         "previous_settlement": 5958.0,
-        "change_pct": 3.910708291372944,
-        "volume": 967261.0,
-        "hold": 397232.0,
-        "quote_time": "2026-09-15 223439"
+        "change_pct": 4.4813695871097625,
+        "volume": 1111823.0,
+        "hold": 382047.0,
+        "quote_time": "2026-09-15 230000"
       },
       {
         "symbol": "PR0",
         "name": "瓶片",
         "exchange": "CZCE",
         "category": "energy",
-        "price": 8560.0,
+        "price": 8592.0,
         "previous_settlement": 8306.0,
-        "change_pct": 3.0580303395135955,
-        "volume": 51234.0,
-        "hold": 68022.0,
-        "quote_time": "2026-09-15 223439"
+        "change_pct": 3.4432940043342075,
+        "volume": 60267.0,
+        "hold": 68123.0,
+        "quote_time": "2026-09-15 230000"
       },
       {
         "symbol": "PF0",
         "name": "短纤",
         "exchange": "CZCE",
         "category": "energy",
-        "price": 8720.0,
+        "price": 8734.0,
         "previous_settlement": 8472.0,
-        "change_pct": 2.9272898961284266,
-        "volume": 157444.0,
-        "hold": 241227.0,
-        "quote_time": "2026-09-15 223439"
+        "change_pct": 3.0925401322001944,
+        "volume": 177891.0,
+        "hold": 242490.0,
+        "quote_time": "2026-09-15 230000"
       }
     ],
     "top_losers": [
@@ -119,44 +128,176 @@
         "up": 1,
         "down": 3,
         "flat": 0,
-        "valid": 4
+        "valid": 4,
+        "average_change_pct": -0.4014304043772843,
+        "median_change_pct": -0.39781216071204106,
+        "breadth_ratio": -0.5,
+        "strength_score": -38.028608087545685
       },
       "nonferrous": {
         "up": 3,
         "down": 6,
         "flat": 0,
-        "valid": 9
+        "valid": 9,
+        "average_change_pct": -0.2651105508914897,
+        "median_change_pct": -0.14880952380952328,
+        "breadth_ratio": -0.3333333333333333,
+        "strength_score": -25.302211017829794
       },
       "ferrous": {
         "up": 3,
         "down": 5,
         "flat": 1,
-        "valid": 9
+        "valid": 9,
+        "average_change_pct": -0.4780194507887432,
+        "median_change_pct": -0.5502063273727598,
+        "breadth_ratio": -0.2222222222222222,
+        "strength_score": -22.893722349108195
       },
       "energy": {
-        "up": 19,
-        "down": 8,
-        "flat": 0,
-        "valid": 27
+        "up": 17,
+        "down": 7,
+        "flat": 3,
+        "valid": 27,
+        "average_change_pct": 0.8170877425684703,
+        "median_change_pct": 0.7300909805683542,
+        "breadth_ratio": 0.37037037037037035,
+        "strength_score": 38.56397707359163
       },
       "agriculture": {
-        "up": 8,
-        "down": 13,
-        "flat": 1,
-        "valid": 22
+        "up": 7,
+        "down": 15,
+        "flat": 0,
+        "valid": 22,
+        "average_change_pct": -0.45523783642533683,
+        "median_change_pct": -0.16846762628890954,
+        "breadth_ratio": -0.36363636363636365,
+        "strength_score": -30.922938546688556
       },
       "new_energy": {
         "up": 0,
         "down": 3,
         "flat": 0,
-        "valid": 3
+        "valid": 3,
+        "average_change_pct": -2.0363058972987296,
+        "median_change_pct": -1.5734265734265729,
+        "breadth_ratio": -1.0,
+        "strength_score": -100.0
       },
       "financial": {
         "up": 0,
         "down": 2,
         "flat": 5,
-        "valid": 7
+        "valid": 7,
+        "average_change_pct": -0.007814961201308661,
+        "median_change_pct": -0.002773540424350074,
+        "breadth_ratio": -0.2857142857142857,
+        "strength_score": -17.299156366883317
       }
+    },
+    "sector_allocation": {
+      "as_of": "2026-09-15T23:10:02+08:00",
+      "stance": "market_neutral_relative_value",
+      "long": [
+        {
+          "category": "energy",
+          "up": 17,
+          "down": 7,
+          "flat": 3,
+          "valid": 27,
+          "average_change_pct": 0.8170877425684703,
+          "median_change_pct": 0.7300909805683542,
+          "breadth_ratio": 0.37037037037037035,
+          "strength_score": 38.56397707359163,
+          "allocation": "relative_long",
+          "rank": 1
+        },
+        {
+          "category": "financial",
+          "up": 0,
+          "down": 2,
+          "flat": 5,
+          "valid": 7,
+          "average_change_pct": -0.007814961201308661,
+          "median_change_pct": -0.002773540424350074,
+          "breadth_ratio": -0.2857142857142857,
+          "strength_score": -17.299156366883317,
+          "allocation": "relative_long",
+          "rank": 2
+        }
+      ],
+      "short": [
+        {
+          "category": "precious",
+          "up": 1,
+          "down": 3,
+          "flat": 0,
+          "valid": 4,
+          "average_change_pct": -0.4014304043772843,
+          "median_change_pct": -0.39781216071204106,
+          "breadth_ratio": -0.5,
+          "strength_score": -38.028608087545685,
+          "allocation": "relative_short",
+          "rank": 6
+        },
+        {
+          "category": "new_energy",
+          "up": 0,
+          "down": 3,
+          "flat": 0,
+          "valid": 3,
+          "average_change_pct": -2.0363058972987296,
+          "median_change_pct": -1.5734265734265729,
+          "breadth_ratio": -1.0,
+          "strength_score": -100.0,
+          "allocation": "relative_short",
+          "rank": 7
+        }
+      ],
+      "neutral": [
+        {
+          "category": "ferrous",
+          "up": 3,
+          "down": 5,
+          "flat": 1,
+          "valid": 9,
+          "average_change_pct": -0.4780194507887432,
+          "median_change_pct": -0.5502063273727598,
+          "breadth_ratio": -0.2222222222222222,
+          "strength_score": -22.893722349108195,
+          "allocation": "neutral",
+          "rank": 3
+        },
+        {
+          "category": "nonferrous",
+          "up": 3,
+          "down": 6,
+          "flat": 0,
+          "valid": 9,
+          "average_change_pct": -0.2651105508914897,
+          "median_change_pct": -0.14880952380952328,
+          "breadth_ratio": -0.3333333333333333,
+          "strength_score": -25.302211017829794,
+          "allocation": "neutral",
+          "rank": 4
+        },
+        {
+          "category": "agriculture",
+          "up": 7,
+          "down": 15,
+          "flat": 0,
+          "valid": 22,
+          "average_change_pct": -0.45523783642533683,
+          "median_change_pct": -0.16846762628890954,
+          "breadth_ratio": -0.36363636363636365,
+          "strength_score": -30.922938546688556,
+          "allocation": "neutral",
+          "rank": 5
+        }
+      ],
+      "spread_score": 138.56397707359162,
+      "method": "板块内主力连续等权：强弱分=60×涨跌家数差/有效品种数+20×板块平均涨跌幅；做多前2、做空后2，其余中性",
+      "note": "这是当日截面相对强弱配置，不代表七板块均已完成日线策略回测；金融板块同时含股指与国债，使用前应复核内部方向。"
     },
     "metal_details": [
       {
@@ -164,12 +305,12 @@
         "name": "螺纹钢",
         "exchange": "SHFE",
         "category": "ferrous",
-        "price": 3122.0,
+        "price": 3121.0,
         "previous_settlement": 3103.0,
-        "change_pct": 0.6123106670963496,
-        "volume": 385208.0,
-        "hold": 1584999.0,
-        "quote_time": "2026-09-15 223439"
+        "change_pct": 0.5800837898807698,
+        "volume": 401646.0,
+        "hold": 1582227.0,
+        "quote_time": "2026-09-15 230000"
       },
       {
         "symbol": "WR0",
@@ -184,64 +325,64 @@
         "quote_time": "2026-09-09 150000"
       },
       {
+        "symbol": "AL0",
+        "name": "沪铝",
+        "exchange": "SHFE",
+        "category": "nonferrous",
+        "price": 24115.0,
+        "previous_settlement": 24040.0,
+        "change_pct": 0.31198003327788104,
+        "volume": 31835.0,
+        "hold": 222932.0,
+        "quote_time": "2026-09-15 231003"
+      },
+      {
         "symbol": "AG0",
         "name": "白银",
         "exchange": "SHFE",
         "category": "precious",
-        "price": 15503.0,
+        "price": 15486.0,
         "previous_settlement": 15460.0,
-        "change_pct": 0.27813712807245317,
-        "volume": 37923.0,
-        "hold": 202310.0,
-        "quote_time": "2026-09-15 223439"
+        "change_pct": 0.168175937904258,
+        "volume": 46436.0,
+        "hold": 202620.0,
+        "quote_time": "2026-09-15 231003"
       },
       {
         "symbol": "BC0",
         "name": "国际铜",
         "exchange": "SHFE/INE",
         "category": "nonferrous",
-        "price": 95250.0,
+        "price": 95180.0,
         "previous_settlement": 95030.0,
-        "change_pct": 0.23150584026097043,
-        "volume": 1527.0,
-        "hold": 12623.0,
-        "quote_time": "2026-09-15 223439"
-      },
-      {
-        "symbol": "CU0",
-        "name": "沪铜",
-        "exchange": "SHFE",
-        "category": "nonferrous",
-        "price": 107160.0,
-        "previous_settlement": 106930.0,
-        "change_pct": 0.2150939867202828,
-        "volume": 16915.0,
-        "hold": 176892.0,
-        "quote_time": "2026-09-15 223439"
-      },
-      {
-        "symbol": "AL0",
-        "name": "沪铝",
-        "exchange": "SHFE",
-        "category": "nonferrous",
-        "price": 24090.0,
-        "previous_settlement": 24040.0,
-        "change_pct": 0.2079866888519133,
-        "volume": 27806.0,
-        "hold": 222795.0,
-        "quote_time": "2026-09-15 223439"
+        "change_pct": 0.15784489108703337,
+        "volume": 2017.0,
+        "hold": 12634.0,
+        "quote_time": "2026-09-15 231003"
       },
       {
         "symbol": "HC0",
         "name": "热卷",
         "exchange": "SHFE",
         "category": "ferrous",
-        "price": 3317.0,
+        "price": 3316.0,
         "previous_settlement": 3311.0,
-        "change_pct": 0.18121413470251202,
-        "volume": 146115.0,
-        "hold": 1314201.0,
-        "quote_time": "2026-09-15 223439"
+        "change_pct": 0.15101177891876372,
+        "volume": 154636.0,
+        "hold": 1313593.0,
+        "quote_time": "2026-09-15 230000"
+      },
+      {
+        "symbol": "CU0",
+        "name": "沪铜",
+        "exchange": "SHFE",
+        "category": "nonferrous",
+        "price": 107030.0,
+        "previous_settlement": 106930.0,
+        "change_pct": 0.09351912466100121,
+        "volume": 22356.0,
+        "hold": 175989.0,
+        "quote_time": "2026-09-15 231002"
       },
       {
         "symbol": "I0",
@@ -251,81 +392,81 @@
         "price": 708.0,
         "previous_settlement": 708.0,
         "change_pct": 0.0,
-        "volume": 90277.0,
-        "hold": 589292.0,
-        "quote_time": "2026-09-15 223438"
-      },
-      {
-        "symbol": "AU0",
-        "name": "黄金",
-        "exchange": "SHFE",
-        "category": "precious",
-        "price": 930.42,
-        "previous_settlement": 931.22,
-        "change_pct": -0.08590880780052768,
-        "volume": 18605.0,
-        "hold": 170832.0,
-        "quote_time": "2026-09-15 223439"
-      },
-      {
-        "symbol": "PB0",
-        "name": "沪铅",
-        "exchange": "SHFE",
-        "category": "nonferrous",
-        "price": 15790.0,
-        "previous_settlement": 15815.0,
-        "change_pct": -0.15807777426494196,
-        "volume": 19380.0,
-        "hold": 63368.0,
-        "quote_time": "2026-09-15 223439"
+        "volume": 98800.0,
+        "hold": 587499.0,
+        "quote_time": "2026-09-15 230000"
       },
       {
         "symbol": "ZN0",
         "name": "沪锌",
         "exchange": "SHFE",
         "category": "nonferrous",
-        "price": 26070.0,
+        "price": 26105.0,
         "previous_settlement": 26115.0,
-        "change_pct": -0.1723147616312426,
-        "volume": 35597.0,
-        "hold": 122738.0,
-        "quote_time": "2026-09-15 223439"
+        "change_pct": -0.03829216925138601,
+        "volume": 43675.0,
+        "hold": 122931.0,
+        "quote_time": "2026-09-15 231003"
+      },
+      {
+        "symbol": "AU0",
+        "name": "黄金",
+        "exchange": "SHFE",
+        "category": "precious",
+        "price": 930.0,
+        "previous_settlement": 931.22,
+        "change_pct": -0.13101093189579194,
+        "volume": 25211.0,
+        "hold": 171079.0,
+        "quote_time": "2026-09-15 231003"
       },
       {
         "symbol": "AO0",
         "name": "氧化铝",
         "exchange": "SHFE",
         "category": "nonferrous",
-        "price": 2682.0,
+        "price": 2684.0,
         "previous_settlement": 2688.0,
-        "change_pct": -0.22321428571429047,
-        "volume": 33677.0,
-        "hold": 232408.0,
-        "quote_time": "2026-09-15 223439"
+        "change_pct": -0.14880952380952328,
+        "volume": 39670.0,
+        "hold": 233232.0,
+        "quote_time": "2026-09-15 231003"
       },
       {
         "symbol": "AD0",
         "name": "铸造铝合金",
         "exchange": "SHFE",
         "category": "nonferrous",
-        "price": 23230.0,
+        "price": 23255.0,
         "previous_settlement": 23290.0,
-        "change_pct": -0.25762129669385514,
-        "volume": 3010.0,
-        "hold": 18677.0,
-        "quote_time": "2026-09-15 223439"
+        "change_pct": -0.15027908973808124,
+        "volume": 3638.0,
+        "hold": 18817.0,
+        "quote_time": "2026-09-15 231002"
+      },
+      {
+        "symbol": "PB0",
+        "name": "沪铅",
+        "exchange": "SHFE",
+        "category": "nonferrous",
+        "price": 15775.0,
+        "previous_settlement": 15815.0,
+        "change_pct": -0.25292443882389826,
+        "volume": 22910.0,
+        "hold": 63197.0,
+        "quote_time": "2026-09-15 231003"
       },
       {
         "symbol": "SN0",
         "name": "沪锡",
         "exchange": "SHFE",
         "category": "nonferrous",
-        "price": 393020.0,
+        "price": 393480.0,
         "previous_settlement": 394520.0,
-        "change_pct": -0.3802088614011989,
-        "volume": 33296.0,
-        "hold": 35666.0,
-        "quote_time": "2026-09-15 223439"
+        "change_pct": -0.26361147723816813,
+        "volume": 41432.0,
+        "hold": 35549.0,
+        "quote_time": "2026-09-15 231003"
       },
       {
         "symbol": "SM0",
@@ -352,18 +493,6 @@
         "quote_time": "2026-09-15 150106"
       },
       {
-        "symbol": "SS0",
-        "name": "不锈钢",
-        "exchange": "SHFE",
-        "category": "ferrous",
-        "price": 13430.0,
-        "previous_settlement": 13545.0,
-        "change_pct": -0.8490217792543331,
-        "volume": 57952.0,
-        "hold": 128907.0,
-        "quote_time": "2026-09-15 223439"
-      },
-      {
         "symbol": "PT0",
         "name": "铂",
         "exchange": "GFEX",
@@ -374,18 +503,6 @@
         "volume": 2490.0,
         "hold": 10340.0,
         "quote_time": "2026-09-15 150106"
-      },
-      {
-        "symbol": "J0",
-        "name": "焦炭",
-        "exchange": "DCE",
-        "category": "ferrous",
-        "price": 2052.0,
-        "previous_settlement": 2072.5,
-        "change_pct": -0.9891435464414955,
-        "volume": 8877.0,
-        "hold": 56673.0,
-        "quote_time": "2026-09-15 223439"
       },
       {
         "symbol": "SF0",
@@ -400,31 +517,55 @@
         "quote_time": "2026-09-15 150000"
       },
       {
+        "symbol": "J0",
+        "name": "焦炭",
+        "exchange": "DCE",
+        "category": "ferrous",
+        "price": 2048.0,
+        "previous_settlement": 2072.5,
+        "change_pct": -1.1821471652593507,
+        "volume": 9445.0,
+        "hold": 56550.0,
+        "quote_time": "2026-09-15 225959"
+      },
+      {
+        "symbol": "SS0",
+        "name": "不锈钢",
+        "exchange": "SHFE",
+        "category": "ferrous",
+        "price": 13375.0,
+        "previous_settlement": 13545.0,
+        "change_pct": -1.2550756736803281,
+        "volume": 79173.0,
+        "hold": 131323.0,
+        "quote_time": "2026-09-15 231003"
+      },
+      {
         "symbol": "JM0",
         "name": "焦煤",
         "exchange": "DCE",
         "category": "ferrous",
-        "price": 1597.5,
+        "price": 1594.5,
         "previous_settlement": 1617.0,
-        "change_pct": -1.2059369202226389,
-        "volume": 196851.0,
-        "hold": 491808.0,
-        "quote_time": "2026-09-15 223439"
+        "change_pct": -1.3914656771799594,
+        "volume": 216508.0,
+        "hold": 487121.0,
+        "quote_time": "2026-09-15 230000"
       },
       {
         "symbol": "NI0",
         "name": "沪镍",
         "exchange": "SHFE",
         "category": "nonferrous",
-        "price": 122070.0,
+        "price": 121480.0,
         "previous_settlement": 124080.0,
-        "change_pct": -1.6199226305609327,
-        "volume": 50890.0,
-        "hold": 132383.0,
-        "quote_time": "2026-09-15 223439"
+        "change_pct": -2.095422308188266,
+        "volume": 85733.0,
+        "hold": 133866.0,
+        "quote_time": "2026-09-15 231003"
       }
     ],
-    "last_quote": "2026-09-15 223439"
+    "last_quote": "2026-09-15 231003"
   },
   "performance": {
     "assumptions": {
@@ -439,29 +580,29 @@
         "key": "ma_trend",
         "name": "移动均线10/30/60",
         "frequency": "daily",
-        "assets": 9,
-        "trades": 143,
-        "win_rate_pct": 34.96503496503497,
-        "equal_weight_return_pct": 15.037765497885065,
-        "median_return_pct": 0.6077643763760854,
-        "average_sharpe": 0.13522670185076127,
-        "positive_assets": 5,
-        "worst_drawdown_pct": -46.73229147082277,
+        "assets": 17,
+        "trades": 272,
+        "win_rate_pct": 36.39705882352941,
+        "equal_weight_return_pct": 3.5169803847086034,
+        "median_return_pct": -2.4458608448766905,
+        "average_sharpe": 0.014360640594538801,
+        "positive_assets": 6,
+        "worst_drawdown_pct": -52.248312985784004,
         "sample_start": "2024-06-28",
         "sample_end": "2026-09-15"
       },
       {
-        "key": "fibonacci_0618",
-        "name": "斐波那契0.618通道",
+        "key": "daily_four_factor",
+        "name": "日线四因子",
         "frequency": "daily",
-        "assets": 9,
-        "trades": 416,
-        "win_rate_pct": 25.48076923076923,
-        "equal_weight_return_pct": 5.0446345425064045,
-        "median_return_pct": -10.544589541923798,
-        "average_sharpe": -0.1742546779597666,
-        "positive_assets": 3,
-        "worst_drawdown_pct": -47.84643478887762,
+        "assets": 17,
+        "trades": 842,
+        "win_rate_pct": 43.23040380047506,
+        "equal_weight_return_pct": -0.45315806835869427,
+        "median_return_pct": -5.236289921303272,
+        "average_sharpe": -0.1674411839731113,
+        "positive_assets": 7,
+        "worst_drawdown_pct": -41.260459036793186,
         "sample_start": "2024-06-28",
         "sample_end": "2026-09-15"
       },
@@ -469,29 +610,29 @@
         "key": "five_minute_momentum",
         "name": "5分钟动量",
         "frequency": "5m",
-        "assets": 9,
-        "trades": 609,
-        "win_rate_pct": 24.302134646962234,
-        "equal_weight_return_pct": -3.9056235344439907,
-        "median_return_pct": -4.801365443742645,
-        "average_sharpe": -15.60451158170717,
+        "assets": 17,
+        "trades": 1154,
+        "win_rate_pct": 22.183708838821488,
+        "equal_weight_return_pct": -5.014211760326664,
+        "median_return_pct": -4.915732306940168,
+        "average_sharpe": -16.92290685551807,
         "positive_assets": 0,
-        "worst_drawdown_pct": -6.571124359094194,
+        "worst_drawdown_pct": -12.21942414857039,
         "sample_start": "2026-08-18 09:30:00",
-        "sample_end": "2026-09-15 22:35:00"
+        "sample_end": "2026-09-15 23:05:00"
       },
       {
-        "key": "daily_four_factor",
-        "name": "日线四因子",
+        "key": "fibonacci_0618",
+        "name": "斐波那契0.618通道",
         "frequency": "daily",
-        "assets": 9,
-        "trades": 447,
-        "win_rate_pct": 41.387024608501115,
-        "equal_weight_return_pct": -4.898027670709329,
-        "median_return_pct": -8.914463750512835,
-        "average_sharpe": -0.3616465771889139,
-        "positive_assets": 2,
-        "worst_drawdown_pct": -41.260459036793186,
+        "assets": 17,
+        "trades": 774,
+        "win_rate_pct": 26.098191214470283,
+        "equal_weight_return_pct": -5.835566947882351,
+        "median_return_pct": -16.578267519364687,
+        "average_sharpe": -0.3258697052324467,
+        "positive_assets": 4,
+        "worst_drawdown_pct": -54.75608487713244,
         "sample_start": "2024-06-28",
         "sample_end": "2026-09-15"
       },
@@ -499,21 +640,21 @@
         "key": "fdt_channel",
         "name": "FDT启发通道共振",
         "frequency": "daily",
-        "assets": 9,
-        "trades": 345,
-        "win_rate_pct": 39.130434782608695,
-        "equal_weight_return_pct": -7.880514682581086,
-        "median_return_pct": -11.221430211780426,
-        "average_sharpe": -0.4330593198641468,
-        "positive_assets": 2,
-        "worst_drawdown_pct": -42.984386598013536,
+        "assets": 17,
+        "trades": 692,
+        "win_rate_pct": 37.861271676300575,
+        "equal_weight_return_pct": -10.815048365009682,
+        "median_return_pct": -13.893869141147519,
+        "average_sharpe": -0.5404325459194905,
+        "positive_assets": 3,
+        "worst_drawdown_pct": -45.036881561110306,
         "sample_start": "2024-06-28",
         "sample_end": "2026-09-15"
       }
     ],
     "frequency_assessment": {
       "decision": "alert_only",
-      "headline": "日线收盘刷新主模型，5分钟只保留预警",
+      "headline": "关闭5分钟定时交易信号，日线收盘刷新主模型",
       "reason": "当前5分钟样本期较短，且尚未同时满足成本后收益、Sharpe和跨品种稳定性门槛。",
       "criteria": "5分钟总交易≥30、至少5个品种为正、等权收益>0、平均Sharpe>0.5且不低于日线四因子"
     },
@@ -533,61 +674,600 @@
   "paper_trading": {
     "mode": "forward_paper",
     "started_at": "2026-09-15T22:28:43+08:00",
-    "updated_at": "2026-09-15T22:35:02+08:00",
+    "updated_at": "2026-09-15T23:09:02+08:00",
     "initial_cash": 1000000.0,
     "strategies": [
       {
+        "key": "fdt_channel",
+        "name": "FDT启发通道共振",
+        "equity": 1000574.4666495819,
+        "return_pct": 0.05744666495819395,
+        "max_drawdown_pct": -0.011500874735115296,
+        "trades": 6,
+        "active_positions": 6,
+        "observations": 5
+      },
+      {
         "key": "daily_four_factor",
         "name": "日线四因子",
-        "equity": 1000352.8214129716,
-        "return_pct": 0.0352821412971549,
-        "max_drawdown_pct": -0.00016085881788807654,
-        "trades": 2,
-        "active_positions": 2,
-        "observations": 3
+        "equity": 1000558.8256811415,
+        "return_pct": 0.05588256811415171,
+        "max_drawdown_pct": -0.012165978449873993,
+        "trades": 4,
+        "active_positions": 4,
+        "observations": 5
       },
       {
         "key": "fibonacci_0618",
         "name": "斐波那契0.618通道",
-        "equity": 1000322.2656058789,
-        "return_pct": 0.03222656058790019,
-        "max_drawdown_pct": -0.00016085881788807654,
-        "trades": 3,
-        "active_positions": 3,
-        "observations": 3
-      },
-      {
-        "key": "fdt_channel",
-        "name": "FDT启发通道共振",
-        "equity": 1000273.7292707477,
-        "return_pct": 0.027372927074775788,
-        "max_drawdown_pct": -0.00016085881788807654,
-        "trades": 4,
-        "active_positions": 4,
-        "observations": 3
-      },
-      {
-        "key": "five_minute_momentum",
-        "name": "5分钟动量",
-        "equity": 1000085.624843955,
-        "return_pct": 0.008562484395513437,
-        "max_drawdown_pct": -0.012928749833374109,
-        "trades": 5,
-        "active_positions": 3,
-        "observations": 3
+        "equity": 1000537.2195652059,
+        "return_pct": 0.05372195652058043,
+        "max_drawdown_pct": -0.007769601064844256,
+        "trades": 6,
+        "active_positions": 6,
+        "observations": 5
       },
       {
         "key": "ma_trend",
         "name": "移动均线10/30/60",
-        "equity": 999891.3950012848,
-        "return_pct": -0.010860499871523377,
+        "equity": 1000107.1780019616,
+        "return_pct": 0.01071780019614721,
         "max_drawdown_pct": 0.0,
-        "trades": 6,
-        "active_positions": 6,
-        "observations": 3
+        "trades": 12,
+        "active_positions": 12,
+        "observations": 5
       }
     ],
-    "note": "无真实委托；按扫描时点最新价盯市，含开平各万1.2和每侧1跳，首次运行仅建立仓位并计成本。"
+    "positions": [
+      {
+        "strategy_key": "fdt_channel",
+        "strategy": "FDT启发通道共振",
+        "asset_id": "stainless_steel",
+        "asset": "不锈钢",
+        "symbol": "SS0",
+        "side": -1,
+        "entry_price": 13375.0,
+        "current_price": 13370.0,
+        "unrealized_pct": 0.037383177570093906,
+        "entry_time": "2026-09-15T23:00:25+08:00",
+        "bar_time": "2026-09-15 23:05:00"
+      },
+      {
+        "strategy_key": "fdt_channel",
+        "strategy": "FDT启发通道共振",
+        "asset_id": "lead",
+        "asset": "沪铅",
+        "symbol": "PB0",
+        "side": -1,
+        "entry_price": 15775.0,
+        "current_price": 15775.0,
+        "unrealized_pct": -0.0,
+        "entry_time": "2026-09-15T22:28:43+08:00",
+        "bar_time": "2026-09-15 23:05:00"
+      },
+      {
+        "strategy_key": "fdt_channel",
+        "strategy": "FDT启发通道共振",
+        "asset_id": "tin",
+        "asset": "沪锡",
+        "symbol": "SN0",
+        "side": -1,
+        "entry_price": 393210.0,
+        "current_price": 393210.0,
+        "unrealized_pct": -0.0,
+        "entry_time": "2026-09-15T22:28:43+08:00",
+        "bar_time": "2026-09-15 23:05:00"
+      },
+      {
+        "strategy_key": "fdt_channel",
+        "strategy": "FDT启发通道共振",
+        "asset_id": "nickel",
+        "asset": "沪镍",
+        "symbol": "NI0",
+        "side": -1,
+        "entry_price": 121510.0,
+        "current_price": 121510.0,
+        "unrealized_pct": -0.0,
+        "entry_time": "2026-09-15T22:28:43+08:00",
+        "bar_time": "2026-09-15 23:05:00"
+      },
+      {
+        "strategy_key": "fdt_channel",
+        "strategy": "FDT启发通道共振",
+        "asset_id": "lithium",
+        "asset": "碳酸锂",
+        "symbol": "LC0",
+        "side": -1,
+        "entry_price": 129120.0,
+        "current_price": 129120.0,
+        "unrealized_pct": -0.0,
+        "entry_time": "2026-09-15T22:28:43+08:00",
+        "bar_time": "2026-09-15 15:00:00"
+      },
+      {
+        "strategy_key": "fdt_channel",
+        "strategy": "FDT启发通道共振",
+        "asset_id": "ferromanganese",
+        "asset": "锰硅",
+        "symbol": "SM0",
+        "side": -1,
+        "entry_price": 5784.0,
+        "current_price": 5784.0,
+        "unrealized_pct": -0.0,
+        "entry_time": "2026-09-15T23:00:25+08:00",
+        "bar_time": "2026-09-15 15:00:00"
+      },
+      {
+        "strategy_key": "fibonacci_0618",
+        "strategy": "斐波那契0.618通道",
+        "asset_id": "stainless_steel",
+        "asset": "不锈钢",
+        "symbol": "SS0",
+        "side": -1,
+        "entry_price": 13375.0,
+        "current_price": 13370.0,
+        "unrealized_pct": 0.037383177570093906,
+        "entry_time": "2026-09-15T23:00:25+08:00",
+        "bar_time": "2026-09-15 23:05:00"
+      },
+      {
+        "strategy_key": "fibonacci_0618",
+        "strategy": "斐波那契0.618通道",
+        "asset_id": "tin",
+        "asset": "沪锡",
+        "symbol": "SN0",
+        "side": -1,
+        "entry_price": 393210.0,
+        "current_price": 393210.0,
+        "unrealized_pct": -0.0,
+        "entry_time": "2026-09-15T22:28:43+08:00",
+        "bar_time": "2026-09-15 23:05:00"
+      },
+      {
+        "strategy_key": "fibonacci_0618",
+        "strategy": "斐波那契0.618通道",
+        "asset_id": "nickel",
+        "asset": "沪镍",
+        "symbol": "NI0",
+        "side": -1,
+        "entry_price": 121510.0,
+        "current_price": 121510.0,
+        "unrealized_pct": -0.0,
+        "entry_time": "2026-09-15T22:28:43+08:00",
+        "bar_time": "2026-09-15 23:05:00"
+      },
+      {
+        "strategy_key": "fibonacci_0618",
+        "strategy": "斐波那契0.618通道",
+        "asset_id": "lithium",
+        "asset": "碳酸锂",
+        "symbol": "LC0",
+        "side": -1,
+        "entry_price": 129120.0,
+        "current_price": 129120.0,
+        "unrealized_pct": -0.0,
+        "entry_time": "2026-09-15T22:28:43+08:00",
+        "bar_time": "2026-09-15 15:00:00"
+      },
+      {
+        "strategy_key": "fibonacci_0618",
+        "strategy": "斐波那契0.618通道",
+        "asset_id": "iron_ore",
+        "asset": "铁矿石",
+        "symbol": "I0",
+        "side": -1,
+        "entry_price": 708.0,
+        "current_price": 708.0,
+        "unrealized_pct": -0.0,
+        "entry_time": "2026-09-15T23:00:25+08:00",
+        "bar_time": "2026-09-15 23:00:00"
+      },
+      {
+        "strategy_key": "fibonacci_0618",
+        "strategy": "斐波那契0.618通道",
+        "asset_id": "ferromanganese",
+        "asset": "锰硅",
+        "symbol": "SM0",
+        "side": -1,
+        "entry_price": 5784.0,
+        "current_price": 5784.0,
+        "unrealized_pct": -0.0,
+        "entry_time": "2026-09-15T23:00:25+08:00",
+        "bar_time": "2026-09-15 15:00:00"
+      },
+      {
+        "strategy_key": "daily_four_factor",
+        "strategy": "日线四因子",
+        "asset_id": "tin",
+        "asset": "沪锡",
+        "symbol": "SN0",
+        "side": -1,
+        "entry_price": 393210.0,
+        "current_price": 393210.0,
+        "unrealized_pct": -0.0,
+        "entry_time": "2026-09-15T22:28:43+08:00",
+        "bar_time": "2026-09-15 23:05:00"
+      },
+      {
+        "strategy_key": "daily_four_factor",
+        "strategy": "日线四因子",
+        "asset_id": "nickel",
+        "asset": "沪镍",
+        "symbol": "NI0",
+        "side": -1,
+        "entry_price": 121510.0,
+        "current_price": 121510.0,
+        "unrealized_pct": -0.0,
+        "entry_time": "2026-09-15T22:28:43+08:00",
+        "bar_time": "2026-09-15 23:05:00"
+      },
+      {
+        "strategy_key": "daily_four_factor",
+        "strategy": "日线四因子",
+        "asset_id": "coke",
+        "asset": "焦炭",
+        "symbol": "J0",
+        "side": -1,
+        "entry_price": 2048.0,
+        "current_price": 2048.0,
+        "unrealized_pct": -0.0,
+        "entry_time": "2026-09-15T23:00:25+08:00",
+        "bar_time": "2026-09-15 23:00:00"
+      },
+      {
+        "strategy_key": "daily_four_factor",
+        "strategy": "日线四因子",
+        "asset_id": "iron_ore",
+        "asset": "铁矿石",
+        "symbol": "I0",
+        "side": -1,
+        "entry_price": 708.0,
+        "current_price": 708.0,
+        "unrealized_pct": -0.0,
+        "entry_time": "2026-09-15T23:00:25+08:00",
+        "bar_time": "2026-09-15 23:00:00"
+      },
+      {
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "stainless_steel",
+        "asset": "不锈钢",
+        "symbol": "SS0",
+        "side": -1,
+        "entry_price": 13375.0,
+        "current_price": 13370.0,
+        "unrealized_pct": 0.037383177570093906,
+        "entry_time": "2026-09-15T23:00:25+08:00",
+        "bar_time": "2026-09-15 23:05:00"
+      },
+      {
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "lead",
+        "asset": "沪铅",
+        "symbol": "PB0",
+        "side": 1,
+        "entry_price": 15775.0,
+        "current_price": 15775.0,
+        "unrealized_pct": 0.0,
+        "entry_time": "2026-09-15T22:28:43+08:00",
+        "bar_time": "2026-09-15 23:05:00"
+      },
+      {
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "copper",
+        "asset": "沪铜",
+        "symbol": "CU0",
+        "side": 1,
+        "entry_price": 107030.0,
+        "current_price": 107030.0,
+        "unrealized_pct": 0.0,
+        "entry_time": "2026-09-15T22:28:43+08:00",
+        "bar_time": "2026-09-15 23:05:00"
+      },
+      {
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "aluminium",
+        "asset": "沪铝",
+        "symbol": "AL0",
+        "side": 1,
+        "entry_price": 24110.0,
+        "current_price": 24110.0,
+        "unrealized_pct": 0.0,
+        "entry_time": "2026-09-15T22:28:43+08:00",
+        "bar_time": "2026-09-15 23:05:00"
+      },
+      {
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "zinc",
+        "asset": "沪锌",
+        "symbol": "ZN0",
+        "side": 1,
+        "entry_price": 26085.0,
+        "current_price": 26085.0,
+        "unrealized_pct": 0.0,
+        "entry_time": "2026-09-15T22:28:43+08:00",
+        "bar_time": "2026-09-15 23:05:00"
+      },
+      {
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "nickel",
+        "asset": "沪镍",
+        "symbol": "NI0",
+        "side": -1,
+        "entry_price": 121510.0,
+        "current_price": 121510.0,
+        "unrealized_pct": -0.0,
+        "entry_time": "2026-09-15T22:28:43+08:00",
+        "bar_time": "2026-09-15 23:05:00"
+      },
+      {
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "hot_rolled_coil",
+        "asset": "热轧卷板",
+        "symbol": "HC0",
+        "side": 1,
+        "entry_price": 3318.0,
+        "current_price": 3316.0,
+        "unrealized_pct": -0.06027727546714656,
+        "entry_time": "2026-09-15T23:00:25+08:00",
+        "bar_time": "2026-09-15 23:00:00"
+      },
+      {
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "coke",
+        "asset": "焦炭",
+        "symbol": "J0",
+        "side": 1,
+        "entry_price": 2048.0,
+        "current_price": 2048.0,
+        "unrealized_pct": 0.0,
+        "entry_time": "2026-09-15T23:00:25+08:00",
+        "bar_time": "2026-09-15 23:00:00"
+      },
+      {
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "coking_coal",
+        "asset": "焦煤",
+        "symbol": "JM0",
+        "side": 1,
+        "entry_price": 1595.0,
+        "current_price": 1594.0,
+        "unrealized_pct": -0.06269592476488839,
+        "entry_time": "2026-09-15T23:00:25+08:00",
+        "bar_time": "2026-09-15 23:00:00"
+      },
+      {
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "ferrosilicon",
+        "asset": "硅铁",
+        "symbol": "SF0",
+        "side": 1,
+        "entry_price": 6020.0,
+        "current_price": 6020.0,
+        "unrealized_pct": 0.0,
+        "entry_time": "2026-09-15T23:00:25+08:00",
+        "bar_time": "2026-09-15 15:00:00"
+      },
+      {
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "lithium",
+        "asset": "碳酸锂",
+        "symbol": "LC0",
+        "side": -1,
+        "entry_price": 129120.0,
+        "current_price": 129120.0,
+        "unrealized_pct": -0.0,
+        "entry_time": "2026-09-15T22:28:43+08:00",
+        "bar_time": "2026-09-15 15:00:00"
+      },
+      {
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "ferromanganese",
+        "asset": "锰硅",
+        "symbol": "SM0",
+        "side": 1,
+        "entry_price": 5784.0,
+        "current_price": 5784.0,
+        "unrealized_pct": 0.0,
+        "entry_time": "2026-09-15T23:00:25+08:00",
+        "bar_time": "2026-09-15 15:00:00"
+      }
+    ],
+    "recent_changes": [
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "strategy_key": "daily_four_factor",
+        "strategy": "日线四因子",
+        "asset_id": "iron_ore",
+        "asset": "铁矿石",
+        "symbol": "I0",
+        "from_position": 0,
+        "to_position": -1,
+        "price": 708.0,
+        "bar_time": "2026-09-15 23:00:00"
+      },
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "strategy_key": "daily_four_factor",
+        "strategy": "日线四因子",
+        "asset_id": "coke",
+        "asset": "焦炭",
+        "symbol": "J0",
+        "from_position": 0,
+        "to_position": -1,
+        "price": 2048.0,
+        "bar_time": "2026-09-15 23:00:00"
+      },
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "hot_rolled_coil",
+        "asset": "热轧卷板",
+        "symbol": "HC0",
+        "from_position": 0,
+        "to_position": 1,
+        "price": 3318.0,
+        "bar_time": "2026-09-15 23:00:00"
+      },
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "stainless_steel",
+        "asset": "不锈钢",
+        "symbol": "SS0",
+        "from_position": 0,
+        "to_position": -1,
+        "price": 13375.0,
+        "bar_time": "2026-09-15 23:00:00"
+      },
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "coke",
+        "asset": "焦炭",
+        "symbol": "J0",
+        "from_position": 0,
+        "to_position": 1,
+        "price": 2048.0,
+        "bar_time": "2026-09-15 23:00:00"
+      },
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "coking_coal",
+        "asset": "焦煤",
+        "symbol": "JM0",
+        "from_position": 0,
+        "to_position": 1,
+        "price": 1595.0,
+        "bar_time": "2026-09-15 23:00:00"
+      },
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "ferrosilicon",
+        "asset": "硅铁",
+        "symbol": "SF0",
+        "from_position": 0,
+        "to_position": 1,
+        "price": 6020.0,
+        "bar_time": "2026-09-15 15:00:00"
+      },
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "strategy_key": "ma_trend",
+        "strategy": "移动均线10/30/60",
+        "asset_id": "ferromanganese",
+        "asset": "锰硅",
+        "symbol": "SM0",
+        "from_position": 0,
+        "to_position": 1,
+        "price": 5784.0,
+        "bar_time": "2026-09-15 15:00:00"
+      },
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "strategy_key": "fibonacci_0618",
+        "strategy": "斐波那契0.618通道",
+        "asset_id": "stainless_steel",
+        "asset": "不锈钢",
+        "symbol": "SS0",
+        "from_position": 0,
+        "to_position": -1,
+        "price": 13375.0,
+        "bar_time": "2026-09-15 23:00:00"
+      },
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "strategy_key": "fibonacci_0618",
+        "strategy": "斐波那契0.618通道",
+        "asset_id": "iron_ore",
+        "asset": "铁矿石",
+        "symbol": "I0",
+        "from_position": 0,
+        "to_position": -1,
+        "price": 708.0,
+        "bar_time": "2026-09-15 23:00:00"
+      },
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "strategy_key": "fibonacci_0618",
+        "strategy": "斐波那契0.618通道",
+        "asset_id": "ferromanganese",
+        "asset": "锰硅",
+        "symbol": "SM0",
+        "from_position": 0,
+        "to_position": -1,
+        "price": 5784.0,
+        "bar_time": "2026-09-15 15:00:00"
+      },
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "strategy_key": "fdt_channel",
+        "strategy": "FDT启发通道共振",
+        "asset_id": "stainless_steel",
+        "asset": "不锈钢",
+        "symbol": "SS0",
+        "from_position": 0,
+        "to_position": -1,
+        "price": 13375.0,
+        "bar_time": "2026-09-15 23:00:00"
+      },
+      {
+        "time": "2026-09-15T23:00:25+08:00",
+        "strategy_key": "fdt_channel",
+        "strategy": "FDT启发通道共振",
+        "asset_id": "ferromanganese",
+        "asset": "锰硅",
+        "symbol": "SM0",
+        "from_position": 0,
+        "to_position": -1,
+        "price": 5784.0,
+        "bar_time": "2026-09-15 15:00:00"
+      }
+    ],
+    "note": "无真实委托；按扫描时点最新价盯市，含开平各万1.2和每侧1跳。新加入品种从首次真实扫描建立仓位，不回填历史收益。"
+  },
+  "signal_changes": {
+    "updated_at": "2026-09-15T23:09:02+08:00",
+    "current_changes": [],
+    "recent_events": [
+      {
+        "event_id": "silver:2026-09-15 23:00:00:short>short",
+        "time": "2026-09-15T23:00:25+08:00",
+        "observation": "2026-09-15 23:00:00",
+        "asset_id": "silver",
+        "asset": "白银",
+        "symbol": "AG0",
+        "from_signal": "short",
+        "to_signal": "short",
+        "from_score": -52,
+        "to_score": -78,
+        "score_delta": -26,
+        "daily_from": "short",
+        "daily_to": "short",
+        "severity": "important",
+        "reason": "综合评分变化 26 分"
+      }
+    ],
+    "major_count": 0,
+    "note": "仅比较不同真实行情时点；首次扫描建立基线，不生成虚构反转记录。"
   },
   "assets": [
     {
@@ -596,11 +1276,12 @@
       "short_name": "铜",
       "symbol": "CU0",
       "exchange": "SHFE",
+      "sector": "nonferrous",
       "provider": "sina",
       "decimals": 0,
       "unit": "元/吨",
       "bar_timezone": "Asia/Shanghai",
-      "score": -45,
+      "score": -52,
       "signal": "short",
       "momentum_pct": -3.2453444223467742,
       "threshold_pct": 3.0,
@@ -626,17 +1307,17 @@
       "daily_signal": "short",
       "status": "ok",
       "status_text": "实时",
-      "price": 107200.0,
-      "bar_time": "2026-09-15 22:35:00",
+      "price": 107030.0,
+      "bar_time": "2026-09-15 23:05:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 0.0,
+      "age_minutes": 4.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.1588339717836229,
+      "change_pct": 0.0,
       "returns": {
         "day": -0.7511127596439127,
         "week": -3.2453444223467742,
@@ -821,18 +1502,18 @@
           "name": "5分钟动量",
           "status": "ok",
           "frequency": "5m",
-          "trades": 58,
-          "win_rate_pct": 31.03448275862069,
-          "net_return_pct": -1.4413800320477232,
-          "annual_return_pct": -30.42400025715154,
-          "max_drawdown_pct": -1.9018318338892115,
-          "sharpe": -7.468439934253849,
-          "profit_factor": 0.5625141883582767,
-          "avg_trade_pct": -0.02599157842412371,
+          "trades": 60,
+          "win_rate_pct": 30.0,
+          "net_return_pct": -1.5926631775185163,
+          "annual_return_pct": -33.04376328699878,
+          "max_drawdown_pct": -2.0524082061021853,
+          "sharpe": -8.216479468424271,
+          "profit_factor": 0.5445628050110927,
+          "avg_trade_pct": -0.027018387574921632,
           "positive_trades": 18,
-          "latest_target": -1,
-          "sample_start": "2026-09-01 21:50:00",
-          "sample_end": "2026-09-15 22:35:00",
+          "latest_target": 0,
+          "sample_start": "2026-09-01 22:20:00",
+          "sample_end": "2026-09-15 23:05:00",
           "observations": 938
         }
       ],
@@ -850,16 +1531,16 @@
           "vote": -3
         },
         "hour": {
-          "signal": "neutral",
-          "vote": 0,
-          "momentum_pct": 0.4115226337448652,
-          "ema8": 107243.17617790167,
-          "ema21": 107874.34987203444,
-          "rsi": 33.63636363636364
+          "signal": "short",
+          "vote": -1,
+          "momentum_pct": 0.07483629560336436,
+          "ema8": 107184.69258281241,
+          "ema21": 107793.04533821312,
+          "rsi": 29.395604395604394
         },
         "five": {
           "signal": "watch_short",
-          "score": -37
+          "score": -65
         }
       },
       "sparkline": [
@@ -1117,9 +1798,9 @@
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 0
+          "incomplete_bars_excluded": 1
         },
-        "last_actual_observation": "2026-09-15 22:35:00",
+        "last_actual_observation": "2026-09-15 23:05:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -1138,6 +1819,7 @@
       "short_name": "铝",
       "symbol": "AL0",
       "exchange": "SHFE",
+      "sector": "nonferrous",
       "provider": "sina",
       "decimals": 0,
       "unit": "元/吨",
@@ -1168,17 +1850,17 @@
       "daily_signal": "watch_long",
       "status": "ok",
       "status_text": "实时",
-      "price": 24085.0,
-      "bar_time": "2026-09-15 22:35:00",
+      "price": 24110.0,
+      "bar_time": "2026-09-15 23:05:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 0.0,
+      "age_minutes": 4.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": -0.0829703381041269,
+      "change_pct": 0.0207425845260234,
       "returns": {
         "day": 0.2912419388391818,
         "week": -1.451349141455438,
@@ -1363,18 +2045,18 @@
           "name": "5分钟动量",
           "status": "ok",
           "frequency": "5m",
-          "trades": 65,
-          "win_rate_pct": 6.153846153846154,
-          "net_return_pct": -6.571124359094194,
-          "annual_return_pct": -81.6992604403176,
-          "max_drawdown_pct": -6.571124359094194,
-          "sharpe": -37.88009408486514,
-          "profit_factor": 0.03608985984227693,
-          "avg_trade_pct": -0.10449683177380892,
+          "trades": 66,
+          "win_rate_pct": 6.0606060606060606,
+          "net_return_pct": -6.6517500950393105,
+          "annual_return_pct": -82.0897898622977,
+          "max_drawdown_pct": -6.6517500950393105,
+          "sharpe": -38.297473417208565,
+          "profit_factor": 0.03565312261680924,
+          "avg_trade_pct": -0.10422139854195003,
           "positive_trades": 4,
           "latest_target": 0,
-          "sample_start": "2026-09-01 21:55:00",
-          "sample_end": "2026-09-15 22:35:00",
+          "sample_start": "2026-09-01 22:25:00",
+          "sample_end": "2026-09-15 23:05:00",
           "observations": 938
         }
       ],
@@ -1394,14 +2076,14 @@
         "hour": {
           "signal": "strong_long",
           "vote": 2,
-          "momentum_pct": 0.49989585503020795,
-          "ema8": 24074.912154406928,
-          "ema21": 24102.327591120345,
-          "rsi": 65.06024096385542
+          "momentum_pct": 0.14549989607151037,
+          "ema8": 24078.265008983166,
+          "ema21": 24101.206901018497,
+          "rsi": 58.13953488372093
         },
         "five": {
-          "signal": "watch_short",
-          "score": -45
+          "signal": "neutral",
+          "score": -4
         }
       },
       "sparkline": [
@@ -1659,9 +2341,9 @@
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 0
+          "incomplete_bars_excluded": 1
         },
-        "last_actual_observation": "2026-09-15 22:35:00",
+        "last_actual_observation": "2026-09-15 23:05:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -1680,11 +2362,12 @@
       "short_name": "铅",
       "symbol": "PB0",
       "exchange": "SHFE",
+      "sector": "nonferrous",
       "provider": "sina",
       "decimals": 0,
       "unit": "元/吨",
       "bar_timezone": "Asia/Shanghai",
-      "score": -78,
+      "score": -85,
       "signal": "short",
       "momentum_pct": -2.2311744654477828,
       "threshold_pct": 3.0,
@@ -1710,17 +2393,17 @@
       "daily_signal": "short",
       "status": "ok",
       "status_text": "实时",
-      "price": 15790.0,
-      "bar_time": "2026-09-15 22:35:00",
+      "price": 15775.0,
+      "bar_time": "2026-09-15 23:05:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 0.0,
+      "age_minutes": 4.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.09508716323296529,
+      "change_pct": 0.0,
       "returns": {
         "day": -0.3159557661927326,
         "week": -2.2311744654477828,
@@ -1905,18 +2588,18 @@
           "name": "5分钟动量",
           "status": "ok",
           "frequency": "5m",
-          "trades": 63,
-          "win_rate_pct": 15.873015873015872,
-          "net_return_pct": -4.821154855333876,
-          "annual_return_pct": -70.90414884651433,
+          "trades": 64,
+          "win_rate_pct": 15.625,
+          "net_return_pct": -4.915732306940168,
+          "annual_return_pct": -71.6179743893403,
           "max_drawdown_pct": -4.918116278874274,
-          "sharpe": -23.350217212158224,
-          "profit_factor": 0.19742590139214106,
-          "avg_trade_pct": -0.07903093911152259,
+          "sharpe": -23.776193856761,
+          "profit_factor": 0.19566922484519714,
+          "avg_trade_pct": -0.07866632632974345,
           "positive_trades": 10,
           "latest_target": 0,
-          "sample_start": "2026-09-01 22:00:00",
-          "sample_end": "2026-09-15 22:35:00",
+          "sample_start": "2026-09-01 22:30:00",
+          "sample_end": "2026-09-15 23:05:00",
           "observations": 938
         }
       ],
@@ -1935,15 +2618,15 @@
         },
         "hour": {
           "signal": "strong_short",
-          "vote": -2,
-          "momentum_pct": -0.06313131313131493,
-          "ema8": 15825.514309689957,
-          "ema21": 15907.206285550456,
-          "rsi": 26.08695652173914
+          "vote": -3,
+          "momentum_pct": -0.22151898734177333,
+          "ema8": 15812.06668531441,
+          "ema21": 15894.278441409504,
+          "rsi": 20.588235294117652
         },
         "five": {
           "signal": "watch_short",
-          "score": -59
+          "score": -63
         }
       },
       "sparkline": [
@@ -2201,9 +2884,9 @@
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 0
+          "incomplete_bars_excluded": 1
         },
-        "last_actual_observation": "2026-09-15 22:35:00",
+        "last_actual_observation": "2026-09-15 23:05:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -2222,6 +2905,7 @@
       "short_name": "锌",
       "symbol": "ZN0",
       "exchange": "SHFE",
+      "sector": "nonferrous",
       "provider": "sina",
       "decimals": 0,
       "unit": "元/吨",
@@ -2252,17 +2936,17 @@
       "daily_signal": "short",
       "status": "ok",
       "status_text": "实时",
-      "price": 26065.0,
-      "bar_time": "2026-09-15 22:35:00",
+      "price": 26085.0,
+      "bar_time": "2026-09-15 23:05:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 0.0,
+      "age_minutes": 4.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": -0.3059858481545219,
+      "change_pct": -0.22948938611588865,
       "returns": {
         "day": -0.721473324473132,
         "week": -4.944555535357209,
@@ -2447,18 +3131,18 @@
           "name": "5分钟动量",
           "status": "ok",
           "frequency": "5m",
-          "trades": 63,
-          "win_rate_pct": 26.984126984126984,
-          "net_return_pct": -3.72296370820705,
-          "annual_return_pct": -61.24624839209981,
-          "max_drawdown_pct": -3.72296370820705,
-          "sharpe": -14.899446816262227,
-          "profit_factor": 0.30813721625137797,
-          "avg_trade_pct": -0.061395806364840336,
-          "positive_trades": 17,
-          "latest_target": -1,
-          "sample_start": "2026-09-01 21:50:00",
-          "sample_end": "2026-09-15 22:35:00",
+          "trades": 64,
+          "win_rate_pct": 28.125,
+          "net_return_pct": -3.7876551901256383,
+          "annual_return_pct": -61.89163967815503,
+          "max_drawdown_pct": -3.801468090157334,
+          "sharpe": -15.13562677705103,
+          "profit_factor": 0.3107107659967503,
+          "avg_trade_pct": -0.06021168882896929,
+          "positive_trades": 18,
+          "latest_target": 0,
+          "sample_start": "2026-09-01 22:20:00",
+          "sample_end": "2026-09-15 23:05:00",
           "observations": 938
         }
       ],
@@ -2478,14 +3162,14 @@
         "hour": {
           "signal": "strong_short",
           "vote": -3,
-          "momentum_pct": -0.28615032430370224,
-          "ema8": 26176.648550643997,
-          "ema21": 26417.538770351523,
-          "rsi": 23.728813559322035
+          "momentum_pct": -0.1532860701283778,
+          "ema8": 26149.615539389775,
+          "ema21": 26384.580700319566,
+          "rsi": 18.378378378378386
         },
         "five": {
-          "signal": "watch_short",
-          "score": -52
+          "signal": "neutral",
+          "score": -20
         }
       },
       "sparkline": [
@@ -2743,9 +3427,9 @@
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 0
+          "incomplete_bars_excluded": 1
         },
-        "last_actual_observation": "2026-09-15 22:35:00",
+        "last_actual_observation": "2026-09-15 23:05:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -2764,6 +3448,7 @@
       "short_name": "镍",
       "symbol": "NI0",
       "exchange": "SHFE",
+      "sector": "nonferrous",
       "provider": "sina",
       "decimals": 0,
       "unit": "元/吨",
@@ -2794,17 +3479,17 @@
       "daily_signal": "watch_short",
       "status": "ok",
       "status_text": "实时",
-      "price": 122220.0,
-      "bar_time": "2026-09-15 22:35:00",
+      "price": 121510.0,
+      "bar_time": "2026-09-15 23:05:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 0.0,
+      "age_minutes": 4.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": -1.3957240822912498,
+      "change_pct": -1.9685356998789816,
       "returns": {
         "day": -0.3777527728661023,
         "week": -2.708006279434849,
@@ -2990,17 +3675,17 @@
           "status": "ok",
           "frequency": "5m",
           "trades": 72,
-          "win_rate_pct": 23.61111111111111,
-          "net_return_pct": -4.8454165631427015,
-          "annual_return_pct": -71.08889082501064,
+          "win_rate_pct": 25.0,
+          "net_return_pct": -4.128690840824289,
+          "annual_return_pct": -65.12696462674828,
           "max_drawdown_pct": -4.9695046236137514,
-          "sharpe": -21.26660495626751,
-          "profit_factor": 0.24140296421001142,
-          "avg_trade_pct": -0.0692256834369903,
-          "positive_trades": 17,
-          "latest_target": -1,
-          "sample_start": "2026-09-01 21:50:00",
-          "sample_end": "2026-09-15 22:35:00",
+          "sharpe": -17.171782153220892,
+          "profit_factor": 0.35358934267492576,
+          "avg_trade_pct": -0.058772658422447,
+          "positive_trades": 18,
+          "latest_target": 0,
+          "sample_start": "2026-09-01 22:20:00",
+          "sample_end": "2026-09-15 23:05:00",
           "observations": 938
         }
       ],
@@ -3020,14 +3705,14 @@
         "hour": {
           "signal": "strong_short",
           "vote": -3,
-          "momentum_pct": -1.20346598202824,
-          "ema8": 123988.44625981123,
-          "ema21": 124848.24320545263,
-          "rsi": 28.80000000000001
+          "momentum_pct": -1.9561878587018078,
+          "ema8": 123388.79153540873,
+          "ema21": 124524.76655041147,
+          "rsi": 21.021897810218974
         },
         "five": {
           "signal": "watch_short",
-          "score": -89
+          "score": -67
         }
       },
       "sparkline": [
@@ -3285,9 +3970,9 @@
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 0
+          "incomplete_bars_excluded": 1
         },
-        "last_actual_observation": "2026-09-15 22:35:00",
+        "last_actual_observation": "2026-09-15 23:05:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -3301,30 +3986,12 @@
       }
     },
     {
-      "id": "cobalt",
-      "name": "LME钴",
-      "short_name": "钴",
-      "symbol": "CO",
-      "exchange": "LME",
-      "provider": "csv",
-      "decimals": 0,
-      "unit": "美元/吨",
-      "bar_timezone": "Europe/London",
-      "status": "missing",
-      "status_text": "缺少数据",
-      "signal": "missing",
-      "score": null,
-      "price": null,
-      "bar_time": null,
-      "error": "等待外部5分钟数据: data/cobalt_daily.csv",
-      "source": "待接入LME钴日线/60分钟/5分钟CSV"
-    },
-    {
       "id": "lithium",
       "name": "碳酸锂",
       "short_name": "锂",
       "symbol": "LC0",
       "exchange": "GFEX",
+      "sector": "new_energy",
       "provider": "sina",
       "decimals": 0,
       "unit": "元/吨",
@@ -3358,7 +4025,7 @@
       "price": 129120.0,
       "bar_time": "2026-09-15 15:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 455.0,
+      "age_minutes": 489.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
@@ -3867,11 +4534,12 @@
       "short_name": "锡",
       "symbol": "SN0",
       "exchange": "SHFE",
+      "sector": "nonferrous",
       "provider": "sina",
       "decimals": 0,
       "unit": "元/吨",
       "bar_timezone": "Asia/Shanghai",
-      "score": -58,
+      "score": -78,
       "signal": "short",
       "momentum_pct": -6.220312686478103,
       "threshold_pct": 3.0,
@@ -3897,17 +4565,17 @@
       "daily_signal": "short",
       "status": "ok",
       "status_text": "实时",
-      "price": 393130.0,
-      "bar_time": "2026-09-15 22:35:00",
+      "price": 393210.0,
+      "bar_time": "2026-09-15 23:05:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 0.0,
+      "age_minutes": 4.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.06108580009671627,
+      "change_pct": 0.08144773346230316,
       "returns": {
         "day": -1.2963195578444942,
         "week": -6.220312686478103,
@@ -4102,8 +4770,8 @@
           "avg_trade_pct": -0.061429655890712496,
           "positive_trades": 17,
           "latest_target": 0,
-          "sample_start": "2026-09-01 21:50:00",
-          "sample_end": "2026-09-15 22:35:00",
+          "sample_start": "2026-09-01 22:20:00",
+          "sample_end": "2026-09-15 23:05:00",
           "observations": 938
         }
       ],
@@ -4121,16 +4789,16 @@
           "vote": -3
         },
         "hour": {
-          "signal": "neutral",
-          "vote": 0,
-          "momentum_pct": 0.1063937582328478,
-          "ema8": 395131.6904007697,
-          "ema21": 400441.5660250222,
-          "rsi": 26.97505197505197
+          "signal": "strong_short",
+          "vote": -3,
+          "momentum_pct": -0.14986029972059445,
+          "ema8": 394682.4258672653,
+          "ema21": 399775.06002274744,
+          "rsi": 24.176857949200368
         },
         "five": {
           "signal": "watch_short",
-          "score": -62
+          "score": -40
         }
       },
       "sparkline": [
@@ -4388,9 +5056,9 @@
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 0
+          "incomplete_bars_excluded": 1
         },
-        "last_actual_observation": "2026-09-15 22:35:00",
+        "last_actual_observation": "2026-09-15 23:05:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -4409,6 +5077,7 @@
       "short_name": "金",
       "symbol": "AU0",
       "exchange": "SHFE",
+      "sector": "precious",
       "provider": "sina",
       "decimals": 2,
       "unit": "元/克",
@@ -4439,17 +5108,17 @@
       "daily_signal": "neutral",
       "status": "ok",
       "status_text": "实时",
-      "price": 930.36,
-      "bar_time": "2026-09-15 22:35:00",
+      "price": 930.0,
+      "bar_time": "2026-09-15 23:05:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 0.0,
+      "age_minutes": 4.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": -0.20808752547463172,
+      "change_pct": -0.24670170545960657,
       "returns": {
         "day": -0.5652730375426684,
         "week": -2.184404901796211,
@@ -4634,18 +5303,18 @@
           "name": "5分钟动量",
           "status": "ok",
           "frequency": "5m",
-          "trades": 71,
-          "win_rate_pct": 33.80281690140845,
-          "net_return_pct": -1.2781479142714103,
-          "annual_return_pct": -29.950234763117844,
+          "trades": 72,
+          "win_rate_pct": 34.72222222222222,
+          "net_return_pct": -1.2256169892981172,
+          "annual_return_pct": -29.614502976874558,
           "max_drawdown_pct": -2.63771197723901,
-          "sharpe": -3.4890190914698387,
-          "profit_factor": 0.7688483293107651,
-          "avg_trade_pct": -0.017845860323061367,
-          "positive_trades": 24,
+          "sharpe": -3.381228791701907,
+          "profit_factor": 0.7785876609437344,
+          "avg_trade_pct": -0.016856527950417314,
+          "positive_trades": 25,
           "latest_target": 0,
-          "sample_start": "2026-09-03 10:10:00",
-          "sample_end": "2026-09-15 22:35:00",
+          "sample_start": "2026-09-03 10:55:00",
+          "sample_end": "2026-09-15 23:05:00",
           "observations": 938
         }
       ],
@@ -4665,14 +5334,14 @@
         "hour": {
           "signal": "strong_short",
           "vote": -3,
-          "momentum_pct": -0.1370273626514762,
-          "ema8": 933.6134530421679,
-          "ema21": 937.2377306521944,
-          "rsi": 35.13033175355454
+          "momentum_pct": -0.7521046109140617,
+          "ema8": 932.5882412550195,
+          "ema21": 936.4888460474494,
+          "rsi": 34.39675174013924
         },
         "five": {
           "signal": "watch_short",
-          "score": -50
+          "score": -37
         }
       },
       "sparkline": [
@@ -4930,9 +5599,9 @@
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 0
+          "incomplete_bars_excluded": 1
         },
-        "last_actual_observation": "2026-09-15 22:35:00",
+        "last_actual_observation": "2026-09-15 23:05:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -4951,11 +5620,12 @@
       "short_name": "银",
       "symbol": "AG0",
       "exchange": "SHFE",
+      "sector": "precious",
       "provider": "sina",
       "decimals": 0,
       "unit": "元/千克",
       "bar_timezone": "Asia/Shanghai",
-      "score": -52,
+      "score": -78,
       "signal": "short",
       "momentum_pct": -4.173643410852712,
       "threshold_pct": 3.0,
@@ -4981,17 +5651,17 @@
       "daily_signal": "short",
       "status": "ok",
       "status_text": "实时",
-      "price": 15506.0,
-      "bar_time": "2026-09-15 22:35:00",
+      "price": 15490.0,
+      "bar_time": "2026-09-15 23:05:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 0.0,
+      "age_minutes": 4.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.34946932435930833,
+      "change_pct": 0.2459228578824746,
       "returns": {
         "day": -0.489438433797007,
         "week": -4.173643410852712,
@@ -5176,18 +5846,18 @@
           "name": "5分钟动量",
           "status": "ok",
           "frequency": "5m",
-          "trades": 67,
-          "win_rate_pct": 28.35820895522388,
-          "net_return_pct": -5.385385138433207,
-          "annual_return_pct": -78.38652300321176,
+          "trades": 68,
+          "win_rate_pct": 29.411764705882355,
+          "net_return_pct": -5.261871614870605,
+          "annual_return_pct": -78.54727902680442,
           "max_drawdown_pct": -5.385385138433207,
-          "sharpe": -11.809397572882334,
-          "profit_factor": 0.4542043109674361,
-          "avg_trade_pct": -0.08218642168480272,
-          "positive_trades": 19,
+          "sharpe": -11.650483228771094,
+          "profit_factor": 0.4671708826444023,
+          "avg_trade_pct": -0.07905399293845707,
+          "positive_trades": 20,
           "latest_target": 0,
-          "sample_start": "2026-09-03 10:05:00",
-          "sample_end": "2026-09-15 22:35:00",
+          "sample_start": "2026-09-03 10:50:00",
+          "sample_end": "2026-09-15 23:05:00",
           "observations": 938
         }
       ],
@@ -5205,16 +5875,16 @@
           "vote": -3
         },
         "hour": {
-          "signal": "long",
-          "vote": 1,
-          "momentum_pct": 0.6633178773827852,
-          "ema8": 15529.758523293813,
-          "ema21": 15595.796489228467,
-          "rsi": 47.75212636695018
+          "signal": "strong_short",
+          "vote": -3,
+          "momentum_pct": -0.38632412594166166,
+          "ema8": 15516.701073672966,
+          "ema21": 15584.45135384406,
+          "rsi": 43.281938325991185
         },
         "five": {
           "signal": "watch_short",
-          "score": -44
+          "score": -41
         }
       },
       "sparkline": [
@@ -5472,9 +6142,9 @@
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 0
+          "incomplete_bars_excluded": 1
         },
-        "last_actual_observation": "2026-09-15 22:35:00",
+        "last_actual_observation": "2026-09-15 23:05:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -5486,13 +6156,4378 @@
         "avg_trade_pct": 0.6345021090830384,
         "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
       }
+    },
+    {
+      "id": "rebar",
+      "name": "螺纹钢",
+      "short_name": "螺纹",
+      "symbol": "RB0",
+      "exchange": "SHFE",
+      "sector": "ferrous",
+      "provider": "sina",
+      "decimals": 0,
+      "unit": "元/吨",
+      "bar_timezone": "Asia/Shanghai",
+      "score": 13,
+      "signal": "neutral",
+      "momentum_pct": -2.108907774630153,
+      "threshold_pct": 3.0,
+      "ma20": 3114.0,
+      "rsi": 55.08982035928143,
+      "prior_high": 3203.0,
+      "prior_low": 2994.0,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": true
+      },
+      "short_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": true,
+        "rsi": false
+      },
+      "long_count": 1,
+      "short_count": 1,
+      "daily_score": 0,
+      "daily_signal": "neutral",
+      "status": "ok",
+      "status_text": "实时",
+      "price": 3121.0,
+      "bar_time": "2026-09-15 23:00:00",
+      "daily_date": "2026-09-15",
+      "age_minutes": 9.0,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": 0.3536977491961357,
+      "returns": {
+        "day": 0.4846526655896577,
+        "week": -2.108907774630153,
+        "month": 2.877935825339062
+      },
+      "position_changes": {
+        "day": -0.8131249871665913,
+        "week": 5.307228247082696,
+        "month": -20.071471442260012
+      },
+      "capital_bucket": "trend_long",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 3114.00 / MA60 3076.07",
+            "signal": "neutral",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF 18.87 / 柱 -9.82",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "52.2",
+            "signal": "short",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-2.11%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "55.1",
+            "signal": "long",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 23.2 / D 12.8",
+            "signal": "long",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-12.4",
+            "signal": "neutral",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "38.50 (1.24%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 48.1%",
+            "signal": "neutral",
+            "note": "上 3216.71 / 下 3011.29"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 3203.00 / 低 2994.00",
+            "signal": "neutral",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "0.94×",
+            "signal": "neutral",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "+2339048",
+            "signal": "long",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 3110.0,
+        "long_atr_stop": 3033.0,
+        "short_atr_stop": 3187.0,
+        "long_break_even_trigger": 3116.22,
+        "short_break_even_trigger": 3103.78,
+        "long_fib_trail": 3167.474,
+        "short_fib_trail": 3038.312
+      },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 39,
+          "win_rate_pct": 46.15384615384615,
+          "net_return_pct": -5.236289921303272,
+          "annual_return_pct": -2.4877664961756474,
+          "max_drawdown_pct": -12.545354392119524,
+          "sharpe": -0.21395432765007505,
+          "profit_factor": 0.7802767005626348,
+          "avg_trade_pct": -0.12573267413751454,
+          "positive_trades": 18,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 15,
+          "win_rate_pct": 46.666666666666664,
+          "net_return_pct": -0.07916687585756144,
+          "annual_return_pct": -0.03708968848116223,
+          "max_drawdown_pct": -14.478224724519306,
+          "sharpe": 0.05928547166550888,
+          "profit_factor": 1.136429963223204,
+          "avg_trade_pct": 0.12543270214410843,
+          "positive_trades": 7,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 52,
+          "win_rate_pct": 23.076923076923077,
+          "net_return_pct": -22.540466491314604,
+          "annual_return_pct": -11.275715137957288,
+          "max_drawdown_pct": -32.130109576153345,
+          "sharpe": -0.8873658189430443,
+          "profit_factor": 0.5050239828446313,
+          "avg_trade_pct": -0.4514217516198568,
+          "positive_trades": 12,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 37,
+          "win_rate_pct": 37.83783783783784,
+          "net_return_pct": -2.911860095358265,
+          "annual_return_pct": -1.3746358138410852,
+          "max_drawdown_pct": -13.469002819270216,
+          "sharpe": -0.0868702398862562,
+          "profit_factor": 0.8861960818231351,
+          "avg_trade_pct": -0.06316813908507071,
+          "positive_trades": 14,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 62,
+          "win_rate_pct": 14.516129032258066,
+          "net_return_pct": -5.3095711002744235,
+          "annual_return_pct": -63.627056589470634,
+          "max_drawdown_pct": -5.715258349257802,
+          "sharpe": -20.10966519477193,
+          "profit_factor": 0.15489397972395844,
+          "avg_trade_pct": -0.08791656410272251,
+          "positive_trades": 9,
+          "latest_target": 0,
+          "sample_start": "2026-08-27 11:30:00",
+          "sample_end": "2026-09-15 23:00:00",
+          "observations": 938
+        }
+      ],
+      "timeframes": {
+        "week": {
+          "signal": "neutral",
+          "vote": 0,
+          "momentum_pct": 3.1509121061359835,
+          "ema8": 3096.4254892998315,
+          "ema21": 3102.3516786739838,
+          "rsi": 43.145161290322584
+        },
+        "day": {
+          "signal": "neutral",
+          "vote": 0
+        },
+        "hour": {
+          "signal": "strong_long",
+          "vote": 2,
+          "momentum_pct": 0.6125080593165633,
+          "ema8": 3112.104848000564,
+          "ema21": 3115.5635225320602,
+          "rsi": 59.701492537313435
+        },
+        "five": {
+          "signal": "neutral",
+          "score": -11
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-24",
+          "value": 3111.0
+        },
+        {
+          "time": "2026-06-25",
+          "value": 3098.0
+        },
+        {
+          "time": "2026-06-26",
+          "value": 3093.0
+        },
+        {
+          "time": "2026-06-29",
+          "value": 3095.0
+        },
+        {
+          "time": "2026-06-30",
+          "value": 3088.0
+        },
+        {
+          "time": "2026-07-01",
+          "value": 3067.0
+        },
+        {
+          "time": "2026-07-02",
+          "value": 3067.0
+        },
+        {
+          "time": "2026-07-03",
+          "value": 3062.0
+        },
+        {
+          "time": "2026-07-06",
+          "value": 3072.0
+        },
+        {
+          "time": "2026-07-07",
+          "value": 3068.0
+        },
+        {
+          "time": "2026-07-08",
+          "value": 3096.0
+        },
+        {
+          "time": "2026-07-09",
+          "value": 3091.0
+        },
+        {
+          "time": "2026-07-10",
+          "value": 3087.0
+        },
+        {
+          "time": "2026-07-13",
+          "value": 3054.0
+        },
+        {
+          "time": "2026-07-14",
+          "value": 3090.0
+        },
+        {
+          "time": "2026-07-15",
+          "value": 3115.0
+        },
+        {
+          "time": "2026-07-16",
+          "value": 3115.0
+        },
+        {
+          "time": "2026-07-17",
+          "value": 3112.0
+        },
+        {
+          "time": "2026-07-20",
+          "value": 3096.0
+        },
+        {
+          "time": "2026-07-21",
+          "value": 3095.0
+        },
+        {
+          "time": "2026-07-22",
+          "value": 3083.0
+        },
+        {
+          "time": "2026-07-23",
+          "value": 3085.0
+        },
+        {
+          "time": "2026-07-24",
+          "value": 3076.0
+        },
+        {
+          "time": "2026-07-27",
+          "value": 3078.0
+        },
+        {
+          "time": "2026-07-28",
+          "value": 3060.0
+        },
+        {
+          "time": "2026-07-29",
+          "value": 3062.0
+        },
+        {
+          "time": "2026-07-30",
+          "value": 3014.0
+        },
+        {
+          "time": "2026-07-31",
+          "value": 3004.0
+        },
+        {
+          "time": "2026-08-03",
+          "value": 2976.0
+        },
+        {
+          "time": "2026-08-04",
+          "value": 2983.0
+        },
+        {
+          "time": "2026-08-05",
+          "value": 2990.0
+        },
+        {
+          "time": "2026-08-06",
+          "value": 3014.0
+        },
+        {
+          "time": "2026-08-07",
+          "value": 3008.0
+        },
+        {
+          "time": "2026-08-10",
+          "value": 2997.0
+        },
+        {
+          "time": "2026-08-11",
+          "value": 3016.0
+        },
+        {
+          "time": "2026-08-12",
+          "value": 3010.0
+        },
+        {
+          "time": "2026-08-13",
+          "value": 3002.0
+        },
+        {
+          "time": "2026-08-14",
+          "value": 3015.0
+        },
+        {
+          "time": "2026-08-17",
+          "value": 3016.0
+        },
+        {
+          "time": "2026-08-18",
+          "value": 3023.0
+        },
+        {
+          "time": "2026-08-19",
+          "value": 3017.0
+        },
+        {
+          "time": "2026-08-20",
+          "value": 3032.0
+        },
+        {
+          "time": "2026-08-21",
+          "value": 3039.0
+        },
+        {
+          "time": "2026-08-24",
+          "value": 3066.0
+        },
+        {
+          "time": "2026-08-25",
+          "value": 3071.0
+        },
+        {
+          "time": "2026-08-26",
+          "value": 3076.0
+        },
+        {
+          "time": "2026-08-27",
+          "value": 3088.0
+        },
+        {
+          "time": "2026-08-28",
+          "value": 3112.0
+        },
+        {
+          "time": "2026-08-31",
+          "value": 3197.0
+        },
+        {
+          "time": "2026-09-01",
+          "value": 3174.0
+        },
+        {
+          "time": "2026-09-02",
+          "value": 3142.0
+        },
+        {
+          "time": "2026-09-03",
+          "value": 3142.0
+        },
+        {
+          "time": "2026-09-04",
+          "value": 3166.0
+        },
+        {
+          "time": "2026-09-07",
+          "value": 3153.0
+        },
+        {
+          "time": "2026-09-08",
+          "value": 3177.0
+        },
+        {
+          "time": "2026-09-09",
+          "value": 3169.0
+        },
+        {
+          "time": "2026-09-10",
+          "value": 3146.0
+        },
+        {
+          "time": "2026-09-11",
+          "value": 3108.0
+        },
+        {
+          "time": "2026-09-14",
+          "value": 3095.0
+        },
+        {
+          "time": "2026-09-15",
+          "value": 3110.0
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "last_actual_observation": "2026-09-15 23:00:00",
+        "last_daily_close": "2026-09-15",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 28,
+        "win_rate_pct": 35.714285714285715,
+        "net_return_pct": -23.758650472309416,
+        "max_drawdown_pct": -24.988408949905295,
+        "avg_trade_pct": -0.9426602124679323,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
+      }
+    },
+    {
+      "id": "hot_rolled_coil",
+      "name": "热轧卷板",
+      "short_name": "热卷",
+      "symbol": "HC0",
+      "exchange": "SHFE",
+      "sector": "ferrous",
+      "provider": "sina",
+      "decimals": 0,
+      "unit": "元/吨",
+      "bar_timezone": "Asia/Shanghai",
+      "score": -30,
+      "signal": "watch_short",
+      "momentum_pct": -2.533136966126659,
+      "threshold_pct": 3.0,
+      "ma20": 3348.9,
+      "rsi": 43.67816091954023,
+      "prior_high": 3415.0,
+      "prior_low": 3261.0,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": false
+      },
+      "short_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": true,
+        "rsi": true
+      },
+      "long_count": 0,
+      "short_count": 2,
+      "daily_score": -50,
+      "daily_signal": "watch_short",
+      "status": "ok",
+      "status_text": "实时",
+      "price": 3316.0,
+      "bar_time": "2026-09-15 23:00:00",
+      "daily_date": "2026-09-15",
+      "age_minutes": 9.0,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": 0.21154427319431957,
+      "returns": {
+        "day": -0.030211480362540843,
+        "week": -2.533136966126659,
+        "month": 0.8533983541603174
+      },
+      "position_changes": {
+        "day": 1.3869047847754112,
+        "week": -3.4706613988879087,
+        "month": 6.0357866751536315
+      },
+      "capital_bucket": "avoid",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 3348.90 / MA60 3300.68",
+            "signal": "neutral",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF 11.95 / 柱 -17.72",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "56.0",
+            "signal": "short",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-2.53%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "43.7",
+            "signal": "short",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 6.4 / D 6.9",
+            "signal": "short",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-82.9",
+            "signal": "neutral",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "32.79 (0.99%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 22.1%",
+            "signal": "neutral",
+            "note": "上 3420.47 / 下 3277.33"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 3415.00 / 低 3261.00",
+            "signal": "neutral",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "0.97×",
+            "signal": "neutral",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "+326952",
+            "signal": "long",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 3309.0,
+        "long_atr_stop": 3243.4285714285716,
+        "short_atr_stop": 3374.5714285714284,
+        "long_break_even_trigger": 3315.618,
+        "short_break_even_trigger": 3302.382,
+        "long_fib_trail": 3374.508,
+        "short_fib_trail": 3279.336
+      },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 34,
+          "win_rate_pct": 50.0,
+          "net_return_pct": 14.955086041565346,
+          "annual_return_pct": 6.745971618508273,
+          "max_drawdown_pct": -8.217500078659668,
+          "sharpe": 0.6820126167183412,
+          "profit_factor": 2.0624207371858567,
+          "avg_trade_pct": 0.42596393727803467,
+          "positive_trades": 17,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 18,
+          "win_rate_pct": 27.77777777777778,
+          "net_return_pct": -1.1041794913454028,
+          "annual_return_pct": -0.5187258615094059,
+          "max_drawdown_pct": -18.62154166522849,
+          "sharpe": 0.014947817993386988,
+          "profit_factor": 1.011547744158796,
+          "avg_trade_pct": 0.011499379033097857,
+          "positive_trades": 5,
+          "latest_target": 1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 39,
+          "win_rate_pct": 25.64102564102564,
+          "net_return_pct": -10.742240241705703,
+          "annual_return_pct": -5.183808967814308,
+          "max_drawdown_pct": -27.489009020997536,
+          "sharpe": -0.3675268315274656,
+          "profit_factor": 0.7630028913921919,
+          "avg_trade_pct": -0.24241080917403382,
+          "positive_trades": 10,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 40,
+          "win_rate_pct": 47.5,
+          "net_return_pct": 12.350348496344953,
+          "annual_return_pct": 5.606131803959813,
+          "max_drawdown_pct": -6.89655870054271,
+          "sharpe": 0.5596571375345122,
+          "profit_factor": 2.173777645786777,
+          "avg_trade_pct": 0.3019518016092478,
+          "positive_trades": 19,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 68,
+          "win_rate_pct": 5.88235294117647,
+          "net_return_pct": -6.244186165548538,
+          "annual_return_pct": -69.73630126177245,
+          "max_drawdown_pct": -6.244186165548538,
+          "sharpe": -30.18174882127435,
+          "profit_factor": 0.055855363146366015,
+          "avg_trade_pct": -0.09474280940224356,
+          "positive_trades": 4,
+          "latest_target": 0,
+          "sample_start": "2026-08-27 11:25:00",
+          "sample_end": "2026-09-15 23:00:00",
+          "observations": 938
+        }
+      ],
+      "timeframes": {
+        "week": {
+          "signal": "neutral",
+          "vote": 0,
+          "momentum_pct": 1.5030674846625791,
+          "ema8": 3318.491670063978,
+          "ema21": 3317.8928446113514,
+          "rsi": 42.55319148936171
+        },
+        "day": {
+          "signal": "watch_short",
+          "vote": -2
+        },
+        "hour": {
+          "signal": "neutral",
+          "vote": 0,
+          "momentum_pct": 0.18126888217522286,
+          "ema8": 3313.8022045326,
+          "ema21": 3324.082998124293,
+          "rsi": 43.28358208955223
+        },
+        "five": {
+          "signal": "neutral",
+          "score": 3
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-24",
+          "value": 3325.0
+        },
+        {
+          "time": "2026-06-25",
+          "value": 3312.0
+        },
+        {
+          "time": "2026-06-26",
+          "value": 3316.0
+        },
+        {
+          "time": "2026-06-29",
+          "value": 3319.0
+        },
+        {
+          "time": "2026-06-30",
+          "value": 3315.0
+        },
+        {
+          "time": "2026-07-01",
+          "value": 3285.0
+        },
+        {
+          "time": "2026-07-02",
+          "value": 3283.0
+        },
+        {
+          "time": "2026-07-03",
+          "value": 3279.0
+        },
+        {
+          "time": "2026-07-06",
+          "value": 3289.0
+        },
+        {
+          "time": "2026-07-07",
+          "value": 3283.0
+        },
+        {
+          "time": "2026-07-08",
+          "value": 3300.0
+        },
+        {
+          "time": "2026-07-09",
+          "value": 3298.0
+        },
+        {
+          "time": "2026-07-10",
+          "value": 3291.0
+        },
+        {
+          "time": "2026-07-13",
+          "value": 3272.0
+        },
+        {
+          "time": "2026-07-14",
+          "value": 3302.0
+        },
+        {
+          "time": "2026-07-15",
+          "value": 3327.0
+        },
+        {
+          "time": "2026-07-16",
+          "value": 3324.0
+        },
+        {
+          "time": "2026-07-17",
+          "value": 3318.0
+        },
+        {
+          "time": "2026-07-20",
+          "value": 3298.0
+        },
+        {
+          "time": "2026-07-21",
+          "value": 3297.0
+        },
+        {
+          "time": "2026-07-22",
+          "value": 3282.0
+        },
+        {
+          "time": "2026-07-23",
+          "value": 3291.0
+        },
+        {
+          "time": "2026-07-24",
+          "value": 3289.0
+        },
+        {
+          "time": "2026-07-27",
+          "value": 3294.0
+        },
+        {
+          "time": "2026-07-28",
+          "value": 3281.0
+        },
+        {
+          "time": "2026-07-29",
+          "value": 3286.0
+        },
+        {
+          "time": "2026-07-30",
+          "value": 3240.0
+        },
+        {
+          "time": "2026-07-31",
+          "value": 3220.0
+        },
+        {
+          "time": "2026-08-03",
+          "value": 3197.0
+        },
+        {
+          "time": "2026-08-04",
+          "value": 3201.0
+        },
+        {
+          "time": "2026-08-05",
+          "value": 3207.0
+        },
+        {
+          "time": "2026-08-06",
+          "value": 3236.0
+        },
+        {
+          "time": "2026-08-07",
+          "value": 3243.0
+        },
+        {
+          "time": "2026-08-10",
+          "value": 3235.0
+        },
+        {
+          "time": "2026-08-11",
+          "value": 3244.0
+        },
+        {
+          "time": "2026-08-12",
+          "value": 3239.0
+        },
+        {
+          "time": "2026-08-13",
+          "value": 3233.0
+        },
+        {
+          "time": "2026-08-14",
+          "value": 3260.0
+        },
+        {
+          "time": "2026-08-17",
+          "value": 3271.0
+        },
+        {
+          "time": "2026-08-18",
+          "value": 3281.0
+        },
+        {
+          "time": "2026-08-19",
+          "value": 3286.0
+        },
+        {
+          "time": "2026-08-20",
+          "value": 3291.0
+        },
+        {
+          "time": "2026-08-21",
+          "value": 3295.0
+        },
+        {
+          "time": "2026-08-24",
+          "value": 3340.0
+        },
+        {
+          "time": "2026-08-25",
+          "value": 3343.0
+        },
+        {
+          "time": "2026-08-26",
+          "value": 3342.0
+        },
+        {
+          "time": "2026-08-27",
+          "value": 3342.0
+        },
+        {
+          "time": "2026-08-28",
+          "value": 3371.0
+        },
+        {
+          "time": "2026-08-31",
+          "value": 3411.0
+        },
+        {
+          "time": "2026-09-01",
+          "value": 3388.0
+        },
+        {
+          "time": "2026-09-02",
+          "value": 3365.0
+        },
+        {
+          "time": "2026-09-03",
+          "value": 3368.0
+        },
+        {
+          "time": "2026-09-04",
+          "value": 3381.0
+        },
+        {
+          "time": "2026-09-07",
+          "value": 3366.0
+        },
+        {
+          "time": "2026-09-08",
+          "value": 3395.0
+        },
+        {
+          "time": "2026-09-09",
+          "value": 3385.0
+        },
+        {
+          "time": "2026-09-10",
+          "value": 3365.0
+        },
+        {
+          "time": "2026-09-11",
+          "value": 3325.0
+        },
+        {
+          "time": "2026-09-14",
+          "value": 3310.0
+        },
+        {
+          "time": "2026-09-15",
+          "value": 3309.0
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "last_actual_observation": "2026-09-15 23:00:00",
+        "last_daily_close": "2026-09-15",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 27,
+        "win_rate_pct": 55.55555555555556,
+        "net_return_pct": 5.345852275957608,
+        "max_drawdown_pct": -7.1499842918338,
+        "avg_trade_pct": 0.21509287052719583,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
+      }
+    },
+    {
+      "id": "wire_rod",
+      "name": "线材",
+      "short_name": "线材",
+      "symbol": "WR0",
+      "exchange": "SHFE",
+      "sector": "ferrous",
+      "provider": "sina",
+      "decimals": 0,
+      "unit": "元/吨",
+      "bar_timezone": "Asia/Shanghai",
+      "status": "missing",
+      "status_text": "缺少数据",
+      "signal": "missing",
+      "score": null,
+      "price": null,
+      "bar_time": null,
+      "error": "5分钟预警指标预热数据不足",
+      "source": "新浪财经多周期行情"
+    },
+    {
+      "id": "stainless_steel",
+      "name": "不锈钢",
+      "short_name": "不锈钢",
+      "symbol": "SS0",
+      "exchange": "SHFE",
+      "sector": "ferrous",
+      "provider": "sina",
+      "decimals": 0,
+      "unit": "元/吨",
+      "bar_timezone": "Asia/Shanghai",
+      "score": -55,
+      "signal": "watch_short",
+      "momentum_pct": -1.9161243673174289,
+      "threshold_pct": 3.0,
+      "ma20": 13921.25,
+      "rsi": 18.269230769230774,
+      "prior_high": 14445.0,
+      "prior_low": 13490.0,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": false
+      },
+      "short_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": true,
+        "rsi": false
+      },
+      "long_count": 0,
+      "short_count": 1,
+      "daily_score": -25,
+      "daily_signal": "neutral",
+      "status": "ok",
+      "status_text": "实时",
+      "price": 13370.0,
+      "bar_time": "2026-09-15 23:05:00",
+      "daily_date": "2026-09-15",
+      "age_minutes": 4.0,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": -1.437523037228161,
+      "returns": {
+        "day": 0.22164758034723953,
+        "week": -1.9161243673174289,
+        "month": -5.338450802512207
+      },
+      "position_changes": {
+        "day": 8.691634953161586,
+        "week": 22.926107558921505,
+        "month": -1.3983634583146554
+      },
+      "capital_bucket": "accumulate",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 13921.25 / MA60 14357.75",
+            "signal": "short",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF -208.80 / 柱 -41.14",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "26.3",
+            "signal": "short",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-1.92%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "18.3",
+            "signal": "short",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 20.0 / D 12.1",
+            "signal": "long",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-126.6",
+            "signal": "short",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "170.36 (1.26%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 11.1%",
+            "signal": "neutral",
+            "note": "上 14379.03 / 下 13463.47"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 14445.00 / 低 13490.00",
+            "signal": "neutral",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "0.65×",
+            "signal": "neutral",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "-562086",
+            "signal": "short",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 13565.0,
+        "long_atr_stop": 13224.285714285714,
+        "short_atr_stop": 13905.714285714286,
+        "long_break_even_trigger": 13592.13,
+        "short_break_even_trigger": 13537.87,
+        "long_fib_trail": 14108.84,
+        "short_fib_trail": 13518.65
+      },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 33,
+          "win_rate_pct": 24.242424242424242,
+          "net_return_pct": -13.993787065312146,
+          "annual_return_pct": -6.817647037200258,
+          "max_drawdown_pct": -13.993787065312146,
+          "sharpe": -1.3058521329792843,
+          "profit_factor": 0.30883848544797793,
+          "avg_trade_pct": -0.4497376224737746,
+          "positive_trades": 8,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 16,
+          "win_rate_pct": 62.5,
+          "net_return_pct": 11.740202837156444,
+          "annual_return_pct": 5.337105533836395,
+          "max_drawdown_pct": -11.581803928457523,
+          "sharpe": 0.4869407222043274,
+          "profit_factor": 2.380417506600647,
+          "avg_trade_pct": 0.7511346125410019,
+          "positive_trades": 10,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 49,
+          "win_rate_pct": 26.53061224489796,
+          "net_return_pct": -19.84267511471012,
+          "annual_return_pct": -9.841462330759077,
+          "max_drawdown_pct": -26.35630033868317,
+          "sharpe": -0.8283344888242249,
+          "profit_factor": 0.5703180991160355,
+          "avg_trade_pct": -0.4313788999515964,
+          "positive_trades": 13,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 39,
+          "win_rate_pct": 28.205128205128204,
+          "net_return_pct": -17.552114063085288,
+          "annual_return_pct": -8.643728915937942,
+          "max_drawdown_pct": -18.053699292160097,
+          "sharpe": -1.667189062131686,
+          "profit_factor": 0.2198315653615945,
+          "avg_trade_pct": -0.5058223252786074,
+          "positive_trades": 11,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 64,
+          "win_rate_pct": 17.1875,
+          "net_return_pct": -7.416083453653599,
+          "annual_return_pct": -85.4156128069544,
+          "max_drawdown_pct": -7.486164116905991,
+          "sharpe": -32.86160672704867,
+          "profit_factor": 0.06491082434535346,
+          "avg_trade_pct": -0.12106724664608952,
+          "positive_trades": 11,
+          "latest_target": 0,
+          "sample_start": "2026-09-01 22:20:00",
+          "sample_end": "2026-09-15 23:05:00",
+          "observations": 938
+        }
+      ],
+      "timeframes": {
+        "week": {
+          "signal": "strong_short",
+          "vote": -3,
+          "momentum_pct": -3.8965639390719065,
+          "ema8": 13982.84845372691,
+          "ema21": 14248.192849134783,
+          "rsi": 30.81761006289308
+        },
+        "day": {
+          "signal": "neutral",
+          "vote": -1
+        },
+        "hour": {
+          "signal": "strong_short",
+          "vote": -3,
+          "momentum_pct": -1.1816838995568735,
+          "ema8": 13505.417019836557,
+          "ema21": 13560.364769653524,
+          "rsi": 32.14285714285714
+        },
+        "five": {
+          "signal": "watch_short",
+          "score": -77
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-24",
+          "value": 14695.0
+        },
+        {
+          "time": "2026-06-25",
+          "value": 14675.0
+        },
+        {
+          "time": "2026-06-26",
+          "value": 14630.0
+        },
+        {
+          "time": "2026-06-29",
+          "value": 14770.0
+        },
+        {
+          "time": "2026-06-30",
+          "value": 14740.0
+        },
+        {
+          "time": "2026-07-01",
+          "value": 14615.0
+        },
+        {
+          "time": "2026-07-02",
+          "value": 14575.0
+        },
+        {
+          "time": "2026-07-03",
+          "value": 14575.0
+        },
+        {
+          "time": "2026-07-06",
+          "value": 14740.0
+        },
+        {
+          "time": "2026-07-07",
+          "value": 14775.0
+        },
+        {
+          "time": "2026-07-08",
+          "value": 14450.0
+        },
+        {
+          "time": "2026-07-09",
+          "value": 14390.0
+        },
+        {
+          "time": "2026-07-10",
+          "value": 14290.0
+        },
+        {
+          "time": "2026-07-13",
+          "value": 14260.0
+        },
+        {
+          "time": "2026-07-14",
+          "value": 14555.0
+        },
+        {
+          "time": "2026-07-15",
+          "value": 14510.0
+        },
+        {
+          "time": "2026-07-16",
+          "value": 14730.0
+        },
+        {
+          "time": "2026-07-17",
+          "value": 14650.0
+        },
+        {
+          "time": "2026-07-20",
+          "value": 14680.0
+        },
+        {
+          "time": "2026-07-21",
+          "value": 14800.0
+        },
+        {
+          "time": "2026-07-22",
+          "value": 14780.0
+        },
+        {
+          "time": "2026-07-23",
+          "value": 14855.0
+        },
+        {
+          "time": "2026-07-24",
+          "value": 14770.0
+        },
+        {
+          "time": "2026-07-27",
+          "value": 14690.0
+        },
+        {
+          "time": "2026-07-28",
+          "value": 14515.0
+        },
+        {
+          "time": "2026-07-29",
+          "value": 14545.0
+        },
+        {
+          "time": "2026-07-30",
+          "value": 14560.0
+        },
+        {
+          "time": "2026-07-31",
+          "value": 14635.0
+        },
+        {
+          "time": "2026-08-03",
+          "value": 14470.0
+        },
+        {
+          "time": "2026-08-04",
+          "value": 14820.0
+        },
+        {
+          "time": "2026-08-05",
+          "value": 14475.0
+        },
+        {
+          "time": "2026-08-06",
+          "value": 14375.0
+        },
+        {
+          "time": "2026-08-07",
+          "value": 14665.0
+        },
+        {
+          "time": "2026-08-10",
+          "value": 14615.0
+        },
+        {
+          "time": "2026-08-11",
+          "value": 14525.0
+        },
+        {
+          "time": "2026-08-12",
+          "value": 14535.0
+        },
+        {
+          "time": "2026-08-13",
+          "value": 14385.0
+        },
+        {
+          "time": "2026-08-14",
+          "value": 14115.0
+        },
+        {
+          "time": "2026-08-17",
+          "value": 14275.0
+        },
+        {
+          "time": "2026-08-18",
+          "value": 14330.0
+        },
+        {
+          "time": "2026-08-19",
+          "value": 14260.0
+        },
+        {
+          "time": "2026-08-20",
+          "value": 14300.0
+        },
+        {
+          "time": "2026-08-21",
+          "value": 14200.0
+        },
+        {
+          "time": "2026-08-24",
+          "value": 14215.0
+        },
+        {
+          "time": "2026-08-25",
+          "value": 14085.0
+        },
+        {
+          "time": "2026-08-26",
+          "value": 14225.0
+        },
+        {
+          "time": "2026-08-27",
+          "value": 14015.0
+        },
+        {
+          "time": "2026-08-28",
+          "value": 14010.0
+        },
+        {
+          "time": "2026-08-31",
+          "value": 13890.0
+        },
+        {
+          "time": "2026-09-01",
+          "value": 13825.0
+        },
+        {
+          "time": "2026-09-02",
+          "value": 13765.0
+        },
+        {
+          "time": "2026-09-03",
+          "value": 13825.0
+        },
+        {
+          "time": "2026-09-04",
+          "value": 13845.0
+        },
+        {
+          "time": "2026-09-07",
+          "value": 13885.0
+        },
+        {
+          "time": "2026-09-08",
+          "value": 13830.0
+        },
+        {
+          "time": "2026-09-09",
+          "value": 13765.0
+        },
+        {
+          "time": "2026-09-10",
+          "value": 13805.0
+        },
+        {
+          "time": "2026-09-11",
+          "value": 13580.0
+        },
+        {
+          "time": "2026-09-14",
+          "value": 13535.0
+        },
+        {
+          "time": "2026-09-15",
+          "value": 13565.0
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 1
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 1
+        },
+        "last_actual_observation": "2026-09-15 23:05:00",
+        "last_daily_close": "2026-09-15",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 25,
+        "win_rate_pct": 40.0,
+        "net_return_pct": -16.32969695606453,
+        "max_drawdown_pct": -21.11094454257062,
+        "avg_trade_pct": -0.6467056149119257,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
+      }
+    },
+    {
+      "id": "iron_ore",
+      "name": "铁矿石",
+      "short_name": "铁矿",
+      "symbol": "I0",
+      "exchange": "DCE",
+      "sector": "ferrous",
+      "provider": "sina",
+      "decimals": 1,
+      "unit": "元/吨",
+      "bar_timezone": "Asia/Shanghai",
+      "score": -72,
+      "signal": "short",
+      "momentum_pct": -4.969778374748158,
+      "threshold_pct": 3.0,
+      "ma20": 720.9,
+      "rsi": 43.38624338624338,
+      "prior_high": 745.0,
+      "prior_low": 696.5,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": false
+      },
+      "short_factors": {
+        "momentum": true,
+        "breakout": false,
+        "trend": true,
+        "rsi": true
+      },
+      "long_count": 0,
+      "short_count": 3,
+      "daily_score": -75,
+      "daily_signal": "short",
+      "status": "ok",
+      "status_text": "实时",
+      "price": 708.0,
+      "bar_time": "2026-09-15 23:00:00",
+      "daily_date": "2026-09-15",
+      "age_minutes": 9.0,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": 0.07067137809186885,
+      "returns": {
+        "day": -0.14114326040931546,
+        "week": -4.969778374748158,
+        "month": -0.9103641456582601
+      },
+      "position_changes": {
+        "day": -0.4646851193801038,
+        "week": -0.7329920943864865,
+        "month": 16.407449104602367
+      },
+      "capital_bucket": "weak",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 720.90 / MA60 728.86",
+            "signal": "short",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF -0.82 / 柱 -2.20",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "18.8",
+            "signal": "neutral",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-4.97%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "43.4",
+            "signal": "short",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 6.2 / D 12.6",
+            "signal": "short",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-107.8",
+            "signal": "short",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "11.71 (1.66%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 18.1%",
+            "signal": "neutral",
+            "note": "上 741.92 / 下 699.88"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 745.00 / 低 696.50",
+            "signal": "neutral",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "0.77×",
+            "signal": "neutral",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "-694472",
+            "signal": "short",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 707.5,
+        "long_atr_stop": 684.0714285714286,
+        "short_atr_stop": 730.9285714285714,
+        "long_break_even_trigger": 708.915,
+        "short_break_even_trigger": 706.085,
+        "long_fib_trail": 730.675,
+        "short_fib_trail": 700.702
+      },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 54,
+          "win_rate_pct": 48.148148148148145,
+          "net_return_pct": 11.479925083956232,
+          "annual_return_pct": 5.222105925645115,
+          "max_drawdown_pct": -10.1199123611166,
+          "sharpe": 0.40403837535559123,
+          "profit_factor": 1.3252300960500007,
+          "avg_trade_pct": 0.2406746973066116,
+          "positive_trades": 26,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 19,
+          "win_rate_pct": 36.84210526315789,
+          "net_return_pct": -31.82930998644319,
+          "annual_return_pct": -16.42874761072616,
+          "max_drawdown_pct": -44.220102483270765,
+          "sharpe": -0.7948672932555467,
+          "profit_factor": 0.2780182121447345,
+          "avg_trade_pct": -1.669649027715986,
+          "positive_trades": 7,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 44,
+          "win_rate_pct": 29.545454545454547,
+          "net_return_pct": -25.41218501607102,
+          "annual_return_pct": -12.8319264641388,
+          "max_drawdown_pct": -36.23010540538167,
+          "sharpe": -0.6216241102829827,
+          "profit_factor": 0.6042573869154442,
+          "avg_trade_pct": -0.5507314134884129,
+          "positive_trades": 13,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 45,
+          "win_rate_pct": 26.666666666666668,
+          "net_return_pct": -35.54556858849958,
+          "annual_return_pct": -18.5945054088549,
+          "max_drawdown_pct": -37.253867622668146,
+          "sharpe": -1.94003613258081,
+          "profit_factor": 0.12739288747891078,
+          "avg_trade_pct": -0.9430394122902798,
+          "positive_trades": 12,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 67,
+          "win_rate_pct": 5.970149253731343,
+          "net_return_pct": -12.21942414857039,
+          "annual_return_pct": -91.07190354543371,
+          "max_drawdown_pct": -12.21942414857039,
+          "sharpe": -34.84045303961479,
+          "profit_factor": 0.07227696873728662,
+          "avg_trade_pct": -0.19429990383633336,
+          "positive_trades": 4,
+          "latest_target": 0,
+          "sample_start": "2026-08-27 11:30:00",
+          "sample_end": "2026-09-15 23:00:00",
+          "observations": 938
+        }
+      ],
+      "timeframes": {
+        "week": {
+          "signal": "strong_short",
+          "vote": -3,
+          "momentum_pct": -0.4222378606615007,
+          "ema8": 721.0540210051685,
+          "ema21": 740.4154564878027,
+          "rsi": 31.715210355987068
+        },
+        "day": {
+          "signal": "short",
+          "vote": -3
+        },
+        "hour": {
+          "signal": "short",
+          "vote": -1,
+          "momentum_pct": 0.14144271570013522,
+          "ema8": 708.6815895248333,
+          "ema21": 713.6259392062445,
+          "rsi": 27.272727272727266
+        },
+        "five": {
+          "signal": "neutral",
+          "score": -13
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-24",
+          "value": 744.0
+        },
+        {
+          "time": "2026-06-25",
+          "value": 735.0
+        },
+        {
+          "time": "2026-06-26",
+          "value": 748.0
+        },
+        {
+          "time": "2026-06-29",
+          "value": 746.0
+        },
+        {
+          "time": "2026-06-30",
+          "value": 747.0
+        },
+        {
+          "time": "2026-07-01",
+          "value": 733.0
+        },
+        {
+          "time": "2026-07-02",
+          "value": 740.0
+        },
+        {
+          "time": "2026-07-03",
+          "value": 734.0
+        },
+        {
+          "time": "2026-07-06",
+          "value": 738.0
+        },
+        {
+          "time": "2026-07-07",
+          "value": 735.5
+        },
+        {
+          "time": "2026-07-08",
+          "value": 746.0
+        },
+        {
+          "time": "2026-07-09",
+          "value": 745.5
+        },
+        {
+          "time": "2026-07-10",
+          "value": 751.5
+        },
+        {
+          "time": "2026-07-13",
+          "value": 744.5
+        },
+        {
+          "time": "2026-07-14",
+          "value": 760.5
+        },
+        {
+          "time": "2026-07-15",
+          "value": 762.0
+        },
+        {
+          "time": "2026-07-16",
+          "value": 759.5
+        },
+        {
+          "time": "2026-07-17",
+          "value": 762.0
+        },
+        {
+          "time": "2026-07-20",
+          "value": 758.0
+        },
+        {
+          "time": "2026-07-21",
+          "value": 749.0
+        },
+        {
+          "time": "2026-07-22",
+          "value": 739.5
+        },
+        {
+          "time": "2026-07-23",
+          "value": 747.5
+        },
+        {
+          "time": "2026-07-24",
+          "value": 746.0
+        },
+        {
+          "time": "2026-07-27",
+          "value": 741.0
+        },
+        {
+          "time": "2026-07-28",
+          "value": 741.0
+        },
+        {
+          "time": "2026-07-29",
+          "value": 739.0
+        },
+        {
+          "time": "2026-07-30",
+          "value": 715.0
+        },
+        {
+          "time": "2026-07-31",
+          "value": 716.0
+        },
+        {
+          "time": "2026-08-03",
+          "value": 698.0
+        },
+        {
+          "time": "2026-08-04",
+          "value": 699.5
+        },
+        {
+          "time": "2026-08-05",
+          "value": 706.0
+        },
+        {
+          "time": "2026-08-06",
+          "value": 719.0
+        },
+        {
+          "time": "2026-08-07",
+          "value": 716.5
+        },
+        {
+          "time": "2026-08-10",
+          "value": 701.5
+        },
+        {
+          "time": "2026-08-11",
+          "value": 707.5
+        },
+        {
+          "time": "2026-08-12",
+          "value": 705.5
+        },
+        {
+          "time": "2026-08-13",
+          "value": 705.0
+        },
+        {
+          "time": "2026-08-14",
+          "value": 710.5
+        },
+        {
+          "time": "2026-08-17",
+          "value": 706.5
+        },
+        {
+          "time": "2026-08-18",
+          "value": 714.0
+        },
+        {
+          "time": "2026-08-19",
+          "value": 712.0
+        },
+        {
+          "time": "2026-08-20",
+          "value": 707.0
+        },
+        {
+          "time": "2026-08-21",
+          "value": 707.5
+        },
+        {
+          "time": "2026-08-24",
+          "value": 716.0
+        },
+        {
+          "time": "2026-08-25",
+          "value": 713.5
+        },
+        {
+          "time": "2026-08-26",
+          "value": 720.0
+        },
+        {
+          "time": "2026-08-27",
+          "value": 716.5
+        },
+        {
+          "time": "2026-08-28",
+          "value": 723.0
+        },
+        {
+          "time": "2026-08-31",
+          "value": 727.0
+        },
+        {
+          "time": "2026-09-01",
+          "value": 726.5
+        },
+        {
+          "time": "2026-09-02",
+          "value": 714.0
+        },
+        {
+          "time": "2026-09-03",
+          "value": 726.5
+        },
+        {
+          "time": "2026-09-04",
+          "value": 727.0
+        },
+        {
+          "time": "2026-09-07",
+          "value": 734.5
+        },
+        {
+          "time": "2026-09-08",
+          "value": 744.5
+        },
+        {
+          "time": "2026-09-09",
+          "value": 738.0
+        },
+        {
+          "time": "2026-09-10",
+          "value": 730.5
+        },
+        {
+          "time": "2026-09-11",
+          "value": 718.0
+        },
+        {
+          "time": "2026-09-14",
+          "value": 708.5
+        },
+        {
+          "time": "2026-09-15",
+          "value": 707.5
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "last_actual_observation": "2026-09-15 23:00:00",
+        "last_daily_close": "2026-09-15",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 43,
+        "win_rate_pct": 41.86046511627907,
+        "net_return_pct": -33.04374751872333,
+        "max_drawdown_pct": -33.22580376365993,
+        "avg_trade_pct": -0.8678576297660452,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
+      }
+    },
+    {
+      "id": "coke",
+      "name": "焦炭",
+      "short_name": "焦炭",
+      "symbol": "J0",
+      "exchange": "DCE",
+      "sector": "ferrous",
+      "provider": "sina",
+      "decimals": 1,
+      "unit": "元/吨",
+      "bar_timezone": "Asia/Shanghai",
+      "score": -52,
+      "signal": "short",
+      "momentum_pct": -6.365503080082135,
+      "threshold_pct": 3.0,
+      "ma20": 2133.525,
+      "rsi": 44.323790720631784,
+      "prior_high": 2276.0,
+      "prior_low": 1985.0,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": false
+      },
+      "short_factors": {
+        "momentum": true,
+        "breakout": false,
+        "trend": true,
+        "rsi": true
+      },
+      "long_count": 0,
+      "short_count": 3,
+      "daily_score": -75,
+      "daily_signal": "short",
+      "status": "ok",
+      "status_text": "实时",
+      "price": 2048.0,
+      "bar_time": "2026-09-15 23:00:00",
+      "daily_date": "2026-09-15",
+      "age_minutes": 9.0,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": -0.19493177387914784,
+      "returns": {
+        "day": -0.17027487229384075,
+        "week": -6.365503080082135,
+        "month": 2.0895522388059806
+      },
+      "position_changes": {
+        "day": 0.19324010961985216,
+        "week": -15.17846519928614,
+        "month": 52.58708331103858
+      },
+      "capital_bucket": "avoid",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 2133.53 / MA60 1965.70",
+            "signal": "neutral",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF 33.36 / 柱 -44.35",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "53.5",
+            "signal": "short",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-6.37%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "44.3",
+            "signal": "short",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 5.9 / D 4.9",
+            "signal": "long",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-116.6",
+            "signal": "short",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "72.46 (3.53%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 10.5%",
+            "signal": "neutral",
+            "note": "上 2236.61 / 下 2030.44"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 2276.00 / 低 1985.00",
+            "signal": "neutral",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "0.73×",
+            "signal": "neutral",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "-154259",
+            "signal": "short",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 2052.0,
+        "long_atr_stop": 1907.0714285714287,
+        "short_atr_stop": 2196.9285714285716,
+        "long_break_even_trigger": 2056.104,
+        "short_break_even_trigger": 2047.896,
+        "long_fib_trail": 2190.432,
+        "short_fib_trail": 2010.594
+      },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 69,
+          "win_rate_pct": 40.57971014492754,
+          "net_return_pct": 8.392930981842195,
+          "annual_return_pct": 3.847130749454264,
+          "max_drawdown_pct": -28.0490737475246,
+          "sharpe": 0.2895398394554812,
+          "profit_factor": 1.1931538170114586,
+          "avg_trade_pct": 0.18166908508751536,
+          "positive_trades": 28,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 14,
+          "win_rate_pct": 35.714285714285715,
+          "net_return_pct": -2.4458608448766905,
+          "annual_return_pct": -1.1531872522084097,
+          "max_drawdown_pct": -38.60335407990585,
+          "sharpe": 0.08872541005666564,
+          "profit_factor": 1.0071914374708315,
+          "avg_trade_pct": 0.02302340304273543,
+          "positive_trades": 5,
+          "latest_target": 1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 43,
+          "win_rate_pct": 30.23255813953488,
+          "net_return_pct": -31.53589839602242,
+          "annual_return_pct": -16.260457453740074,
+          "max_drawdown_pct": -43.574122484712376,
+          "sharpe": -0.5540484218341679,
+          "profit_factor": 0.5914622084845401,
+          "avg_trade_pct": -0.7149639392939622,
+          "positive_trades": 13,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 46,
+          "win_rate_pct": 30.434782608695656,
+          "net_return_pct": -17.966308781772433,
+          "annual_return_pct": -8.85898859030706,
+          "max_drawdown_pct": -33.02687607643613,
+          "sharpe": -0.4301840077620014,
+          "profit_factor": 0.6345515061210256,
+          "avg_trade_pct": -0.3746155420625219,
+          "positive_trades": 14,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 58,
+          "win_rate_pct": 24.137931034482758,
+          "net_return_pct": -3.4888263326475433,
+          "annual_return_pct": -48.22619504232467,
+          "max_drawdown_pct": -6.325074440293365,
+          "sharpe": -5.588385545574832,
+          "profit_factor": 0.6282831253836324,
+          "avg_trade_pct": -0.060826224259502584,
+          "positive_trades": 14,
+          "latest_target": 0,
+          "sample_start": "2026-08-27 11:30:00",
+          "sample_end": "2026-09-15 23:00:00",
+          "observations": 938
+        }
+      ],
+      "timeframes": {
+        "week": {
+          "signal": "strong_long",
+          "vote": 2,
+          "momentum_pct": 7.350248495945588,
+          "ema8": 2036.4553764844495,
+          "ema21": 1947.5560695230404,
+          "rsi": 48.441247002398086
+        },
+        "day": {
+          "signal": "short",
+          "vote": -3
+        },
+        "hour": {
+          "signal": "strong_short",
+          "vote": -3,
+          "momentum_pct": -0.9192065795839421,
+          "ema8": 2056.523787392337,
+          "ema21": 2075.0669236796457,
+          "rsi": 42.56410256410256
+        },
+        "five": {
+          "signal": "neutral",
+          "score": -17
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-24",
+          "value": 1947.5
+        },
+        {
+          "time": "2026-06-25",
+          "value": 1932.0
+        },
+        {
+          "time": "2026-06-26",
+          "value": 1946.0
+        },
+        {
+          "time": "2026-06-29",
+          "value": 1982.5
+        },
+        {
+          "time": "2026-06-30",
+          "value": 1958.5
+        },
+        {
+          "time": "2026-07-01",
+          "value": 1909.0
+        },
+        {
+          "time": "2026-07-02",
+          "value": 1905.0
+        },
+        {
+          "time": "2026-07-03",
+          "value": 1938.0
+        },
+        {
+          "time": "2026-07-06",
+          "value": 1951.0
+        },
+        {
+          "time": "2026-07-07",
+          "value": 1936.0
+        },
+        {
+          "time": "2026-07-08",
+          "value": 1956.5
+        },
+        {
+          "time": "2026-07-09",
+          "value": 1945.0
+        },
+        {
+          "time": "2026-07-10",
+          "value": 1913.0
+        },
+        {
+          "time": "2026-07-13",
+          "value": 1865.0
+        },
+        {
+          "time": "2026-07-14",
+          "value": 1868.0
+        },
+        {
+          "time": "2026-07-15",
+          "value": 1879.5
+        },
+        {
+          "time": "2026-07-16",
+          "value": 1864.5
+        },
+        {
+          "time": "2026-07-17",
+          "value": 1864.0
+        },
+        {
+          "time": "2026-07-20",
+          "value": 1840.0
+        },
+        {
+          "time": "2026-07-21",
+          "value": 1837.0
+        },
+        {
+          "time": "2026-07-22",
+          "value": 1824.5
+        },
+        {
+          "time": "2026-07-23",
+          "value": 1847.0
+        },
+        {
+          "time": "2026-07-24",
+          "value": 1840.5
+        },
+        {
+          "time": "2026-07-27",
+          "value": 1853.5
+        },
+        {
+          "time": "2026-07-28",
+          "value": 1825.0
+        },
+        {
+          "time": "2026-07-29",
+          "value": 1845.0
+        },
+        {
+          "time": "2026-07-30",
+          "value": 1821.0
+        },
+        {
+          "time": "2026-07-31",
+          "value": 1767.0
+        },
+        {
+          "time": "2026-08-03",
+          "value": 1753.0
+        },
+        {
+          "time": "2026-08-04",
+          "value": 1760.0
+        },
+        {
+          "time": "2026-08-05",
+          "value": 1793.0
+        },
+        {
+          "time": "2026-08-06",
+          "value": 1832.5
+        },
+        {
+          "time": "2026-08-07",
+          "value": 1868.5
+        },
+        {
+          "time": "2026-08-10",
+          "value": 1865.0
+        },
+        {
+          "time": "2026-08-11",
+          "value": 1910.0
+        },
+        {
+          "time": "2026-08-12",
+          "value": 1906.0
+        },
+        {
+          "time": "2026-08-13",
+          "value": 1890.5
+        },
+        {
+          "time": "2026-08-14",
+          "value": 1911.5
+        },
+        {
+          "time": "2026-08-17",
+          "value": 1910.0
+        },
+        {
+          "time": "2026-08-18",
+          "value": 2010.0
+        },
+        {
+          "time": "2026-08-19",
+          "value": 2058.0
+        },
+        {
+          "time": "2026-08-20",
+          "value": 2072.5
+        },
+        {
+          "time": "2026-08-21",
+          "value": 2119.5
+        },
+        {
+          "time": "2026-08-24",
+          "value": 2152.5
+        },
+        {
+          "time": "2026-08-25",
+          "value": 2145.0
+        },
+        {
+          "time": "2026-08-26",
+          "value": 2109.5
+        },
+        {
+          "time": "2026-08-27",
+          "value": 2135.5
+        },
+        {
+          "time": "2026-08-28",
+          "value": 2153.5
+        },
+        {
+          "time": "2026-08-31",
+          "value": 2241.5
+        },
+        {
+          "time": "2026-09-01",
+          "value": 2202.0
+        },
+        {
+          "time": "2026-09-02",
+          "value": 2181.5
+        },
+        {
+          "time": "2026-09-03",
+          "value": 2142.0
+        },
+        {
+          "time": "2026-09-04",
+          "value": 2171.0
+        },
+        {
+          "time": "2026-09-07",
+          "value": 2128.0
+        },
+        {
+          "time": "2026-09-08",
+          "value": 2191.5
+        },
+        {
+          "time": "2026-09-09",
+          "value": 2160.5
+        },
+        {
+          "time": "2026-09-10",
+          "value": 2136.5
+        },
+        {
+          "time": "2026-09-11",
+          "value": 2062.5
+        },
+        {
+          "time": "2026-09-14",
+          "value": 2055.5
+        },
+        {
+          "time": "2026-09-15",
+          "value": 2052.0
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "last_actual_observation": "2026-09-15 23:00:00",
+        "last_daily_close": "2026-09-15",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 45,
+        "win_rate_pct": 37.77777777777778,
+        "net_return_pct": -35.20745839824172,
+        "max_drawdown_pct": -39.76687447375109,
+        "avg_trade_pct": -0.8098176316224233,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
+      }
+    },
+    {
+      "id": "coking_coal",
+      "name": "焦煤",
+      "short_name": "焦煤",
+      "symbol": "JM0",
+      "exchange": "DCE",
+      "sector": "ferrous",
+      "provider": "sina",
+      "decimals": 1,
+      "unit": "元/吨",
+      "bar_timezone": "Asia/Shanghai",
+      "score": -8,
+      "signal": "watch_short",
+      "momentum_pct": -6.007694584196511,
+      "threshold_pct": 3.0,
+      "ma20": 1625.85,
+      "rsi": 51.521739130434774,
+      "prior_high": 1763.5,
+      "prior_low": 1517.0,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": true
+      },
+      "short_factors": {
+        "momentum": true,
+        "breakout": false,
+        "trend": true,
+        "rsi": false
+      },
+      "long_count": 1,
+      "short_count": 2,
+      "daily_score": -25,
+      "daily_signal": "watch_short",
+      "status": "ok",
+      "status_text": "实时",
+      "price": 1594.0,
+      "bar_time": "2026-09-15 23:00:00",
+      "daily_date": "2026-09-15",
+      "age_minutes": 9.0,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": 0.37783375314861534,
+      "returns": {
+        "day": 0.0,
+        "week": -6.007694584196511,
+        "month": 2.6834788231490547
+      },
+      "position_changes": {
+        "day": -1.587719728157877,
+        "week": -13.979851564145495,
+        "month": 8.851384468743007
+      },
+      "capital_bucket": "avoid",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 1625.85 / MA60 1402.39",
+            "signal": "neutral",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF 50.78 / 柱 -40.29",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "52.1",
+            "signal": "short",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-6.01%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "51.5",
+            "signal": "neutral",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 14.7 / D 8.9",
+            "signal": "long",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-36.8",
+            "signal": "neutral",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "69.00 (4.35%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 29.0%",
+            "signal": "neutral",
+            "note": "上 1715.90 / 下 1535.80"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 1763.50 / 低 1517.00",
+            "signal": "neutral",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "1.09×",
+            "signal": "neutral",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "-1862609",
+            "signal": "short",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 1588.0,
+        "long_atr_stop": 1450.0,
+        "short_atr_stop": 1726.0,
+        "long_break_even_trigger": 1591.176,
+        "short_break_even_trigger": 1584.824,
+        "long_fib_trail": 1696.459,
+        "short_fib_trail": 1544.122
+      },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 77,
+          "win_rate_pct": 49.35064935064935,
+          "net_return_pct": 20.586947613104446,
+          "annual_return_pct": 9.164437779433921,
+          "max_drawdown_pct": -22.238338571044956,
+          "sharpe": 0.4699467413145631,
+          "profit_factor": 1.3129192837681793,
+          "avg_trade_pct": 0.31930968671533405,
+          "positive_trades": 38,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 17,
+          "win_rate_pct": 47.05882352941176,
+          "net_return_pct": -21.94177167163689,
+          "annual_return_pct": -10.955160713594159,
+          "max_drawdown_pct": -52.248312985784004,
+          "sharpe": -0.13030064242607936,
+          "profit_factor": 0.7879535732080408,
+          "avg_trade_pct": -0.8317808404652574,
+          "positive_trades": 8,
+          "latest_target": 1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 41,
+          "win_rate_pct": 21.951219512195124,
+          "net_return_pct": -12.408679860749983,
+          "annual_return_pct": -6.017134897851706,
+          "max_drawdown_pct": -54.75608487713244,
+          "sharpe": 0.014611555160226039,
+          "profit_factor": 1.0053306355432858,
+          "avg_trade_pct": 0.012231664175759138,
+          "positive_trades": 9,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 44,
+          "win_rate_pct": 36.36363636363637,
+          "net_return_pct": -25.81890186005745,
+          "annual_return_pct": -13.054888406316255,
+          "max_drawdown_pct": -45.036881561110306,
+          "sharpe": -0.4578596836497613,
+          "profit_factor": 0.7025223464801083,
+          "avg_trade_pct": -0.5372677915526332,
+          "positive_trades": 16,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 61,
+          "win_rate_pct": 39.34426229508197,
+          "net_return_pct": -0.9605521414846718,
+          "annual_return_pct": -16.38282626073582,
+          "max_drawdown_pct": -3.7015321688866676,
+          "sharpe": -1.157414273732739,
+          "profit_factor": 0.9140959629641623,
+          "avg_trade_pct": -0.014475161215039953,
+          "positive_trades": 24,
+          "latest_target": 0,
+          "sample_start": "2026-08-27 11:30:00",
+          "sample_end": "2026-09-15 23:00:00",
+          "observations": 938
+        }
+      ],
+      "timeframes": {
+        "week": {
+          "signal": "strong_long",
+          "vote": 3,
+          "momentum_pct": 4.783899703068295,
+          "ema8": 1523.9792710682395,
+          "ema21": 1396.6670541377475,
+          "rsi": 62.35093696763203
+        },
+        "day": {
+          "signal": "watch_short",
+          "vote": -1
+        },
+        "hour": {
+          "signal": "strong_short",
+          "vote": -2,
+          "momentum_pct": -0.9630319975147517,
+          "ema8": 1597.7423649629611,
+          "ema21": 1607.0742996332554,
+          "rsi": 53.0
+        },
+        "five": {
+          "signal": "neutral",
+          "score": -4
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-24",
+          "value": 1245.5
+        },
+        {
+          "time": "2026-06-25",
+          "value": 1238.5
+        },
+        {
+          "time": "2026-06-26",
+          "value": 1248.5
+        },
+        {
+          "time": "2026-06-29",
+          "value": 1294.5
+        },
+        {
+          "time": "2026-06-30",
+          "value": 1280.5
+        },
+        {
+          "time": "2026-07-01",
+          "value": 1262.0
+        },
+        {
+          "time": "2026-07-02",
+          "value": 1267.5
+        },
+        {
+          "time": "2026-07-03",
+          "value": 1282.0
+        },
+        {
+          "time": "2026-07-06",
+          "value": 1283.5
+        },
+        {
+          "time": "2026-07-07",
+          "value": 1273.0
+        },
+        {
+          "time": "2026-07-08",
+          "value": 1293.5
+        },
+        {
+          "time": "2026-07-09",
+          "value": 1290.0
+        },
+        {
+          "time": "2026-07-10",
+          "value": 1257.5
+        },
+        {
+          "time": "2026-07-13",
+          "value": 1239.0
+        },
+        {
+          "time": "2026-07-14",
+          "value": 1260.0
+        },
+        {
+          "time": "2026-07-15",
+          "value": 1273.0
+        },
+        {
+          "time": "2026-07-16",
+          "value": 1261.0
+        },
+        {
+          "time": "2026-07-17",
+          "value": 1260.5
+        },
+        {
+          "time": "2026-07-20",
+          "value": 1272.0
+        },
+        {
+          "time": "2026-07-21",
+          "value": 1275.0
+        },
+        {
+          "time": "2026-07-22",
+          "value": 1266.0
+        },
+        {
+          "time": "2026-07-23",
+          "value": 1287.5
+        },
+        {
+          "time": "2026-07-24",
+          "value": 1285.0
+        },
+        {
+          "time": "2026-07-27",
+          "value": 1270.5
+        },
+        {
+          "time": "2026-07-28",
+          "value": 1242.5
+        },
+        {
+          "time": "2026-07-29",
+          "value": 1248.0
+        },
+        {
+          "time": "2026-07-30",
+          "value": 1227.0
+        },
+        {
+          "time": "2026-07-31",
+          "value": 1181.0
+        },
+        {
+          "time": "2026-08-03",
+          "value": 1182.0
+        },
+        {
+          "time": "2026-08-04",
+          "value": 1196.5
+        },
+        {
+          "time": "2026-08-05",
+          "value": 1233.0
+        },
+        {
+          "time": "2026-08-06",
+          "value": 1235.5
+        },
+        {
+          "time": "2026-08-07",
+          "value": 1267.5
+        },
+        {
+          "time": "2026-08-10",
+          "value": 1273.5
+        },
+        {
+          "time": "2026-08-11",
+          "value": 1343.5
+        },
+        {
+          "time": "2026-08-12",
+          "value": 1476.0
+        },
+        {
+          "time": "2026-08-13",
+          "value": 1470.5
+        },
+        {
+          "time": "2026-08-14",
+          "value": 1515.5
+        },
+        {
+          "time": "2026-08-17",
+          "value": 1522.0
+        },
+        {
+          "time": "2026-08-18",
+          "value": 1546.5
+        },
+        {
+          "time": "2026-08-19",
+          "value": 1586.5
+        },
+        {
+          "time": "2026-08-20",
+          "value": 1591.5
+        },
+        {
+          "time": "2026-08-21",
+          "value": 1581.5
+        },
+        {
+          "time": "2026-08-24",
+          "value": 1584.0
+        },
+        {
+          "time": "2026-08-25",
+          "value": 1578.0
+        },
+        {
+          "time": "2026-08-26",
+          "value": 1574.0
+        },
+        {
+          "time": "2026-08-27",
+          "value": 1609.0
+        },
+        {
+          "time": "2026-08-28",
+          "value": 1629.0
+        },
+        {
+          "time": "2026-08-31",
+          "value": 1729.0
+        },
+        {
+          "time": "2026-09-01",
+          "value": 1694.0
+        },
+        {
+          "time": "2026-09-02",
+          "value": 1663.5
+        },
+        {
+          "time": "2026-09-03",
+          "value": 1649.0
+        },
+        {
+          "time": "2026-09-04",
+          "value": 1666.0
+        },
+        {
+          "time": "2026-09-07",
+          "value": 1627.5
+        },
+        {
+          "time": "2026-09-08",
+          "value": 1689.5
+        },
+        {
+          "time": "2026-09-09",
+          "value": 1655.0
+        },
+        {
+          "time": "2026-09-10",
+          "value": 1649.0
+        },
+        {
+          "time": "2026-09-11",
+          "value": 1585.0
+        },
+        {
+          "time": "2026-09-14",
+          "value": 1588.0
+        },
+        {
+          "time": "2026-09-15",
+          "value": 1588.0
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "last_actual_observation": "2026-09-15 23:00:00",
+        "last_daily_close": "2026-09-15",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 48,
+        "win_rate_pct": 45.83333333333333,
+        "net_return_pct": -4.854353582442172,
+        "max_drawdown_pct": -41.81311034572931,
+        "avg_trade_pct": 0.15473970372825793,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
+      }
+    },
+    {
+      "id": "ferrosilicon",
+      "name": "硅铁",
+      "short_name": "硅铁",
+      "symbol": "SF0",
+      "exchange": "CZCE",
+      "sector": "ferrous",
+      "provider": "sina",
+      "decimals": 0,
+      "unit": "元/吨",
+      "bar_timezone": "Asia/Shanghai",
+      "score": -15,
+      "signal": "watch_short",
+      "momentum_pct": -5.819774718397996,
+      "threshold_pct": 3.0,
+      "ma20": 6143.0,
+      "rsi": 52.78422273781903,
+      "prior_high": 6624.0,
+      "prior_low": 5904.0,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": true
+      },
+      "short_factors": {
+        "momentum": true,
+        "breakout": false,
+        "trend": true,
+        "rsi": false
+      },
+      "long_count": 1,
+      "short_count": 2,
+      "daily_score": -25,
+      "daily_signal": "watch_short",
+      "status": "stale",
+      "status_text": "行情陈旧",
+      "price": 6020.0,
+      "bar_time": "2026-09-15 15:00:00",
+      "daily_date": "2026-09-15",
+      "age_minutes": 489.0,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": 0.0,
+      "returns": {
+        "day": -0.13271400132713884,
+        "week": -5.819774718397996,
+        "month": 0.7700033478406532
+      },
+      "position_changes": {
+        "day": -2.963762575151052,
+        "week": -17.160249534746207,
+        "month": -25.432504424126236
+      },
+      "capital_bucket": "avoid",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 6143.00 / MA60 5920.60",
+            "signal": "neutral",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF 55.67 / 柱 -69.53",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "52.1",
+            "signal": "short",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-5.82%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "52.8",
+            "signal": "neutral",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 2.3 / D 3.7",
+            "signal": "short",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-46.0",
+            "signal": "neutral",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "187.57 (3.12%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 32.5%",
+            "signal": "neutral",
+            "note": "上 6493.77 / 下 5792.23"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 6624.00 / 低 5904.00",
+            "signal": "neutral",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "0.48×",
+            "signal": "neutral",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "+1419186",
+            "signal": "long",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 6020.0,
+        "long_atr_stop": 5644.857142857143,
+        "short_atr_stop": 6395.142857142857,
+        "long_break_even_trigger": 6032.04,
+        "short_break_even_trigger": 6007.96,
+        "long_fib_trail": 6393.272,
+        "short_fib_trail": 5948.312
+      },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 38,
+          "win_rate_pct": 50.0,
+          "net_return_pct": 3.2392826313227374,
+          "annual_return_pct": 1.504432709339798,
+          "max_drawdown_pct": -10.047713786899182,
+          "sharpe": 0.186101358327194,
+          "profit_factor": 1.160970227257555,
+          "avg_trade_pct": 0.10534280425847718,
+          "positive_trades": 19,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 15,
+          "win_rate_pct": 13.333333333333334,
+          "net_return_pct": -15.21159494553368,
+          "annual_return_pct": -7.438007641480182,
+          "max_drawdown_pct": -22.77599435871337,
+          "sharpe": -0.36647260929021314,
+          "profit_factor": 0.4972273789431915,
+          "avg_trade_pct": -1.0717378099332249,
+          "positive_trades": 2,
+          "latest_target": 1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 50,
+          "win_rate_pct": 20.0,
+          "net_return_pct": -37.13962414314679,
+          "annual_return_pct": -19.543807809454417,
+          "max_drawdown_pct": -41.914283214606066,
+          "sharpe": -1.1900590759224234,
+          "profit_factor": 0.4185275346635952,
+          "avg_trade_pct": -0.8856299496319587,
+          "positive_trades": 10,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 47,
+          "win_rate_pct": 46.808510638297875,
+          "net_return_pct": -13.893869141147519,
+          "annual_return_pct": -6.7669559661724055,
+          "max_drawdown_pct": -17.890243190180776,
+          "sharpe": -0.6819707964989716,
+          "profit_factor": 0.603156627830801,
+          "avg_trade_pct": -0.30005470431622133,
+          "positive_trades": 22,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 80,
+          "win_rate_pct": 26.25,
+          "net_return_pct": -5.113295925385264,
+          "annual_return_pct": -46.98203827492908,
+          "max_drawdown_pct": -5.113295925385264,
+          "sharpe": -5.304391738443689,
+          "profit_factor": 0.5527548550150713,
+          "avg_trade_pct": -0.06503849789178237,
+          "positive_trades": 21,
+          "latest_target": 0,
+          "sample_start": "2026-08-18 09:30:00",
+          "sample_end": "2026-09-15 15:00:00",
+          "observations": 938
+        }
+      ],
+      "timeframes": {
+        "week": {
+          "signal": "long",
+          "vote": 1,
+          "momentum_pct": 1.586230172122849,
+          "ema8": 6065.370850659986,
+          "ema21": 5932.451770994328,
+          "rsi": 54.76419634263715
+        },
+        "day": {
+          "signal": "watch_short",
+          "vote": -1
+        },
+        "hour": {
+          "signal": "short",
+          "vote": -1,
+          "momentum_pct": 0.06648936170212671,
+          "ema8": 6054.498212484198,
+          "ema21": 6120.88604260844,
+          "rsi": 28.193832599118934
+        },
+        "five": {
+          "signal": "watch_short",
+          "score": -39
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-24",
+          "value": 5600.0
+        },
+        {
+          "time": "2026-06-25",
+          "value": 5622.0
+        },
+        {
+          "time": "2026-06-26",
+          "value": 5604.0
+        },
+        {
+          "time": "2026-06-29",
+          "value": 5646.0
+        },
+        {
+          "time": "2026-06-30",
+          "value": 5680.0
+        },
+        {
+          "time": "2026-07-01",
+          "value": 5644.0
+        },
+        {
+          "time": "2026-07-02",
+          "value": 5714.0
+        },
+        {
+          "time": "2026-07-03",
+          "value": 5774.0
+        },
+        {
+          "time": "2026-07-06",
+          "value": 5782.0
+        },
+        {
+          "time": "2026-07-07",
+          "value": 5818.0
+        },
+        {
+          "time": "2026-07-08",
+          "value": 5832.0
+        },
+        {
+          "time": "2026-07-09",
+          "value": 5824.0
+        },
+        {
+          "time": "2026-07-10",
+          "value": 5792.0
+        },
+        {
+          "time": "2026-07-13",
+          "value": 5746.0
+        },
+        {
+          "time": "2026-07-14",
+          "value": 5828.0
+        },
+        {
+          "time": "2026-07-15",
+          "value": 5796.0
+        },
+        {
+          "time": "2026-07-16",
+          "value": 5812.0
+        },
+        {
+          "time": "2026-07-17",
+          "value": 5784.0
+        },
+        {
+          "time": "2026-07-20",
+          "value": 5782.0
+        },
+        {
+          "time": "2026-07-21",
+          "value": 5782.0
+        },
+        {
+          "time": "2026-07-22",
+          "value": 5840.0
+        },
+        {
+          "time": "2026-07-23",
+          "value": 5830.0
+        },
+        {
+          "time": "2026-07-24",
+          "value": 5892.0
+        },
+        {
+          "time": "2026-07-27",
+          "value": 5896.0
+        },
+        {
+          "time": "2026-07-28",
+          "value": 5812.0
+        },
+        {
+          "time": "2026-07-29",
+          "value": 5916.0
+        },
+        {
+          "time": "2026-07-30",
+          "value": 5786.0
+        },
+        {
+          "time": "2026-07-31",
+          "value": 5782.0
+        },
+        {
+          "time": "2026-08-03",
+          "value": 5766.0
+        },
+        {
+          "time": "2026-08-04",
+          "value": 5860.0
+        },
+        {
+          "time": "2026-08-05",
+          "value": 5880.0
+        },
+        {
+          "time": "2026-08-06",
+          "value": 5924.0
+        },
+        {
+          "time": "2026-08-07",
+          "value": 5900.0
+        },
+        {
+          "time": "2026-08-10",
+          "value": 5882.0
+        },
+        {
+          "time": "2026-08-11",
+          "value": 5906.0
+        },
+        {
+          "time": "2026-08-12",
+          "value": 5924.0
+        },
+        {
+          "time": "2026-08-13",
+          "value": 5896.0
+        },
+        {
+          "time": "2026-08-14",
+          "value": 5926.0
+        },
+        {
+          "time": "2026-08-17",
+          "value": 5922.0
+        },
+        {
+          "time": "2026-08-18",
+          "value": 5974.0
+        },
+        {
+          "time": "2026-08-19",
+          "value": 5956.0
+        },
+        {
+          "time": "2026-08-20",
+          "value": 5966.0
+        },
+        {
+          "time": "2026-08-21",
+          "value": 6022.0
+        },
+        {
+          "time": "2026-08-24",
+          "value": 5992.0
+        },
+        {
+          "time": "2026-08-25",
+          "value": 6022.0
+        },
+        {
+          "time": "2026-08-26",
+          "value": 5924.0
+        },
+        {
+          "time": "2026-08-27",
+          "value": 6034.0
+        },
+        {
+          "time": "2026-08-28",
+          "value": 6080.0
+        },
+        {
+          "time": "2026-08-31",
+          "value": 6170.0
+        },
+        {
+          "time": "2026-09-01",
+          "value": 6258.0
+        },
+        {
+          "time": "2026-09-02",
+          "value": 6158.0
+        },
+        {
+          "time": "2026-09-03",
+          "value": 6364.0
+        },
+        {
+          "time": "2026-09-04",
+          "value": 6624.0
+        },
+        {
+          "time": "2026-09-07",
+          "value": 6300.0
+        },
+        {
+          "time": "2026-09-08",
+          "value": 6392.0
+        },
+        {
+          "time": "2026-09-09",
+          "value": 6230.0
+        },
+        {
+          "time": "2026-09-10",
+          "value": 6248.0
+        },
+        {
+          "time": "2026-09-11",
+          "value": 6072.0
+        },
+        {
+          "time": "2026-09-14",
+          "value": 6028.0
+        },
+        {
+          "time": "2026-09-15",
+          "value": 6020.0
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "last_actual_observation": "2026-09-15 15:00:00",
+        "last_daily_close": "2026-09-15",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 29,
+        "win_rate_pct": 55.172413793103445,
+        "net_return_pct": -4.229677905117645,
+        "max_drawdown_pct": -18.381929886711557,
+        "avg_trade_pct": -0.0494705910180431,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
+      }
+    },
+    {
+      "id": "ferromanganese",
+      "name": "锰硅",
+      "short_name": "锰硅",
+      "symbol": "SM0",
+      "exchange": "CZCE",
+      "sector": "ferrous",
+      "provider": "sina",
+      "decimals": 0,
+      "unit": "元/吨",
+      "bar_timezone": "Asia/Shanghai",
+      "score": -57,
+      "signal": "watch_short",
+      "momentum_pct": -2.8878441907320362,
+      "threshold_pct": 3.0,
+      "ma20": 5969.3,
+      "rsi": 38.048780487804876,
+      "prior_high": 6242.0,
+      "prior_low": 5774.0,
+      "long_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": false,
+        "rsi": false
+      },
+      "short_factors": {
+        "momentum": false,
+        "breakout": false,
+        "trend": true,
+        "rsi": true
+      },
+      "long_count": 0,
+      "short_count": 2,
+      "daily_score": -50,
+      "daily_signal": "watch_short",
+      "status": "stale",
+      "status_text": "行情陈旧",
+      "price": 5784.0,
+      "bar_time": "2026-09-15 15:00:00",
+      "daily_date": "2026-09-15",
+      "age_minutes": 489.0,
+      "bars": {
+        "daily": 600,
+        "hourly": 600,
+        "five": 1000,
+        "weekly": 129
+      },
+      "change_pct": 0.0,
+      "returns": {
+        "day": -0.17259233690024578,
+        "week": -2.8878441907320362,
+        "month": -1.9328585961342792
+      },
+      "position_changes": {
+        "day": 1.269747633161633,
+        "week": -11.033515139641148,
+        "month": -35.05062599054612
+      },
+      "capital_bucket": "weak",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 5969.30 / MA60 5839.53",
+            "signal": "neutral",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF -0.79 / 柱 -72.43",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "48.4",
+            "signal": "short",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-2.89%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "38.0",
+            "signal": "short",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 5.0 / D 5.6",
+            "signal": "short",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-156.1",
+            "signal": "short",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "110.29 (1.91%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 3.9%",
+            "signal": "neutral",
+            "note": "上 6170.44 / 下 5768.16"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 6242.00 / 低 5774.00",
+            "signal": "neutral",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "0.59×",
+            "signal": "neutral",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "+1853782",
+            "signal": "long",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 5784.0,
+        "long_atr_stop": 5563.428571428572,
+        "short_atr_stop": 6004.571428571428,
+        "long_break_even_trigger": 5795.568,
+        "short_break_even_trigger": 5772.432,
+        "long_fib_trail": 6067.044,
+        "short_fib_trail": 5777.82
+      },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 51,
+          "win_rate_pct": 49.01960784313725,
+          "net_return_pct": -3.045533490889385,
+          "annual_return_pct": -1.438263290624331,
+          "max_drawdown_pct": -8.776664534855794,
+          "sharpe": -0.10351340338447831,
+          "profit_factor": 0.9242477525473127,
+          "avg_trade_pct": -0.046282087416739726,
+          "positive_trades": 25,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 15,
+          "win_rate_pct": 33.33333333333333,
+          "net_return_pct": -14.679541962382348,
+          "annual_return_pct": -7.166397036432059,
+          "max_drawdown_pct": -30.45112938937291,
+          "sharpe": -0.3311683034977416,
+          "profit_factor": 0.5517532666527305,
+          "avg_trade_pct": -0.9718442439002901,
+          "positive_trades": 5,
+          "latest_target": 1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 40,
+          "win_rate_pct": 40.0,
+          "net_return_pct": 15.015420267163027,
+          "annual_return_pct": 6.772210464927442,
+          "max_drawdown_pct": -15.368400443333973,
+          "sharpe": 0.46285430486038864,
+          "profit_factor": 1.5794557254834547,
+          "avg_trade_pct": 0.3805849026920422,
+          "positive_trades": 16,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 49,
+          "win_rate_pct": 38.775510204081634,
+          "net_return_pct": -11.592916028359234,
+          "annual_return_pct": -5.608157789276835,
+          "max_drawdown_pct": -17.533041362467227,
+          "sharpe": -0.5853666168790422,
+          "profit_factor": 0.6781802872795698,
+          "avg_trade_pct": -0.2169019095234728,
+          "positive_trades": 19,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 78,
+          "win_rate_pct": 21.794871794871796,
+          "net_return_pct": -9.840641203906465,
+          "annual_return_pct": -71.41745536189997,
+          "max_drawdown_pct": -9.850246743620028,
+          "sharpe": -19.739098943002052,
+          "profit_factor": 0.11657514555468398,
+          "avg_trade_pct": -0.13260161529767203,
+          "positive_trades": 17,
+          "latest_target": 0,
+          "sample_start": "2026-08-18 09:30:00",
+          "sample_end": "2026-09-15 15:00:00",
+          "observations": 938
+        }
+      ],
+      "timeframes": {
+        "week": {
+          "signal": "strong_short",
+          "vote": -3,
+          "momentum_pct": -0.7549759780370646,
+          "ema8": 5887.366708671089,
+          "ema21": 5902.4793180870765,
+          "rsi": 42.18328840970351
+        },
+        "day": {
+          "signal": "watch_short",
+          "vote": -2
+        },
+        "hour": {
+          "signal": "short",
+          "vote": -1,
+          "momentum_pct": 0.03459010722932643,
+          "ema8": 5795.897237694461,
+          "ema21": 5849.070984552159,
+          "rsi": 28.80000000000001
+        },
+        "five": {
+          "signal": "watch_long",
+          "score": 37
+        }
+      },
+      "sparkline": [
+        {
+          "time": "2026-06-24",
+          "value": 5770.0
+        },
+        {
+          "time": "2026-06-25",
+          "value": 5758.0
+        },
+        {
+          "time": "2026-06-26",
+          "value": 5750.0
+        },
+        {
+          "time": "2026-06-29",
+          "value": 5762.0
+        },
+        {
+          "time": "2026-06-30",
+          "value": 5770.0
+        },
+        {
+          "time": "2026-07-01",
+          "value": 5752.0
+        },
+        {
+          "time": "2026-07-02",
+          "value": 5782.0
+        },
+        {
+          "time": "2026-07-03",
+          "value": 5832.0
+        },
+        {
+          "time": "2026-07-06",
+          "value": 5842.0
+        },
+        {
+          "time": "2026-07-07",
+          "value": 5892.0
+        },
+        {
+          "time": "2026-07-08",
+          "value": 5928.0
+        },
+        {
+          "time": "2026-07-09",
+          "value": 5918.0
+        },
+        {
+          "time": "2026-07-10",
+          "value": 5872.0
+        },
+        {
+          "time": "2026-07-13",
+          "value": 5868.0
+        },
+        {
+          "time": "2026-07-14",
+          "value": 5890.0
+        },
+        {
+          "time": "2026-07-15",
+          "value": 5882.0
+        },
+        {
+          "time": "2026-07-16",
+          "value": 5884.0
+        },
+        {
+          "time": "2026-07-17",
+          "value": 5822.0
+        },
+        {
+          "time": "2026-07-20",
+          "value": 5802.0
+        },
+        {
+          "time": "2026-07-21",
+          "value": 5788.0
+        },
+        {
+          "time": "2026-07-22",
+          "value": 5712.0
+        },
+        {
+          "time": "2026-07-23",
+          "value": 5670.0
+        },
+        {
+          "time": "2026-07-24",
+          "value": 5674.0
+        },
+        {
+          "time": "2026-07-27",
+          "value": 5714.0
+        },
+        {
+          "time": "2026-07-28",
+          "value": 5694.0
+        },
+        {
+          "time": "2026-07-29",
+          "value": 5724.0
+        },
+        {
+          "time": "2026-07-30",
+          "value": 5684.0
+        },
+        {
+          "time": "2026-07-31",
+          "value": 5680.0
+        },
+        {
+          "time": "2026-08-03",
+          "value": 5602.0
+        },
+        {
+          "time": "2026-08-04",
+          "value": 5630.0
+        },
+        {
+          "time": "2026-08-05",
+          "value": 5634.0
+        },
+        {
+          "time": "2026-08-06",
+          "value": 5676.0
+        },
+        {
+          "time": "2026-08-07",
+          "value": 5668.0
+        },
+        {
+          "time": "2026-08-10",
+          "value": 5710.0
+        },
+        {
+          "time": "2026-08-11",
+          "value": 5762.0
+        },
+        {
+          "time": "2026-08-12",
+          "value": 5814.0
+        },
+        {
+          "time": "2026-08-13",
+          "value": 5806.0
+        },
+        {
+          "time": "2026-08-14",
+          "value": 5828.0
+        },
+        {
+          "time": "2026-08-17",
+          "value": 5842.0
+        },
+        {
+          "time": "2026-08-18",
+          "value": 5898.0
+        },
+        {
+          "time": "2026-08-19",
+          "value": 5922.0
+        },
+        {
+          "time": "2026-08-20",
+          "value": 5930.0
+        },
+        {
+          "time": "2026-08-21",
+          "value": 5964.0
+        },
+        {
+          "time": "2026-08-24",
+          "value": 5962.0
+        },
+        {
+          "time": "2026-08-25",
+          "value": 5968.0
+        },
+        {
+          "time": "2026-08-26",
+          "value": 5980.0
+        },
+        {
+          "time": "2026-08-27",
+          "value": 6004.0
+        },
+        {
+          "time": "2026-08-28",
+          "value": 6030.0
+        },
+        {
+          "time": "2026-08-31",
+          "value": 6090.0
+        },
+        {
+          "time": "2026-09-01",
+          "value": 6112.0
+        },
+        {
+          "time": "2026-09-02",
+          "value": 6062.0
+        },
+        {
+          "time": "2026-09-03",
+          "value": 6100.0
+        },
+        {
+          "time": "2026-09-04",
+          "value": 6166.0
+        },
+        {
+          "time": "2026-09-07",
+          "value": 5880.0
+        },
+        {
+          "time": "2026-09-08",
+          "value": 5956.0
+        },
+        {
+          "time": "2026-09-09",
+          "value": 5940.0
+        },
+        {
+          "time": "2026-09-10",
+          "value": 5890.0
+        },
+        {
+          "time": "2026-09-11",
+          "value": 5852.0
+        },
+        {
+          "time": "2026-09-14",
+          "value": 5794.0
+        },
+        {
+          "time": "2026-09-15",
+          "value": 5784.0
+        }
+      ],
+      "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
+      "quality": {
+        "source_mode": "live/intraday + derived close",
+        "daily": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "hourly": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "five": {
+          "duplicate_bars_removed": 0,
+          "incomplete_bars_excluded": 0
+        },
+        "last_actual_observation": "2026-09-15 15:00:00",
+        "last_daily_close": "2026-09-15",
+        "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
+      },
+      "backtest": {
+        "trades": 36,
+        "win_rate_pct": 55.55555555555556,
+        "net_return_pct": 9.718688773496819,
+        "max_drawdown_pct": -24.302127714242427,
+        "avg_trade_pct": 0.37665773612093195,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
+      }
     }
   ],
   "methodology": {
     "bar": "日线四因子为主；周线和60分钟确认趋势；5分钟仅作盘中预警",
     "factors": "mom5超过±3% / 突破20日高低 / 收盘相对MA20 / 日线RSI14区间",
     "decision": "日线四因子至少3项同向触发，再结合周线与小时线给出综合结论",
-    "execution": "日线回测在下一交易日开盘入场，最长持有10个交易日；扫描每5分钟运行",
+    "execution": "核心模型在交易日15:20后刷新；全市场行情在交易时段每15分钟刷新；5分钟策略不进入定时交易信号",
+    "allocation": "七板块按主力连续当日涨跌广度与等权平均涨幅排序，相对做多前2、做空后2、其余中性",
     "technical": "主流指标层覆盖均线、MACD、ADX、ROC、RSI、KDJ、CCI、ATR、布林带、唐奇安、量比与OBV，仅作交叉验证",
     "risk": "研究参考线采用2×ATR初始止损、0.618动态跟踪与±0.2%保本触发；不自动下单",
     "cost": "所有策略对比统一按开仓万1.2、平仓万1.2，并在每一侧额外计1跳滑点"
@@ -5500,7 +10535,8 @@
   "warnings": [
     "主连换月可能产生跳空，生产使用前应接入后复权连续合约或固定主力合约。",
     "持仓变化是主连持仓量代理，换月附近不可直接解释为资金净流入或流出。",
-    "钴采用LME CO外部CSV适配，不用国内现货价格冒充期货行情。",
+    "七板块配置是当日截面相对强弱，不等同于全部板块已经完成日线策略回测。",
+    "黑色板块覆盖螺纹钢、热卷、线材、不锈钢、铁矿石、焦炭、焦煤、硅铁与锰硅主力连续。",
     "公开接口可能限流或中断；实盘研究建议切换至iFinD、Wind、CTP或交易所授权源。"
   ]
 }
