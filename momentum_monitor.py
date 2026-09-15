@@ -1255,28 +1255,32 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
         holds = [bar["hold"] for bar in daily]
         returns = {"day": percentage_change(daily_closes, 1), "week": percentage_change(daily_closes, 5), "month": percentage_change(daily_closes, 20)}
         continuous_position_changes = {"day": percentage_change(holds, 1), "week": percentage_change(holds, 5), "month": percentage_change(holds, 20)}
-        try:
-            position_changes = fetch_eastmoney_weighted_oi(asset["symbol"], generated_at)
+        position_changes = cached_position_changes(asset["id"], daily[-1]["datetime"])
+        if position_changes and position_changes.get("mode") == "weighted_contract":
+            position_changes["cache_status"] = "same_day_weighted_reuse"
             position_changes["continuous_proxy"] = continuous_position_changes
-        except Exception as weighted_exc:
-            position_changes = cached_position_changes(asset["id"], daily[-1]["datetime"])
-            if position_changes:
-                position_changes["cache_status"] = "same_day_reuse"
-                position_changes["weighted_contract_error"] = str(weighted_exc)
+        else:
+            try:
+                position_changes = fetch_eastmoney_weighted_oi(asset["symbol"], generated_at)
                 position_changes["continuous_proxy"] = continuous_position_changes
-            else:
-                try:
-                    position_changes = aggregate_open_interest_changes(asset["symbol"], generated_at)
+            except Exception as weighted_exc:
+                if position_changes:
+                    position_changes["cache_status"] = "same_day_reuse"
                     position_changes["weighted_contract_error"] = str(weighted_exc)
                     position_changes["continuous_proxy"] = continuous_position_changes
-                except Exception as aggregate_exc:
-                    position_changes = {
-                        **continuous_position_changes,
-                        "mode": "continuous_fallback", "contract_count": 1, "coverage_pct": None,
-                        "constituents": [], "as_of": daily[-1]["datetime"],
-                        "method": "加权合约与全合约加总均不可用，明确降级为主力连续持仓变化",
-                        "error": f"加权合约: {weighted_exc}; 全合约加总: {aggregate_exc}",
-                    }
+                else:
+                    try:
+                        position_changes = aggregate_open_interest_changes(asset["symbol"], generated_at)
+                        position_changes["weighted_contract_error"] = str(weighted_exc)
+                        position_changes["continuous_proxy"] = continuous_position_changes
+                    except Exception as aggregate_exc:
+                        position_changes = {
+                            **continuous_position_changes,
+                            "mode": "continuous_fallback", "contract_count": 1, "coverage_pct": None,
+                            "constituents": [], "as_of": daily[-1]["datetime"],
+                            "method": "加权合约与全合约加总均不可用，明确降级为主力连续持仓变化",
+                            "error": f"加权合约: {weighted_exc}; 全合约加总: {aggregate_exc}",
+                        }
         technical = technical_snapshot(daily)
         oi_week = position_changes.get("week")
         oi_mode = "加权合约" if position_changes.get("mode") == "weighted_contract" else "全合约汇总" if position_changes.get("mode") == "aggregate_all_contracts" else "主连降级"
