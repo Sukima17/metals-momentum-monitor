@@ -320,6 +320,125 @@ def percentage_change(values: list[float], bars: int) -> float | None:
     return (values[-1] / values[-bars - 1] - 1) * 100
 
 
+def technical_snapshot(bars: list[dict[str, Any]]) -> dict[str, Any]:
+    """Latest mainstream daily indicators, kept separate from the core signal."""
+    closes = [bar["close"] for bar in bars]
+    highs = [bar["high"] for bar in bars]
+    lows = [bar["low"] for bar in bars]
+    volumes = [bar["volume"] for bar in bars]
+    if len(bars) < 60:
+        raise ValueError("技术指标预热数据不足")
+
+    ma20 = statistics.fmean(closes[-20:])
+    ma60 = statistics.fmean(closes[-60:])
+    ema12 = ema(closes, 12)
+    ema26 = ema(closes, 26)
+    macd_line = [fast - slow for fast, slow in zip(ema12, ema26)]
+    macd_signal = ema(macd_line, 9)
+    macd_hist = (macd_line[-1] - macd_signal[-1]) * 2
+    atr14 = rolling_atr(bars, 14)[-1] or 0.0
+    rsi14 = rolling_rsi(closes, 14)[-1]
+
+    middle = ma20
+    deviation = statistics.pstdev(closes[-20:])
+    boll_upper, boll_lower = middle + 2 * deviation, middle - 2 * deviation
+    boll_position = 50.0 if boll_upper == boll_lower else (closes[-1] - boll_lower) / (boll_upper - boll_lower) * 100
+
+    k_values: list[float] = []
+    for index in range(8, len(bars)):
+        high9 = max(highs[index - 8 : index + 1])
+        low9 = min(lows[index - 8 : index + 1])
+        k_values.append(50.0 if high9 == low9 else (closes[index] - low9) / (high9 - low9) * 100)
+    k_value = k_values[-1]
+    d_value = statistics.fmean(k_values[-3:])
+
+    typical = [(bar["high"] + bar["low"] + bar["close"]) / 3 for bar in bars]
+    tp20 = typical[-20:]
+    tp_mean = statistics.fmean(tp20)
+    mean_deviation = statistics.fmean(abs(value - tp_mean) for value in tp20)
+    cci20 = 0.0 if mean_deviation == 0 else (typical[-1] - tp_mean) / (0.015 * mean_deviation)
+
+    # ADX14: simple rolling directional-movement implementation for the latest value.
+    true_ranges, plus_dm, minus_dm = [], [], []
+    for index in range(1, len(bars)):
+        up = highs[index] - highs[index - 1]
+        down = lows[index - 1] - lows[index]
+        plus_dm.append(up if up > down and up > 0 else 0.0)
+        minus_dm.append(down if down > up and down > 0 else 0.0)
+        true_ranges.append(max(highs[index] - lows[index], abs(highs[index] - closes[index - 1]), abs(lows[index] - closes[index - 1])))
+    dx_values = []
+    for index in range(13, len(true_ranges)):
+        tr_sum = sum(true_ranges[index - 13 : index + 1])
+        plus_di = 0.0 if tr_sum == 0 else 100 * sum(plus_dm[index - 13 : index + 1]) / tr_sum
+        minus_di = 0.0 if tr_sum == 0 else 100 * sum(minus_dm[index - 13 : index + 1]) / tr_sum
+        denominator = plus_di + minus_di
+        dx_values.append(0.0 if denominator == 0 else 100 * abs(plus_di - minus_di) / denominator)
+    adx14 = statistics.fmean(dx_values[-14:])
+
+    obv = [0.0]
+    for index in range(1, len(bars)):
+        direction = 1 if closes[index] > closes[index - 1] else -1 if closes[index] < closes[index - 1] else 0
+        obv.append(obv[-1] + direction * volumes[index])
+    obv_change = obv[-1] - obv[-21]
+    normal_volume = statistics.fmean(volumes[-21:-1])
+    volume_ratio = volumes[-1] / normal_volume if normal_volume > 0 else None
+
+    def side(value: float, positive: float = 0.0, negative: float = 0.0) -> str:
+        return "long" if value > positive else "short" if value < negative else "neutral"
+
+    return {
+        "groups": {
+            "trend": [
+                {"name": "均线系统", "value": f"MA20 {ma20:.2f} / MA60 {ma60:.2f}", "signal": "long" if closes[-1] > ma20 > ma60 else "short" if closes[-1] < ma20 < ma60 else "neutral", "note": "收盘与中长期均线排列"},
+                {"name": "MACD", "value": f"DIF {macd_line[-1]:.2f} / 柱 {macd_hist:.2f}", "signal": side(macd_hist), "note": "EMA12、EMA26、Signal9"},
+                {"name": "ADX14", "value": f"{adx14:.1f}", "signal": "long" if adx14 >= 25 and closes[-1] > ma20 else "short" if adx14 >= 25 and closes[-1] < ma20 else "neutral", "note": "≥25 表示趋势较明确"},
+            ],
+            "momentum": [
+                {"name": "ROC5", "value": f"{percentage_change(closes, 5):+.2f}%", "signal": side(percentage_change(closes, 5) or 0), "note": "5日价格动量"},
+                {"name": "RSI14", "value": f"{rsi14:.1f}", "signal": "long" if rsi14 and rsi14 >= 55 else "short" if rsi14 and rsi14 <= 45 else "neutral", "note": "超买超卖与强弱区间"},
+                {"name": "KDJ(9,3)", "value": f"K {k_value:.1f} / D {d_value:.1f}", "signal": "long" if k_value > d_value else "short" if k_value < d_value else "neutral", "note": "随机指标交叉"},
+                {"name": "CCI20", "value": f"{cci20:.1f}", "signal": "long" if cci20 > 100 else "short" if cci20 < -100 else "neutral", "note": "±100 为强弱参考阈值"},
+            ],
+            "volatility": [
+                {"name": "ATR14", "value": f"{atr14:.2f} ({atr14 / closes[-1] * 100:.2f}%)", "signal": "neutral", "note": "真实波幅，用于风险线"},
+                {"name": "布林带20,2", "value": f"位置 {boll_position:.1f}%", "signal": "long" if closes[-1] > boll_upper else "short" if closes[-1] < boll_lower else "neutral", "note": f"上 {boll_upper:.2f} / 下 {boll_lower:.2f}"},
+                {"name": "唐奇安20", "value": f"高 {max(highs[-21:-1]):.2f} / 低 {min(lows[-21:-1]):.2f}", "signal": "long" if closes[-1] > max(highs[-21:-1]) else "short" if closes[-1] < min(lows[-21:-1]) else "neutral", "note": "20日区间突破"},
+            ],
+            "volume_position": [
+                {"name": "量比20", "value": "—" if volume_ratio is None else f"{volume_ratio:.2f}×", "signal": "long" if volume_ratio and volume_ratio >= 1.2 and closes[-1] >= closes[-2] else "short" if volume_ratio and volume_ratio >= 1.2 and closes[-1] < closes[-2] else "neutral", "note": "当日量 / 前20日均量"},
+                {"name": "OBV20方向", "value": f"{obv_change:+.0f}", "signal": side(obv_change), "note": "成交量累积方向，不代表资金流"},
+            ],
+        },
+        "values": {"ma20": ma20, "ma60": ma60, "atr14": atr14, "boll_upper": boll_upper, "boll_lower": boll_lower, "adx14": adx14},
+    }
+
+
+def capital_bucket(price_month: float | None, position_week: float | None) -> str:
+    """Classify price/OI quadrants from screenshot 2; OI remains a proxy."""
+    if price_month is None or position_week is None or abs(price_month) < 0.15 or abs(position_week) < 0.15:
+        return "divergence"
+    if price_month > 0 and position_week > 0:
+        return "trend_long"
+    if price_month > 0 and position_week < 0:
+        return "avoid"
+    if price_month < 0 and position_week > 0:
+        return "accumulate"
+    return "weak"
+
+
+def research_risk_levels(close: float, high20: float, low20: float, atr14: float) -> dict[str, float]:
+    """Screenshot-compatible reference levels; these are not executable orders."""
+    return {
+        "entry_reference": close,
+        "long_atr_stop": close - 2 * atr14,
+        "short_atr_stop": close + 2 * atr14,
+        "long_break_even_trigger": close * 1.002,
+        "short_break_even_trigger": close * 0.998,
+        "long_fib_trail": close + max(0.0, high20 - close) * 0.618,
+        "short_fib_trail": close - max(0.0, close - low20) * 0.618,
+    }
+
+
 def prepare_bars(
     raw_bars: list[dict[str, Any]], asset: dict[str, Any], generated_at: datetime, timeframe: str
 ) -> tuple[list[dict[str, Any]], dict[str, int]]:
@@ -542,6 +661,9 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
         ]
         daily_closes = [bar["close"] for bar in daily]
         holds = [bar["hold"] for bar in daily]
+        returns = {"day": percentage_change(daily_closes, 1), "week": percentage_change(daily_closes, 5), "month": percentage_change(daily_closes, 20)}
+        position_changes = {"day": percentage_change(holds, 1), "week": percentage_change(holds, 5), "month": percentage_change(holds, 20)}
+        technical = technical_snapshot(daily)
         result = {
             **base,
             **latest,
@@ -557,8 +679,11 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             "age_minutes": round(age_minutes, 1),
             "bars": {"daily": len(daily), "hourly": len(hourly), "five": len(five), "weekly": len(weekly)},
             "change_pct": (five_closes[-1] / daily_closes[-1] - 1) * 100,
-            "returns": {"day": percentage_change(daily_closes, 1), "week": percentage_change(daily_closes, 5), "month": percentage_change(daily_closes, 20)},
-            "position_changes": {"day": percentage_change(holds, 1), "week": percentage_change(holds, 5), "month": percentage_change(holds, 20)},
+            "returns": returns,
+            "position_changes": position_changes,
+            "capital_bucket": capital_bucket(returns["month"], position_changes["week"]),
+            "technical_methods": technical["groups"],
+            "risk_levels": research_risk_levels(daily_closes[-1], latest["prior_high"], latest["prior_low"], technical["values"]["atr14"]),
             "timeframes": {"week": weekly_trend, "day": {"signal": latest["signal"], "vote": latest["long_count"] - latest["short_count"]}, "hour": hourly_trend, "five": {"signal": five_signal["signal"], "score": five_signal["score"]}},
             "sparkline": sparkline,
             "source": source,
@@ -600,17 +725,25 @@ def scan_once() -> dict[str, Any]:
         order = {asset["id"]: index for index, asset in enumerate(config["assets"])}
         results.sort(key=lambda item: order[item["id"]])
         counts = {key: sum(item.get("signal") == key for item in results) for key in ("long", "short", "watch_long", "watch_short", "neutral", "missing")}
+        bucket_keys = ("trend_long", "avoid", "accumulate", "divergence", "weak")
+        operation_summary = {
+            key: [item["id"] for item in results if item.get("capital_bucket") == key]
+            for key in bucket_keys
+        }
         payload = {
-            "schema_version": 2,
+            "schema_version": 3,
             "generated_at": generated_at.isoformat(timespec="seconds"),
             "interval_seconds": int(config["scan_interval_seconds"]),
             "summary": counts,
+            "operation_summary": operation_summary,
             "assets": results,
             "methodology": {
                 "bar": "日线四因子为主；周线和60分钟确认趋势；5分钟仅作盘中预警",
                 "factors": "mom5超过±3% / 突破20日高低 / 收盘相对MA20 / 日线RSI14区间",
                 "decision": "日线四因子至少3项同向触发，再结合周线与小时线给出综合结论",
                 "execution": "日线回测在下一交易日开盘入场，最长持有10个交易日；扫描每5分钟运行",
+                "technical": "主流指标层覆盖均线、MACD、ADX、ROC、RSI、KDJ、CCI、ATR、布林带、唐奇安、量比与OBV，仅作交叉验证",
+                "risk": "研究参考线采用2×ATR初始止损、0.618动态跟踪与±0.2%保本触发；不自动下单",
             },
             "warnings": [
                 "主连换月可能产生跳空，生产使用前应接入后复权连续合约或固定主力合约。",

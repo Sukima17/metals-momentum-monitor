@@ -1,130 +1,54 @@
-const state = { data: null, filter: "all", selected: null, seconds: 300 };
-const labels = {
-  long: "顺势做多", short: "顺势做空", watch_long: "观察偏多",
-  watch_short: "观察偏空", neutral: "多空分歧", missing: "数据缺失"
+const state={data:null,filter:"all",selected:null,seconds:300};
+const labels={long:"顺势做多",short:"顺势做空",watch_long:"观察偏多",watch_short:"观察偏空",neutral:"多空分歧",missing:"数据缺失"};
+const timeframeLabels={strong_long:"强势多头",long:"偏多",strong_short:"强势空头",short:"偏空",watch_long:"偏多",watch_short:"偏空",neutral:"中性"};
+const colors={long:"#e33d48",short:"#119a67",watch_long:"#e99b16",watch_short:"#d88336",neutral:"#75859b",missing:"#8997a8"};
+const factorNames={momentum:"5日动量",breakout:"20日突破",trend:"MA20趋势",rsi:"RSI14区间"};
+const groupNames={trend:"趋势类",momentum:"动量类",volatility:"波动与突破",volume_position:"量价与持仓"};
+const capitalMeta={
+  trend_long:["顺势做多首选","价格上涨、持仓代理增加"],avoid:["回避 / 警惕","价格上涨、持仓代理下降"],
+  accumulate:["埋伏观察","价格下跌、持仓代理增加"],divergence:["观望 / 分歧","价格或持仓变化不显著"],weak:["弱势","价格下跌、持仓代理下降"]
 };
-const timeframeLabels = {
-  strong_long: "强势多头", long: "偏多", strong_short: "强势空头",
-  short: "偏空", watch_long: "偏多", watch_short: "偏空", neutral: "中性"
-};
-const colors = { long:"#2ee68a", short:"#ff5c72", watch_long:"#f6bd46", watch_short:"#f09454", neutral:"#718097", missing:"#8390a2" };
-const factorNames = { momentum:"5日动量", breakout:"20日突破", trend:"MA20趋势", rsi:"RSI14区间" };
-const fmt = (value, digits=1) => value == null ? "—" : Number(value).toLocaleString("zh-CN", {minimumFractionDigits:digits, maximumFractionDigits:digits});
-const pct = value => value == null ? "—" : `${value >= 0 ? "+" : ""}${fmt(value, 2)}%`;
-const escapeHtml = value => String(value ?? "").replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
-
-function signalSide(signal){
-  return signal === "long" || signal === "watch_long" ? "long" : signal === "short" || signal === "watch_short" ? "short" : signal;
-}
-function filteredAssets(){
-  if(!state.data) return [];
-  return state.data.assets.filter(asset => state.filter === "all" ||
-    (state.filter === "watch" ? asset.signal.startsWith("watch") : signalSide(asset.signal) === state.filter));
-}
-function timeframeClass(signal){
-  if(signal.includes("long")) return "tf-long";
-  if(signal.includes("short")) return "tf-short";
-  return "tf-neutral";
-}
-function timeframePill(prefix, item){
-  return `<span class="${timeframeClass(item.signal)}">${prefix}·${timeframeLabels[item.signal] || labels[item.signal]}</span>`;
-}
+const fmt=(value,digits=1)=>value==null||Number.isNaN(Number(value))?"—":Number(value).toLocaleString("zh-CN",{minimumFractionDigits:digits,maximumFractionDigits:digits});
+const pct=value=>value==null?"—":`${value>=0?"+":""}${fmt(value,2)}%`;
+const escapeHtml=value=>String(value??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
+function signalSide(signal){return signal==="long"||signal==="watch_long"?"long":signal==="short"||signal==="watch_short"?"short":signal}
+function filteredAssets(){return state.data?state.data.assets.filter(a=>state.filter==="all"||(state.filter==="watch"?a.signal.startsWith("watch"):signalSide(a.signal)===state.filter)):[]}
+function timeframeClass(signal){return signal?.includes("long")?"tf-long":signal?.includes("short")?"tf-short":"tf-neutral"}
+function timeframePill(prefix,item){return `<span class="${timeframeClass(item?.signal)}">${prefix}·${timeframeLabels[item?.signal]||labels[item?.signal]||"—"}</span>`}
 function cardTemplate(asset){
-  const color = colors[asset.signal] || colors.neutral;
-  if(asset.status === "missing") return `<article class="card missing ${state.selected===asset.id?'selected':''}" data-id="${asset.id}">
-    <div class="card-top"><div><span class="contract">${escapeHtml(asset.name)}</span><span class="symbol">${asset.symbol}</span><small class="exchange">${asset.exchange}</small></div><span class="signal-pill">数据缺失</span></div>
-    <div class="error-text">${escapeHtml(asset.error || "等待行情接入")}</div><div class="card-foot"><span>${escapeHtml(asset.source)}</span><span>—</span></div></article>`;
-  const factors = asset.daily_score >= 0 ? asset.long_factors : asset.short_factors;
-  const statusLabel = asset.status === "closed" ? "休市 · " : asset.status === "stale" ? "陈旧 · " : "";
-  return `<article class="card ${state.selected===asset.id?'selected':''}" data-id="${asset.id}" style="--signal-color:${color}">
-    <div class="card-top"><div><span class="contract">${asset.name}</span><span class="symbol">${asset.symbol}</span><small class="exchange">${asset.exchange}</small></div><span class="signal-pill">${labels[asset.signal]}</span></div>
-    <div class="price-row"><span class="price">${fmt(asset.price, asset.decimals)}</span><span class="change">${pct(asset.change_pct)}</span></div>
-    <div class="timeframe-pills">${timeframePill("周",asset.timeframes.week)}${timeframePill("日",asset.timeframes.day)}${timeframePill("时",asset.timeframes.hour)}</div>
-    <div class="factor-pills">${Object.entries(factors).map(([key,on])=>`<span class="${on?'on':''}">${factorNames[key]} ${on?'✓':'×'}</span>`).join('')}</div>
-    <div class="card-foot"><span>${statusLabel}${asset.bar_time.slice(5)}</span><span>日线 ${asset.long_count}/${asset.short_count}</span></div>
-  </article>`;
+  const color=colors[asset.signal]||colors.neutral;
+  if(asset.status==="missing")return `<article class="card missing ${state.selected===asset.id?"selected":""}" data-id="${asset.id}"><div class="card-top"><div><span class="contract">${escapeHtml(asset.name)}</span><span class="symbol">${asset.symbol}</span><small class="exchange">${asset.exchange}</small></div><span class="signal-pill">数据缺失</span></div><div class="error-text">${escapeHtml(asset.error||"等待行情接入")}</div><div class="card-foot"><span>${escapeHtml(asset.source)}</span><span>—</span></div></article>`;
+  const factors=asset.daily_score>=0?asset.long_factors:asset.short_factors;
+  const status=asset.status==="closed"?"休市 · ":asset.status==="stale"?"陈旧 · ":"";
+  return `<article class="card ${state.selected===asset.id?"selected":""}" data-id="${asset.id}" style="--signal-color:${color}"><div class="card-top"><div><span class="contract">${asset.name}</span><span class="symbol">${asset.symbol}</span><small class="exchange">${asset.exchange}</small></div><span class="signal-pill">${labels[asset.signal]}</span></div><div class="price-row"><span class="price">${fmt(asset.price,asset.decimals)}</span><span class="change">${pct(asset.change_pct)}</span></div><div class="timeframe-pills">${timeframePill("周",asset.timeframes.week)}${timeframePill("日",asset.timeframes.day)}${timeframePill("时",asset.timeframes.hour)}</div><div class="factor-pills">${Object.entries(factors).map(([key,on])=>`<span class="${on?"on":""}">${factorNames[key]} ${on?"✓":"×"}</span>`).join("")}</div><div class="card-foot"><span>${status}${asset.bar_time.slice(5)}</span><span>多${asset.long_count}/空${asset.short_count}</span></div></article>`
 }
-function renderCards(){
-  const assets = filteredAssets();
-  document.querySelector("#cards").innerHTML = assets.length ? assets.map(cardTemplate).join("") : `<div class="empty-detail">当前筛选没有品种</div>`;
-  document.querySelectorAll(".card").forEach(card => card.addEventListener("click", () => selectAsset(card.dataset.id)));
+function renderCards(){const assets=filteredAssets();document.querySelector("#cards").innerHTML=assets.length?assets.map(cardTemplate).join(""):`<div class="empty-detail">当前筛选没有品种</div>`;document.querySelectorAll(".card").forEach(card=>card.addEventListener("click",()=>selectAsset(card.dataset.id)))}
+function renderCapital(){
+  const valid=state.data.assets.filter(a=>a.status!=="missing");
+  document.querySelector("#capitalGroups").innerHTML=Object.entries(capitalMeta).map(([key,[title,desc]])=>{
+    const items=valid.filter(a=>a.capital_bucket===key);
+    const chips=items.length?items.map(a=>`<span class="capital-chip"><b>${a.short_name}</b><em>月${pct(a.returns.month)} · 持仓5日${pct(a.position_changes.week)}</em></span>`).join(""):`<span class="capital-chip"><em>暂无</em></span>`;
+    return `<div class="capital-row ${key}"><div class="capital-label">${title}<small>${desc}</small></div><div class="capital-chips">${chips}</div></div>`
+  }).join("")
 }
-function sparkPoints(points){
-  if(!points || points.length < 2) return "";
-  const values=points.map(point=>point.value), min=Math.min(...values), max=Math.max(...values), range=max-min || 1;
-  return values.map((value,index)=>`${(index/(values.length-1)*100).toFixed(2)},${(92-(value-min)/range*82).toFixed(2)}`).join(" ");
+function sparkPoints(points){if(!points||points.length<2)return"";const values=points.map(p=>p.value),min=Math.min(...values),max=Math.max(...values),range=max-min||1;return values.map((v,i)=>`${(i/(values.length-1)*100).toFixed(2)},${(92-(v-min)/range*82).toFixed(2)}`).join(" ")}
+function bindSpark(asset){const wrap=document.querySelector("#detailContent .spark-wrap"),svg=wrap?.querySelector("svg");if(!wrap||!svg||!asset.sparkline?.length)return;const line=svg.querySelector(".crosshair"),dot=svg.querySelector(".hover-dot"),tip=wrap.querySelector(".spark-tooltip"),values=asset.sparkline.map(p=>p.value),min=Math.min(...values),max=Math.max(...values),range=max-min||1;const inspect=event=>{const rect=svg.getBoundingClientRect(),ratio=Math.max(0,Math.min(1,(event.clientX-rect.left)/rect.width)),index=Math.round(ratio*(asset.sparkline.length-1)),point=asset.sparkline[index],x=index/(asset.sparkline.length-1)*100,y=92-(point.value-min)/range*82;line.setAttribute("x1",x);line.setAttribute("x2",x);line.style.opacity=1;dot.setAttribute("cx",x);dot.setAttribute("cy",y);dot.style.opacity=1;tip.textContent=`${point.time} · ${fmt(point.value,asset.decimals)} ${asset.unit}`;tip.style.left=`${Math.max(9,Math.min(91,x))}%`;tip.classList.add("show")};svg.addEventListener("pointermove",inspect);svg.addEventListener("pointerdown",inspect);svg.addEventListener("pointerleave",()=>{line.style.opacity=0;dot.style.opacity=0;tip.classList.remove("show")})}
+function factorDetail(asset,key,passed){const side=asset.daily_score>=0?"多":"空";const values={momentum:`${pct(asset.momentum_pct)}；${side}头阈值 ${side==="多"?">":"< -"}${fmt(asset.threshold_pct,1)}%`,breakout:`收盘 ${fmt(asset.sparkline.at(-1).value,asset.decimals)}；20日高/低 ${fmt(asset.prior_high,asset.decimals)} / ${fmt(asset.prior_low,asset.decimals)}`,trend:`收盘相对 MA20 ${fmt(asset.ma20,asset.decimals)}`,rsi:`RSI14 = ${fmt(asset.rsi,1)}`};return `<div class="factor-row ${passed?"pass":""}"><i></i><div><b>${factorNames[key]}</b><small>${values[key]}</small></div><small>${passed?"通过":"未通过"}</small></div>`}
+function renderTechnical(asset){
+  document.querySelector("#technicalTitle").textContent=asset.status==="missing"?"主流技术指标全景":`${asset.name} · 主流技术指标全景`;
+  const grid=document.querySelector("#technicalGrid"),risk=document.querySelector("#riskPanel");
+  if(!asset.technical_methods){grid.innerHTML=`<div class="empty-detail">该品种暂无技术指标数据</div>`;risk.innerHTML="";return}
+  grid.innerHTML=Object.entries(asset.technical_methods).map(([group,items])=>`<section class="tech-group"><h3>${groupNames[group]||group}</h3>${items.map(item=>`<div class="tech-item ${item.signal}"><i class="tech-dot"></i><div class="tech-copy"><b>${item.name}</b><small>${item.note}</small></div><span class="tech-value">${item.value}</span></div>`).join("")}</section>`).join("");
+  const r=asset.risk_levels,d=asset.decimals;
+  risk.innerHTML=`<div class="risk-heading"><b>风险管理参考线</b><small>以最新日线收盘为研究入场基准，不自动下单</small></div><div class="risk-card"><small>2×ATR 初始止损</small><b>多 ${fmt(r.long_atr_stop,d)} / 空 ${fmt(r.short_atr_stop,d)}</b></div><div class="risk-card"><small>0.618 动态跟踪</small><b>多 ${fmt(r.long_fib_trail,d)} / 空 ${fmt(r.short_fib_trail,d)}</b></div><div class="risk-card"><small>保本触发 BTP</small><b>多 ${fmt(r.long_break_even_trigger,d)} / 空 ${fmt(r.short_break_even_trigger,d)}</b></div>`
 }
-function bindSpark(asset){
-  const wrap=document.querySelector("#detailContent .spark-wrap"), svg=wrap?.querySelector("svg");
-  if(!wrap || !svg || !asset.sparkline?.length) return;
-  const line=svg.querySelector(".crosshair"), dot=svg.querySelector(".hover-dot"), tip=wrap.querySelector(".spark-tooltip");
-  const values=asset.sparkline.map(point=>point.value), min=Math.min(...values), max=Math.max(...values), range=max-min||1;
-  const inspect=event=>{
-    const rect=svg.getBoundingClientRect(), ratio=Math.max(0,Math.min(1,(event.clientX-rect.left)/rect.width));
-    const index=Math.round(ratio*(asset.sparkline.length-1)), point=asset.sparkline[index];
-    const x=index/(asset.sparkline.length-1)*100, y=92-(point.value-min)/range*82;
-    line.setAttribute("x1",x); line.setAttribute("x2",x); line.style.opacity=1;
-    dot.setAttribute("cx",x); dot.setAttribute("cy",y); dot.style.opacity=1;
-    tip.textContent=`${point.time} · ${fmt(point.value,asset.decimals)} ${asset.unit}`;
-    tip.style.left=`${Math.max(8,Math.min(92,x))}%`; tip.classList.add("show");
-  };
-  svg.addEventListener("pointermove",inspect); svg.addEventListener("pointerdown",inspect);
-  svg.addEventListener("pointerleave",()=>{line.style.opacity=0;dot.style.opacity=0;tip.classList.remove("show")});
-}
-function factorDetail(asset, key, passed){
-  const side=asset.daily_score>=0 ? "多" : "空";
-  const values={
-    momentum:`${pct(asset.momentum_pct)}；${side}头阈值 ${side==='多'?'>':'< -'}${fmt(asset.threshold_pct,1)}%`,
-    breakout:`收盘 ${fmt(asset.sparkline.at(-1).value,asset.decimals)}；20日高/低 ${fmt(asset.prior_high,asset.decimals)} / ${fmt(asset.prior_low,asset.decimals)}`,
-    trend:`收盘相对 MA20 ${fmt(asset.ma20,asset.decimals)}`,
-    rsi:`RSI14 = ${fmt(asset.rsi,1)}`
-  };
-  return `<div class="factor-row ${passed?'pass':''}"><i></i><div><b>${factorNames[key]}</b><small>${values[key]}</small></div><small>${passed?'通过':'未通过'}</small></div>`;
-}
-function selectAsset(id, shouldScroll=true){
-  state.selected=id; renderCards();
-  const asset=state.data.assets.find(item=>item.id===id);
-  const title=document.querySelector("#detailTitle"), badge=document.querySelector("#detailBadge"), body=document.querySelector("#detailContent");
-  title.textContent=`${asset.name} ${asset.symbol}`; badge.textContent=labels[asset.signal]; badge.style.color=colors[asset.signal]; badge.style.borderColor=colors[asset.signal];
-  if(asset.status==="missing") { body.className="empty-detail"; body.textContent=asset.error; return; }
-  const factors=asset.daily_score>=0?asset.long_factors:asset.short_factors, color=colors[asset.signal], bt=asset.backtest||{};
-  body.className="detail-body"; body.style.setProperty("--detail-color",color);
-  body.innerHTML=`<div class="spark-wrap"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="最近60个交易日日线收盘价，可移动指针查看真实观测"><polyline points="${sparkPoints(asset.sparkline)}"></polyline><line class="crosshair" y1="7" y2="95"></line><circle class="hover-dot" r="2.3"></circle></svg><div class="spark-tooltip"></div><div class="spark-meta"><span>${asset.sparkline.length}个交易日 · ${asset.unit}</span><span>日线截止 ${asset.daily_date}</span></div><div class="spark-source">${asset.source} · ${asset.bar_timezone}</div></div>
-    <div class="factor-list">${Object.entries(factors).map(([key,on])=>factorDetail(asset,key,on)).join('')}</div>
-    <div class="timeframe-detail"><b>多周期确认</b>${timeframePill("周",asset.timeframes.week)}${timeframePill("日",asset.timeframes.day)}${timeframePill("时",asset.timeframes.hour)}${timeframePill("5分",asset.timeframes.five)}</div>
-    <div class="metrics"><div class="metric"><small>1日 / 5日 / 20日</small><b>${pct(asset.returns.day)} · ${pct(asset.returns.week)} · ${pct(asset.returns.month)}</b></div><div class="metric"><small>持仓变化 1日 / 5日</small><b>${pct(asset.position_changes.day)} · ${pct(asset.position_changes.week)}</b></div><div class="metric"><small>日线四因子</small><b>多 ${asset.long_count}/4 · 空 ${asset.short_count}/4</b></div><div class="metric"><small>样本内快速回测</small><b>${bt.trades||0}笔 · 胜率${fmt(bt.win_rate_pct,1)}%</b></div><div class="metric"><small>收益 / 最大回撤</small><b>${pct(bt.net_return_pct)} · ${pct(bt.max_drawdown_pct)}</b></div></div>`;
-  bindSpark(asset);
-  if(shouldScroll) document.querySelector("#detail").scrollIntoView({behavior:"smooth",block:"center"});
-}
-function renderRanking(){
-  const ranked=state.data.assets.filter(asset=>asset.score!=null).sort((a,b)=>b.score-a.score);
-  document.querySelector("#ranking").innerHTML=ranked.map((asset,index)=>{const color=asset.score>=0?colors.long:colors.short;const left=asset.score>=0?50:50-Math.abs(asset.score)/2;return `<div class="rank-row" style="--rank-color:${color}"><span class="num">${String(index+1).padStart(2,'0')}</span><b>${asset.short_name}</b><span class="rank-track"><i style="left:${left}%;width:${Math.abs(asset.score)/2}%"></i></span><em>${asset.score>0?'+':''}${asset.score}</em></div>`}).join("");
-}
-function renderSummary(){
-  const summary=state.data.summary, valid=state.data.assets.filter(asset=>asset.status!=="missing").length;
-  document.querySelector("#longCount").textContent=summary.long; document.querySelector("#shortCount").textContent=summary.short;
-  document.querySelector("#watchCount").textContent=summary.watch_long+summary.watch_short; document.querySelector("#healthCount").textContent=`${valid}/10`;
-  const scores=state.data.assets.filter(asset=>asset.score!=null).map(asset=>asset.score), average=scores.length?scores.reduce((a,b)=>a+b,0)/scores.length:0;
-  document.querySelector("#spectrumNeedle").style.left=`${Math.max(3,Math.min(97,50+average/2))}%`;
-  document.querySelector("#scanTime").textContent=`扫描 ${new Date(state.data.generated_at).toLocaleString('zh-CN',{hour12:false})}`;
-}
-function renderMethod(){
-  const names={bar:"频率结构",factors:"日线四因子",decision:"综合判断",execution:"刷新与回测"};
-  document.querySelector("#methodList").innerHTML=Object.entries(state.data.methodology).map(([key,value])=>`<div class="method-item"><b>${names[key]}</b><span>${value}</span></div>`).join("");
-  document.querySelector("#warnings").innerHTML=state.data.warnings.map(warning=>`<span class="warning">${warning}</span>`).join("");
-}
-function render(){renderSummary();renderCards();renderRanking();renderMethod();if(!state.selected){const first=state.data.assets.find(asset=>asset.status!=="missing");if(first)selectAsset(first.id,false)}}
-function toast(message){const element=document.querySelector("#toast");element.textContent=message;element.classList.add("show");setTimeout(()=>element.classList.remove("show"),2600)}
-function applyFilter(filter){if(!["all","long","short","watch","missing"].includes(filter))throw new Error("筛选值无效");state.filter=filter;document.querySelectorAll(".filter").forEach(button=>button.classList.toggle("active",button.dataset.filter===filter));renderCards();return filteredAssets().length}
-function registerWebMcp(){const context=document.modelContext;if(!context?.registerTool)return;try{Promise.resolve(context.registerTool({name:"filter_metal_momentum_signals",title:"筛选金属多周期信号",description:"按偏多、偏空、观察或数据异常筛选金属多周期动量卡片。",inputSchema:{type:"object",properties:{filter:{type:"string",enum:["all","long","short","watch","missing"]}},required:["filter"],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute(input){return{filter:input.filter,visible_assets:applyFilter(input.filter)}}})).catch(()=>{})}catch(_){}}
-async function loadData(force=false){
-  const button=document.querySelector("#refreshButton");button.disabled=true;button.firstChild.textContent=force?"扫描中 ":"载入中 ";
-  try{let response;if(force){response=await fetch("/api/scan",{method:"POST"});if(!response.ok)throw new Error("本地扫描服务未启动")}else{response=await fetch("/api/status",{cache:"no-store"});if(!response.ok)response=await fetch(`latest.json?t=${Date.now()}`,{cache:"no-store"})}state.data=await response.json();if(state.data.error)throw new Error(state.data.error);state.seconds=state.data.interval_seconds||300;render();if(force)toast("多周期行情扫描完成")}
-  catch(error){if(!force){try{const response=await fetch(`latest.json?t=${Date.now()}`);state.data=await response.json();render()}catch(_){}}toast(force?"云端静态页不能主动抓数，请等待定时更新":"数据载入失败")}
-  finally{button.disabled=false;button.firstChild.textContent="立即扫描 "}
-}
-document.querySelectorAll(".filter").forEach(button=>button.addEventListener("click",()=>applyFilter(button.dataset.filter)));
-document.querySelectorAll(".nav-item").forEach(button=>button.addEventListener("click",()=>{document.querySelectorAll(".nav-item").forEach(item=>item.classList.remove("active"));button.classList.add("active");document.querySelector(`#${button.dataset.scroll}`).scrollIntoView({behavior:"smooth"})}));
-document.querySelector("#refreshButton").addEventListener("click",()=>loadData(true));
-setInterval(()=>{const now=new Date();document.querySelector("#nowClock").textContent=now.toLocaleTimeString('zh-CN',{hour12:false});const h=now.getHours()+now.getMinutes()/60,day=now.getDay(),open=day>0&&day<6&&((h>=8.916&&h<=11.583)||(h>=13.416&&h<=15.083)||(h>=20.916)||(h<=2.583));document.querySelector("#marketState").classList.toggle("closed",!open);state.seconds=Math.max(0,state.seconds-1);document.querySelector("#countdown").textContent=`${String(Math.floor(state.seconds/60)).padStart(2,'0')}:${String(state.seconds%60).padStart(2,'0')}`;if(state.seconds===0)loadData(false)},1000);
-loadData(false);registerWebMcp();
+function selectAsset(id,shouldScroll=true){state.selected=id;renderCards();const asset=state.data.assets.find(a=>a.id===id),title=document.querySelector("#detailTitle"),badge=document.querySelector("#detailBadge"),body=document.querySelector("#detailContent");title.textContent=`${asset.name} ${asset.symbol}`;badge.textContent=labels[asset.signal];badge.style.color=colors[asset.signal];badge.style.borderColor=colors[asset.signal];renderTechnical(asset);if(asset.status==="missing"){body.className="empty-detail";body.textContent=asset.error;return}const factors=asset.daily_score>=0?asset.long_factors:asset.short_factors,color=colors[asset.signal],bt=asset.backtest||{};body.className="detail-body";body.style.setProperty("--detail-color",color);body.innerHTML=`<div class="spark-wrap"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="最近60个交易日日线收盘价，可移动指针查看真实观测"><polyline points="${sparkPoints(asset.sparkline)}"></polyline><line class="crosshair" y1="7" y2="95"></line><circle class="hover-dot" r="2.3"></circle></svg><div class="spark-tooltip"></div><div class="spark-meta"><span>${asset.sparkline.length}个交易日 · ${asset.unit}</span><span>日线截止 ${asset.daily_date}</span></div><div class="spark-source">${asset.source} · ${asset.bar_timezone}</div></div><div class="factor-list">${Object.entries(factors).map(([key,on])=>factorDetail(asset,key,on)).join("")}</div><div class="timeframe-detail"><b>多周期确认</b>${timeframePill("周",asset.timeframes.week)}${timeframePill("日",asset.timeframes.day)}${timeframePill("时",asset.timeframes.hour)}${timeframePill("5分",asset.timeframes.five)}</div><div class="metrics"><div class="metric"><small>价格 1日 / 5日 / 20日</small><b>${pct(asset.returns.day)} · ${pct(asset.returns.week)} · ${pct(asset.returns.month)}</b></div><div class="metric"><small>持仓代理 1日 / 5日 / 20日</small><b>${pct(asset.position_changes.day)} · ${pct(asset.position_changes.week)} · ${pct(asset.position_changes.month)}</b></div><div class="metric"><small>日线四因子</small><b>多 ${asset.long_count}/4 · 空 ${asset.short_count}/4</b></div><div class="metric"><small>样本内快速回测</small><b>${bt.trades||0}笔 · 胜率 ${fmt(bt.win_rate_pct,1)}%</b></div><div class="metric"><small>收益 / 最大回撤</small><b>${pct(bt.net_return_pct)} · ${pct(bt.max_drawdown_pct)}</b></div></div>`;bindSpark(asset);if(shouldScroll)document.querySelector("#detail").scrollIntoView({behavior:"smooth",block:"center"})}
+function renderRanking(){const ranked=state.data.assets.filter(a=>a.score!=null).sort((a,b)=>b.score-a.score);document.querySelector("#ranking").innerHTML=ranked.map((a,i)=>{const color=a.score>=0?colors.long:colors.short,left=a.score>=0?50:50-Math.abs(a.score)/2;return `<div class="rank-row" style="--rank-color:${color}"><span class="num">${String(i+1).padStart(2,"0")}</span><b>${a.short_name}</b><span class="rank-track"><i style="left:${left}%;width:${Math.abs(a.score)/2}%"></i></span><em>${a.score>0?"+":""}${a.score}</em></div>`}).join("")}
+function renderSummary(){const s=state.data.summary,valid=state.data.assets.filter(a=>a.status!=="missing").length;document.querySelector("#longCount").textContent=s.long;document.querySelector("#shortCount").textContent=s.short;document.querySelector("#watchCount").textContent=s.watch_long+s.watch_short;document.querySelector("#healthCount").textContent=`${valid}/${state.data.assets.length}`;const scores=state.data.assets.filter(a=>a.score!=null).map(a=>a.score),average=scores.length?scores.reduce((a,b)=>a+b,0)/scores.length:0;document.querySelector("#spectrumNeedle").style.left=`${Math.max(3,Math.min(97,50+average/2))}%`;document.querySelector("#scanTime").textContent=`扫描 ${new Date(state.data.generated_at).toLocaleString("zh-CN",{hour12:false})}`}
+function renderMethod(){const names={bar:"频率结构",factors:"日线四因子",decision:"综合判断",execution:"刷新与回测",technical:"技术全景",risk:"风控参考"};document.querySelector("#methodList").innerHTML=Object.entries(state.data.methodology).map(([k,v])=>`<div class="method-item"><b>${names[k]||k}</b><span>${v}</span></div>`).join("");document.querySelector("#warnings").innerHTML=state.data.warnings.map(w=>`<span class="warning">${w}</span>`).join("")}
+function render(){renderSummary();renderCapital();renderCards();renderRanking();renderMethod();const initial=state.data.assets.find(a=>a.id===state.selected)||state.data.assets.find(a=>a.status!=="missing");if(initial)selectAsset(initial.id,false)}
+function toast(message){const el=document.querySelector("#toast");el.textContent=message;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2600)}
+function applyFilter(filter){if(!["all","long","short","watch","missing"].includes(filter))throw new Error("筛选值无效");state.filter=filter;document.querySelectorAll(".filter").forEach(b=>b.classList.toggle("active",b.dataset.filter===filter));renderCards();return filteredAssets().length}
+function registerWebMcp(){const context=document.modelContext;if(!context?.registerTool)return;try{Promise.resolve(context.registerTool({name:"filter_metal_momentum_signals",title:"筛选金属多周期信号",description:"按偏多、偏空、观察或数据异常筛选金属技术信号。",inputSchema:{type:"object",properties:{filter:{type:"string",enum:["all","long","short","watch","missing"]}},required:["filter"],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute(input){return{filter:input.filter,visible_assets:applyFilter(input.filter)}}})).catch(()=>{})}catch(_){}}
+async function loadData(force=false){const button=document.querySelector("#refreshButton");button.disabled=true;button.firstChild.textContent=force?"扫描中 ":"载入中 ";try{let response;if(force){response=await fetch("/api/scan",{method:"POST"});if(!response.ok)throw new Error("本地扫描服务未启动")}else{response=await fetch("/api/status",{cache:"no-store"});if(!response.ok)response=await fetch(`latest.json?t=${Date.now()}`,{cache:"no-store"})}state.data=await response.json();if(state.data.error)throw new Error(state.data.error);state.seconds=state.data.interval_seconds||300;render();if(force)toast("多周期行情扫描完成")}catch(error){if(!force){try{const response=await fetch(`latest.json?t=${Date.now()}`);state.data=await response.json();render()}catch(_){}}toast(force?"云端页面由定时任务更新，请稍后查看":"数据载入失败")}finally{button.disabled=false;button.firstChild.textContent="立即扫描 "}}
+document.querySelectorAll(".filter").forEach(b=>b.addEventListener("click",()=>applyFilter(b.dataset.filter)));document.querySelectorAll(".nav-item").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".nav-item").forEach(i=>i.classList.remove("active"));b.classList.add("active");document.querySelector(`#${b.dataset.scroll}`).scrollIntoView({behavior:"smooth"})}));document.querySelector("#refreshButton").addEventListener("click",()=>loadData(true));setInterval(()=>{const now=new Date();document.querySelector("#nowClock").textContent=now.toLocaleTimeString("zh-CN",{hour12:false});const h=now.getHours()+now.getMinutes()/60,day=now.getDay(),open=day>0&&day<6&&((h>=8.916&&h<=11.583)||(h>=13.416&&h<=15.083)||(h>=20.916)||(h<=2.583));document.querySelector("#marketState").classList.toggle("closed",!open);state.seconds=Math.max(0,state.seconds-1);document.querySelector("#countdown").textContent=`${String(Math.floor(state.seconds/60)).padStart(2,"0")}:${String(state.seconds%60).padStart(2,"0")}`;if(state.seconds===0)loadData(false)},1000);loadData(false);registerWebMcp();

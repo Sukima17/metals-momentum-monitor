@@ -1,14 +1,34 @@
 {
-  "schema_version": 2,
-  "generated_at": "2026-09-15T16:07:14+08:00",
+  "schema_version": 3,
+  "generated_at": "2026-09-15T16:38:17+08:00",
   "interval_seconds": 300,
   "summary": {
     "long": 0,
-    "short": 2,
+    "short": 3,
     "watch_long": 1,
     "watch_short": 5,
-    "neutral": 1,
+    "neutral": 0,
     "missing": 1
+  },
+  "operation_summary": {
+    "trend_long": [],
+    "avoid": [
+      "zinc"
+    ],
+    "accumulate": [
+      "lithium",
+      "gold",
+      "silver"
+    ],
+    "divergence": [
+      "aluminium"
+    ],
+    "weak": [
+      "copper",
+      "lead",
+      "nickel",
+      "tin"
+    ]
   },
   "assets": [
     {
@@ -50,7 +70,7 @@
       "price": 107030.0,
       "bar_time": "2026-09-15 15:00:00",
       "daily_date": "2026-09-14",
-      "age_minutes": 67.2,
+      "age_minutes": 98.3,
       "bars": {
         "daily": 600,
         "hourly": 600,
@@ -67,6 +87,98 @@
         "day": -5.5656668242013545,
         "week": -12.413674113658724,
         "month": -10.933447139436181
+      },
+      "capital_bucket": "weak",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 108751.50 / MA60 106140.50",
+            "signal": "neutral",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF 783.76 / 柱 -200.64",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "24.4",
+            "signal": "neutral",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-1.43%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "49.4",
+            "signal": "neutral",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 7.8 / D 45.5",
+            "signal": "short",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-45.0",
+            "signal": "neutral",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "1385.71 (1.28%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 32.2%",
+            "signal": "neutral",
+            "note": "上 111314.11 / 下 106188.89"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 112330.00 / 低 106150.00",
+            "signal": "neutral",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "1.15×",
+            "signal": "neutral",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "+517388",
+            "signal": "long",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 107840.0,
+        "long_atr_stop": 105068.57142857143,
+        "short_atr_stop": 110611.42857142857,
+        "long_break_even_trigger": 108055.68,
+        "short_break_even_trigger": 107624.32,
+        "long_fib_trail": 110614.82,
+        "short_fib_trail": 106795.58
       },
       "timeframes": {
         "week": {
@@ -403,7 +515,7 @@
       "price": 24105.0,
       "bar_time": "2026-09-15 15:00:00",
       "daily_date": "2026-09-14",
-      "age_minutes": 67.2,
+      "age_minutes": 98.3,
       "bars": {
         "daily": 600,
         "hourly": 600,
@@ -420,6 +532,98 @@
         "day": -8.857561852500117,
         "week": -25.323255813953494,
         "month": -21.371407116592454
+      },
+      "capital_bucket": "divergence",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 24055.00 / MA60 23583.00",
+            "signal": "neutral",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF 160.30 / 柱 -12.20",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "32.5",
+            "signal": "short",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-1.58%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "59.3",
+            "signal": "long",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 15.2 / D 43.2",
+            "signal": "short",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-8.8",
+            "signal": "neutral",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "268.57 (1.12%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 48.3%",
+            "signal": "neutral",
+            "note": "上 24647.25 / 下 23462.75"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 24675.00 / 低 23465.00",
+            "signal": "neutral",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "0.95×",
+            "signal": "neutral",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "+401999",
+            "signal": "long",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 24035.0,
+        "long_atr_stop": 23497.85714285714,
+        "short_atr_stop": 24572.14285714286,
+        "long_break_even_trigger": 24083.07,
+        "short_break_even_trigger": 23986.93,
+        "long_fib_trail": 24430.52,
+        "short_fib_trail": 23682.74
       },
       "timeframes": {
         "week": {
@@ -756,7 +960,7 @@
       "price": 15775.0,
       "bar_time": "2026-09-15 15:00:00",
       "daily_date": "2026-09-14",
-      "age_minutes": 67.2,
+      "age_minutes": 98.3,
       "bars": {
         "daily": 600,
         "hourly": 600,
@@ -773,6 +977,98 @@
         "day": 1.655413456191912,
         "week": -0.9994894249067854,
         "month": -15.181601272534461
+      },
+      "capital_bucket": "weak",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 16113.25 / MA60 15950.33",
+            "signal": "neutral",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF 37.94 / 柱 -60.90",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "29.9",
+            "signal": "short",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-2.38%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "36.2",
+            "signal": "short",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 3.3 / D 31.0",
+            "signal": "short",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-155.7",
+            "signal": "short",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "171.79 (1.09%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 -8.7%",
+            "signal": "short",
+            "note": "上 16358.73 / 下 15867.77"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 16380.00 / 低 15750.00",
+            "signal": "neutral",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "1.34×",
+            "signal": "short",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "-121881",
+            "signal": "short",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 15825.0,
+        "long_atr_stop": 15481.42857142857,
+        "short_atr_stop": 16168.57142857143,
+        "long_break_even_trigger": 15856.65,
+        "short_break_even_trigger": 15793.35,
+        "long_fib_trail": 16167.99,
+        "short_fib_trail": 15778.65
       },
       "timeframes": {
         "week": {
@@ -1080,65 +1376,157 @@
       "decimals": 0,
       "unit": "元/吨",
       "bar_timezone": "Asia/Shanghai",
-      "score": 0,
-      "signal": "neutral",
-      "momentum_pct": -2.804945561911787,
+      "score": -45,
+      "signal": "short",
+      "momentum_pct": -4.944555535357209,
       "threshold_pct": 3.0,
-      "ma20": 26480.0,
-      "rsi": 53.12868949232586,
+      "ma20": 26502.0,
+      "rsi": 48.88366627497062,
       "prior_high": 27895.0,
       "prior_low": 25260.0,
       "long_factors": {
         "momentum": false,
         "breakout": false,
         "trend": false,
-        "rsi": true
-      },
-      "short_factors": {
-        "momentum": false,
-        "breakout": false,
-        "trend": true,
         "rsi": false
       },
-      "long_count": 1,
-      "short_count": 1,
-      "daily_score": 0,
-      "daily_signal": "neutral",
+      "short_factors": {
+        "momentum": true,
+        "breakout": false,
+        "trend": true,
+        "rsi": true
+      },
+      "long_count": 0,
+      "short_count": 3,
+      "daily_score": -75,
+      "daily_signal": "short",
       "status": "closed",
       "status_text": "休市快照",
       "price": 26145.0,
       "bar_time": "2026-09-15 15:00:00",
-      "daily_date": "2026-09-14",
-      "age_minutes": 67.2,
+      "daily_date": "2026-09-15",
+      "age_minutes": 98.3,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": -0.721473324473132,
+      "change_pct": 0.0,
       "returns": {
-        "day": -1.7534042156314156,
-        "week": -2.804945561911787,
-        "month": 1.8171273922288789
+        "day": -0.721473324473132,
+        "week": -4.944555535357209,
+        "month": 1.711729235557291
       },
       "position_changes": {
-        "day": 5.473760572436648,
-        "week": -18.37575757575758,
-        "month": -11.53808924595876
+        "day": -3.8727275569380826,
+        "week": -23.231862980694206,
+        "month": -19.26757863781967
+      },
+      "capital_bucket": "avoid",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 26502.00 / MA60 25425.50",
+            "signal": "neutral",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF 341.57 / 柱 -190.67",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "51.0",
+            "signal": "short",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-4.94%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "48.9",
+            "signal": "neutral",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 9.6 / D 13.8",
+            "signal": "short",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-51.0",
+            "signal": "neutral",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "546.07 (2.09%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 36.4%",
+            "signal": "neutral",
+            "note": "上 27813.34 / 下 25190.66"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 27895.00 / 低 25260.00",
+            "signal": "neutral",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "0.58×",
+            "signal": "neutral",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "+930131",
+            "signal": "long",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 26145.0,
+        "long_atr_stop": 25052.85714285714,
+        "short_atr_stop": 27237.14285714286,
+        "long_break_even_trigger": 26197.29,
+        "short_break_even_trigger": 26092.71,
+        "long_fib_trail": 27226.5,
+        "short_fib_trail": 25598.07
       },
       "timeframes": {
         "week": {
           "signal": "strong_long",
           "vote": 3,
-          "momentum_pct": 2.4907569566063437,
-          "ema8": 26082.818579631552,
-          "ema21": 25308.583429146613,
-          "rsi": 66.55490360435876
+          "momentum_pct": 1.7513134851138368,
+          "ema8": 26040.59635740933,
+          "ema21": 25291.31070187389,
+          "rsi": 64.5004061738424
         },
         "day": {
-          "signal": "neutral",
-          "vote": 0
+          "signal": "short",
+          "vote": -3
         },
         "hour": {
           "signal": "strong_short",
@@ -1154,10 +1542,6 @@
         }
       },
       "sparkline": [
-        {
-          "time": "2026-06-23",
-          "value": 24570.0
-        },
         {
           "time": "2026-06-24",
           "value": 24330.0
@@ -1393,6 +1777,10 @@
         {
           "time": "2026-09-14",
           "value": 26335.0
+        },
+        {
+          "time": "2026-09-15",
+          "value": 26145.0
         }
       ],
       "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
@@ -1411,7 +1799,7 @@
           "incomplete_bars_excluded": 0
         },
         "last_actual_observation": "2026-09-15 15:00:00",
-        "last_daily_close": "2026-09-14",
+        "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
       "backtest": {
@@ -1433,14 +1821,14 @@
       "decimals": 0,
       "unit": "元/吨",
       "bar_timezone": "Asia/Shanghai",
-      "score": -85,
-      "signal": "short",
-      "momentum_pct": -2.6599906117978356,
+      "score": -70,
+      "signal": "watch_short",
+      "momentum_pct": -2.708006279434849,
       "threshold_pct": 3.0,
-      "ma20": 128026.5,
-      "rsi": 32.03363914373088,
+      "ma20": 127787.0,
+      "rsi": 29.94011976047905,
       "prior_high": 131480.0,
-      "prior_low": 125070.0,
+      "prior_low": 124330.0,
       "long_factors": {
         "momentum": false,
         "breakout": false,
@@ -1451,47 +1839,139 @@
         "momentum": false,
         "breakout": true,
         "trend": true,
-        "rsi": true
+        "rsi": false
       },
       "long_count": 0,
-      "short_count": 3,
-      "daily_score": -75,
-      "daily_signal": "short",
+      "short_count": 2,
+      "daily_score": -50,
+      "daily_signal": "watch_short",
       "status": "closed",
       "status_text": "休市快照",
       "price": 123950.0,
       "bar_time": "2026-09-15 15:00:00",
-      "daily_date": "2026-09-14",
-      "age_minutes": 67.2,
+      "daily_date": "2026-09-15",
+      "age_minutes": 98.3,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": -0.3777527728661023,
+      "change_pct": 0.0,
       "returns": {
-        "day": -1.316624365482233,
-        "week": -2.6599906117978356,
-        "month": -3.3330743531971074
+        "day": -0.3777527728661023,
+        "week": -2.708006279434849,
+        "month": -3.7206773341618815
       },
       "position_changes": {
-        "day": 4.389859408679997,
-        "week": 6.274615768830816,
-        "month": -0.7554787502485172
+        "day": -2.1966253178210993,
+        "week": -1.016047784657137,
+        "month": 2.738861235886847
+      },
+      "capital_bucket": "weak",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 127787.00 / MA60 128865.50",
+            "signal": "short",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF -1107.42 / 柱 -655.97",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "15.6",
+            "signal": "neutral",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-2.71%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "29.9",
+            "signal": "short",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 9.7 / D 11.3",
+            "signal": "short",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-227.7",
+            "signal": "short",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "1929.29 (1.56%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 -12.9%",
+            "signal": "short",
+            "note": "上 130836.23 / 下 124737.77"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 131480.00 / 低 124330.00",
+            "signal": "short",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "0.68×",
+            "signal": "neutral",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "-866561",
+            "signal": "short",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 123950.0,
+        "long_atr_stop": 120091.42857142857,
+        "short_atr_stop": 127808.57142857143,
+        "long_break_even_trigger": 124197.9,
+        "short_break_even_trigger": 123702.1,
+        "long_fib_trail": 128603.54,
+        "short_fib_trail": 123950.0
       },
       "timeframes": {
         "week": {
           "signal": "strong_short",
           "vote": -3,
-          "momentum_pct": -2.0623425692695263,
-          "ema8": 127808.39941728197,
-          "ema21": 131004.09351104341,
-          "rsi": 33.89560789306174
+          "momentum_pct": -2.4323047858942015,
+          "ema8": 127703.95497283751,
+          "ema21": 130961.36623831614,
+          "rsi": 33.39604891815617
         },
         "day": {
-          "signal": "short",
-          "vote": -3
+          "signal": "watch_short",
+          "vote": -2
         },
         "hour": {
           "signal": "strong_short",
@@ -1507,10 +1987,6 @@
         }
       },
       "sparkline": [
-        {
-          "time": "2026-06-23",
-          "value": 133250.0
-        },
         {
           "time": "2026-06-24",
           "value": 130700.0
@@ -1746,6 +2222,10 @@
         {
           "time": "2026-09-14",
           "value": 124420.0
+        },
+        {
+          "time": "2026-09-15",
+          "value": 123950.0
         }
       ],
       "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
@@ -1764,15 +2244,15 @@
           "incomplete_bars_excluded": 0
         },
         "last_actual_observation": "2026-09-15 15:00:00",
-        "last_daily_close": "2026-09-14",
+        "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
       "backtest": {
-        "trades": 34,
-        "win_rate_pct": 35.294117647058826,
-        "net_return_pct": -32.51459946377192,
-        "max_drawdown_pct": -40.55583179929131,
-        "avg_trade_pct": -1.0572153178115797,
+        "trades": 33,
+        "win_rate_pct": 36.36363636363637,
+        "net_return_pct": -27.380189791802888,
+        "max_drawdown_pct": -40.5558317992913,
+        "avg_trade_pct": -0.8693594931738028,
         "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
       }
     },
@@ -1834,7 +2314,7 @@
       "price": 129120.0,
       "bar_time": "2026-09-15 15:00:00",
       "daily_date": "2026-09-14",
-      "age_minutes": 67.2,
+      "age_minutes": 98.3,
       "bars": {
         "daily": 600,
         "hourly": 600,
@@ -1851,6 +2331,98 @@
         "day": 0.9776933796541654,
         "week": 4.197764027990147,
         "month": 35.97849860247524
+      },
+      "capital_bucket": "accumulate",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 149571.00 / MA60 150263.33",
+            "signal": "short",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF -3676.76 / 柱 -4520.21",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "31.8",
+            "signal": "short",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-6.93%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "29.0",
+            "signal": "short",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 14.2 / D 13.7",
+            "signal": "long",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-164.8",
+            "signal": "short",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "5945.71 (4.49%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 -2.6%",
+            "signal": "short",
+            "note": "上 165950.02 / 下 133191.98"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 162860.00 / 低 128080.00",
+            "signal": "neutral",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "0.62×",
+            "signal": "neutral",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "-633750",
+            "signal": "short",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 132340.0,
+        "long_atr_stop": 120448.57142857143,
+        "short_atr_stop": 144231.42857142858,
+        "long_break_even_trigger": 132604.68,
+        "short_break_even_trigger": 132075.32,
+        "long_fib_trail": 151201.36,
+        "short_fib_trail": 129707.32
       },
       "timeframes": {
         "week": {
@@ -2187,7 +2759,7 @@
       "price": 392890.0,
       "bar_time": "2026-09-15 15:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 67.2,
+      "age_minutes": 98.3,
       "bars": {
         "daily": 600,
         "hourly": 600,
@@ -2204,6 +2776,98 @@
         "day": -2.3826033894544185,
         "week": -1.3731644434480494,
         "month": -11.92031433791325
+      },
+      "capital_bucket": "weak",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 418415.50 / MA60 415902.00",
+            "signal": "neutral",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF -4594.22 / 柱 -5748.95",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "33.6",
+            "signal": "short",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-6.22%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "29.0",
+            "signal": "short",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 4.0 / D 5.4",
+            "signal": "short",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-289.6",
+            "signal": "short",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "8753.57 (2.23%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 -20.5%",
+            "signal": "short",
+            "note": "上 436529.54 / 下 400301.46"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 431490.00 / 低 397820.00",
+            "signal": "short",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "0.88×",
+            "signal": "neutral",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "-394644",
+            "signal": "short",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 392890.0,
+        "long_atr_stop": 375382.85714285716,
+        "short_atr_stop": 410397.14285714284,
+        "long_break_even_trigger": 393675.78,
+        "short_break_even_trigger": 392104.22,
+        "long_fib_trail": 416744.8,
+        "short_fib_trail": 392890.0
       },
       "timeframes": {
         "week": {
@@ -2540,7 +3204,7 @@
       "price": 932.3,
       "bar_time": "2026-09-15 15:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 67.2,
+      "age_minutes": 98.3,
       "bars": {
         "daily": 600,
         "hourly": 600,
@@ -2557,6 +3221,98 @@
         "day": 2.474998637115289,
         "week": 12.002886518765688,
         "month": -15.422495075640164
+      },
+      "capital_bucket": "accumulate",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 966.36 / MA60 923.94",
+            "signal": "neutral",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF 0.09 / 柱 -12.60",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "24.6",
+            "signal": "neutral",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-2.18%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "26.2",
+            "signal": "short",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 16.7 / D 21.2",
+            "signal": "short",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-118.2",
+            "signal": "short",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "19.18 (2.06%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 14.2%",
+            "signal": "neutral",
+            "note": "上 1013.94 / 下 918.78"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 1015.38 / 低 930.22",
+            "signal": "neutral",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "0.28×",
+            "signal": "neutral",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "-975720",
+            "signal": "short",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 932.3,
+        "long_atr_stop": 893.9428571428571,
+        "short_atr_stop": 970.6571428571428,
+        "long_break_even_trigger": 934.1646,
+        "short_break_even_trigger": 930.4354,
+        "long_fib_trail": 983.6434399999999,
+        "short_fib_trail": 931.01456
       },
       "timeframes": {
         "week": {
@@ -2864,12 +3620,12 @@
       "decimals": 0,
       "unit": "元/千克",
       "bar_timezone": "Asia/Shanghai",
-      "score": -63,
-      "signal": "watch_short",
-      "momentum_pct": -2.8893058161350793,
+      "score": -78,
+      "signal": "short",
+      "momentum_pct": -4.173643410852712,
       "threshold_pct": 3.0,
-      "ma20": 16251.65,
-      "rsi": 37.525446731508715,
+      "ma20": 16226.2,
+      "rsi": 35.08691674290942,
       "prior_high": 17388.0,
       "prior_low": 15320.0,
       "long_factors": {
@@ -2879,50 +3635,142 @@
         "rsi": false
       },
       "short_factors": {
-        "momentum": false,
+        "momentum": true,
         "breakout": false,
         "trend": true,
         "rsi": true
       },
       "long_count": 0,
-      "short_count": 2,
-      "daily_score": -50,
-      "daily_signal": "watch_short",
+      "short_count": 3,
+      "daily_score": -75,
+      "daily_signal": "short",
       "status": "closed",
       "status_text": "休市快照",
       "price": 15452.0,
       "bar_time": "2026-09-15 15:00:00",
-      "daily_date": "2026-09-14",
-      "age_minutes": 67.2,
+      "daily_date": "2026-09-15",
+      "age_minutes": 98.3,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": -0.489438433797007,
+      "change_pct": 0.0,
       "returns": {
-        "day": -0.3721288335685857,
-        "week": -2.8893058161350793,
-        "month": -3.8097007991079734
+        "day": -0.489438433797007,
+        "week": -4.173643410852712,
+        "month": -3.1890232441576294
       },
       "position_changes": {
-        "day": 8.738477286710689,
-        "week": 0.0972362841705321,
-        "month": -37.0665422963962
+        "day": 1.5107056302201105,
+        "week": 1.703715967069508,
+        "month": -34.38173661416558
+      },
+      "capital_bucket": "accumulate",
+      "technical_methods": {
+        "trend": [
+          {
+            "name": "均线系统",
+            "value": "MA20 16226.20 / MA60 15207.23",
+            "signal": "neutral",
+            "note": "收盘与中长期均线排列"
+          },
+          {
+            "name": "MACD",
+            "value": "DIF 31.23 / 柱 -297.06",
+            "signal": "short",
+            "note": "EMA12、EMA26、Signal9"
+          },
+          {
+            "name": "ADX14",
+            "value": "15.5",
+            "signal": "neutral",
+            "note": "≥25 表示趋势较明确"
+          }
+        ],
+        "momentum": [
+          {
+            "name": "ROC5",
+            "value": "-4.17%",
+            "signal": "short",
+            "note": "5日价格动量"
+          },
+          {
+            "name": "RSI14",
+            "value": "35.1",
+            "signal": "short",
+            "note": "超买超卖与强弱区间"
+          },
+          {
+            "name": "KDJ(9,3)",
+            "value": "K 12.4 / D 14.7",
+            "signal": "short",
+            "note": "随机指标交叉"
+          },
+          {
+            "name": "CCI20",
+            "value": "-134.9",
+            "signal": "short",
+            "note": "±100 为强弱参考阈值"
+          }
+        ],
+        "volatility": [
+          {
+            "name": "ATR14",
+            "value": "578.21 (3.74%)",
+            "signal": "neutral",
+            "note": "真实波幅，用于风险线"
+          },
+          {
+            "name": "布林带20,2",
+            "value": "位置 11.3%",
+            "signal": "neutral",
+            "note": "上 17225.43 / 下 15226.97"
+          },
+          {
+            "name": "唐奇安20",
+            "value": "高 17388.00 / 低 15320.00",
+            "signal": "neutral",
+            "note": "20日区间突破"
+          }
+        ],
+        "volume_position": [
+          {
+            "name": "量比20",
+            "value": "0.18×",
+            "signal": "neutral",
+            "note": "当日量 / 前20日均量"
+          },
+          {
+            "name": "OBV20方向",
+            "value": "+359817",
+            "signal": "long",
+            "note": "成交量累积方向，不代表资金流"
+          }
+        ]
+      },
+      "risk_levels": {
+        "entry_reference": 15452.0,
+        "long_atr_stop": 14295.57142857143,
+        "short_atr_stop": 16608.428571428572,
+        "long_break_even_trigger": 15482.904,
+        "short_break_even_trigger": 15421.096,
+        "long_fib_trail": 16648.448,
+        "short_fib_trail": 15370.424
       },
       "timeframes": {
         "week": {
           "signal": "strong_short",
           "vote": -2,
-          "momentum_pct": -1.2339397023279464,
-          "ema8": 15842.24573682328,
-          "ema21": 16234.016752043883,
-          "rsi": 47.96591533809786
+          "momentum_pct": -1.717338760971887,
+          "ema8": 15825.356847934392,
+          "ema21": 16227.10766113479,
+          "rsi": 47.63421292083713
         },
         "day": {
-          "signal": "watch_short",
-          "vote": -2
+          "signal": "short",
+          "vote": -3
         },
         "hour": {
           "signal": "strong_short",
@@ -2938,10 +3786,6 @@
         }
       },
       "sparkline": [
-        {
-          "time": "2026-06-23",
-          "value": 14997.0
-        },
         {
           "time": "2026-06-24",
           "value": 14950.0
@@ -3177,6 +4021,10 @@
         {
           "time": "2026-09-14",
           "value": 15528.0
+        },
+        {
+          "time": "2026-09-15",
+          "value": 15452.0
         }
       ],
       "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
@@ -3195,15 +4043,15 @@
           "incomplete_bars_excluded": 0
         },
         "last_actual_observation": "2026-09-15 15:00:00",
-        "last_daily_close": "2026-09-14",
+        "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
       "backtest": {
-        "trades": 44,
-        "win_rate_pct": 45.45454545454545,
-        "net_return_pct": -0.4359678794859545,
+        "trades": 45,
+        "win_rate_pct": 46.666666666666664,
+        "net_return_pct": 2.2439188654391984,
         "max_drawdown_pct": -52.371464050838554,
-        "avg_trade_pct": 0.57138576271115,
+        "avg_trade_pct": 0.6185021090830383,
         "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
       }
     }
@@ -3212,7 +4060,9 @@
     "bar": "日线四因子为主；周线和60分钟确认趋势；5分钟仅作盘中预警",
     "factors": "mom5超过±3% / 突破20日高低 / 收盘相对MA20 / 日线RSI14区间",
     "decision": "日线四因子至少3项同向触发，再结合周线与小时线给出综合结论",
-    "execution": "日线回测在下一交易日开盘入场，最长持有10个交易日；扫描每5分钟运行"
+    "execution": "日线回测在下一交易日开盘入场，最长持有10个交易日；扫描每5分钟运行",
+    "technical": "主流指标层覆盖均线、MACD、ADX、ROC、RSI、KDJ、CCI、ATR、布林带、唐奇安、量比与OBV，仅作交叉验证",
+    "risk": "研究参考线采用2×ATR初始止损、0.618动态跟踪与±0.2%保本触发；不自动下单"
   },
   "warnings": [
     "主连换月可能产生跳空，生产使用前应接入后复权连续合约或固定主力合约。",

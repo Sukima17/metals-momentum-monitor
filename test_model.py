@@ -1,6 +1,16 @@
 """Small deterministic checks for the signal engine; run with `python test_model.py`."""
 
-from momentum_monitor import daily_four_factor, ema, load_config, point_signal, rolling_atr, rolling_rsi
+from momentum_monitor import (
+    capital_bucket,
+    daily_four_factor,
+    ema,
+    load_config,
+    point_signal,
+    research_risk_levels,
+    rolling_atr,
+    rolling_rsi,
+    technical_snapshot,
+)
 
 
 def make_bars(direction: int) -> list[dict]:
@@ -47,4 +57,14 @@ if __name__ == "__main__":
     daily_bearish = daily_four_factor(make_bars(-1), 99, config)
     assert daily_bullish and daily_bullish["score"] > 0
     assert daily_bearish and daily_bearish["score"] < 0
-    print("intraday and daily signal direction checks OK")
+    technical = technical_snapshot(make_bars(1))
+    assert set(technical["groups"]) == {"trend", "momentum", "volatility", "volume_position"}
+    assert sum(len(group) for group in technical["groups"].values()) == 12
+    assert capital_bucket(3.0, 2.0) == "trend_long"
+    assert capital_bucket(3.0, -2.0) == "avoid"
+    assert capital_bucket(-3.0, 2.0) == "accumulate"
+    assert capital_bucket(-3.0, -2.0) == "weak"
+    levels = research_risk_levels(100, 110, 90, 2)
+    assert levels["long_atr_stop"] == 96 and levels["short_atr_stop"] == 104
+    assert levels["long_break_even_trigger"] == 100.2
+    print("signal, technical toolkit, capital quadrant and risk checks OK")
