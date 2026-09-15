@@ -74,7 +74,7 @@ SINA_MARKET_NODES = {
 WRITE_LOCK = threading.Lock()
 SCAN_LOCK = threading.Lock()
 OI_FALLBACK_SEMAPHORE = threading.Semaphore(2)
-EASTMONEY_SEMAPHORE = threading.Semaphore(2)
+EASTMONEY_SEMAPHORE = threading.Semaphore(1)
 EASTMONEY_STATE_LOCK = threading.Lock()
 EASTMONEY_FAILURE_UNTIL = 0.0
 
@@ -180,7 +180,9 @@ def request_eastmoney_text(url: str) -> str:
         for attempt in range(3):
             try:
                 with urllib.request.urlopen(request, timeout=18) as response:
-                    return response.read().decode("utf-8", errors="replace")
+                    payload = response.read().decode("utf-8", errors="replace")
+                    time.sleep(0.25)
+                    return payload
             except Exception:
                 if attempt == 2:
                     with EASTMONEY_STATE_LOCK:
