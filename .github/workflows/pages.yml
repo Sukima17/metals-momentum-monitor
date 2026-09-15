@@ -7,6 +7,7 @@ on:
   schedule:
     - cron: "*/15 1-7 * * 1-5"
     - cron: "*/15 13-18 * * 1-5"
+    - cron: "20 7 * * 1-5"
 
 permissions:
   contents: read
@@ -28,9 +29,34 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Restore paper-trading ledger
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            state/paper_portfolio.json
+            state/cloud_latest.json
+          key: paper-ledger-${{ github.run_id }}
+          restore-keys: paper-ledger-
+      - name: Restore latest cloud snapshot
+        run: if [ -f state/cloud_latest.json ]; then cp state/cloud_latest.json dist/latest.json; fi
       - name: Refresh real market snapshot
+        if: github.event_name != 'schedule' || github.event.schedule == '20 7 * * 1-5'
         continue-on-error: true
         run: python momentum_monitor.py --scan
+      - name: Refresh breadth only
+        if: github.event_name == 'schedule' && github.event.schedule != '20 7 * * 1-5'
+        continue-on-error: true
+        run: python momentum_monitor.py --breadth-only
+      - name: Preserve latest cloud snapshot
+        run: mkdir -p state && cp dist/latest.json state/cloud_latest.json
+      - name: Save paper-trading ledger
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: |
+            state/paper_portfolio.json
+            state/cloud_latest.json
+          key: paper-ledger-${{ github.run_id }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

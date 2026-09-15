@@ -1,5 +1,5 @@
 {
-  "scan_interval_seconds": 300,
+  "scan_interval_seconds": 900,
   "timezone": "Asia/Shanghai",
   "history_bars": 20,
   "momentum_bars": 6,
@@ -14,7 +14,10 @@
   "ema_slow": 21,
   "minimum_signal_score": 60,
   "watch_score": 35,
-  "estimated_round_trip_cost_bps": 4,
+  "estimated_round_trip_cost_bps": 2.4,
+  "commission_per_side_bps": 1.2,
+  "slippage_ticks_per_side": 1,
+  "initial_paper_cash": 1000000,
   "max_holding_bars": 10,
   "assets": [
     {"id":"copper","name":"沪铜","short_name":"铜","symbol":"CU0","exchange":"SHFE","provider":"sina","tick":10,"decimals":0,"unit":"元/吨","bar_timezone":"Asia/Shanghai"},

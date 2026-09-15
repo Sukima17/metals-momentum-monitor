@@ -13,18 +13,20 @@
     <div class="brand"><span class="brand-mark">M</span><div><b>商品监控工作台</b><small>METALS MOMENTUM</small></div></div>
     <nav aria-label="主导航">
       <button class="nav-item active" data-scroll="overview"><span>01</span> 总览</button>
-      <button class="nav-item" data-scroll="capital"><span>02</span> 资金结构</button>
-      <button class="nav-item" data-scroll="matrix"><span>03</span> 信号矩阵</button>
-      <button class="nav-item" data-scroll="detail"><span>04</span> 品种拆解</button>
-      <button class="nav-item" data-scroll="technical"><span>05</span> 技术全景</button>
-      <button class="nav-item" data-scroll="method"><span>06</span> 模型口径</button>
+      <button class="nav-item" data-scroll="market"><span>02</span> 全市场</button>
+      <button class="nav-item" data-scroll="capital"><span>03</span> 资金结构</button>
+      <button class="nav-item" data-scroll="performance"><span>04</span> 策略回测</button>
+      <button class="nav-item" data-scroll="paper"><span>05</span> 模拟盘</button>
+      <button class="nav-item" data-scroll="matrix"><span>06</span> 信号矩阵</button>
+      <button class="nav-item" data-scroll="technical"><span>07</span> 技术全景</button>
+      <button class="nav-item" data-scroll="method"><span>08</span> 模型口径</button>
     </nav>
-    <div class="rail-foot"><i></i><span>日线主模型</span><small>周 / 60分确认 · 5分预警</small></div>
+    <div class="rail-foot"><i></i><span>日线主模型</span><small>周 / 60分确认 · 5分仅对照</small></div>
   </aside>
 
   <main>
     <header class="topbar" id="overview">
-      <div><p class="eyebrow">COMMODITY MONITOR / DAILY CORE</p><h1>金属多周期技术研究工作台</h1><p class="subtitle">四因子定方向，周线与小时线确认，5分钟只做盘中预警</p></div>
+      <div><p class="eyebrow">COMMODITY MONITOR / DAILY CORE</p><h1>金属多周期技术研究工作台</h1><p class="subtitle">日线收盘定方向，周线与小时线确认；5分钟策略保留研究对照、不进入定时交易信号</p></div>
       <div class="top-actions"><div class="clock"><span id="marketState" class="state-dot"></span><div><b id="nowClock">--:--:--</b><small id="scanTime">等待数据</small></div></div><button id="refreshButton" class="refresh">立即扫描 <span id="countdown">05:00</span></button></div>
     </header>
 
@@ -33,10 +35,32 @@
       <div class="spectrum"><span>空</span><div><i id="spectrumNeedle"></i></div><span>多</span></div>
     </section>
 
+    <section class="panel market-panel" id="market">
+      <div class="section-head"><div><p class="eyebrow">DOMESTIC FUTURES BREADTH</p><h2>国内期货全市场</h2></div><span id="marketScope" class="scope-note">加载中</span></div>
+      <div id="breadthStats" class="breadth-stats"></div>
+      <div class="top3-grid"><div><h3>涨幅 TOP3</h3><div id="topGainers" class="top-list"></div></div><div><h3>跌幅 TOP3</h3><div id="topLosers" class="top-list"></div></div></div>
+      <div id="categoryBreadth" class="category-breadth"></div>
+      <details class="metal-details"><summary>贵金属 / 有色 / 黑色明细</summary><div class="table-scroll"><table><thead><tr><th>类别</th><th>品种</th><th>交易所</th><th>最新价</th><th>涨跌幅</th><th>成交量</th><th>持仓量</th></tr></thead><tbody id="metalDetailRows"></tbody></table></div></details>
+      <p id="marketFoot" class="panel-note"></p>
+    </section>
+
     <section class="panel capital-panel" id="capital">
       <div class="section-head"><div><p class="eyebrow">PRICE × OPEN INTEREST</p><h2>操作总结 · 价格与持仓代理</h2></div><span class="scope-note">月价格 × 5日持仓变化</span></div>
       <div id="capitalGroups" class="capital-groups"></div>
       <p class="panel-note">持仓量变化是主连持仓代理，不等同于资金净流入；换月窗口需结合固定合约复核。</p>
+    </section>
+
+    <section class="panel performance-panel" id="performance">
+      <div class="section-head"><div><p class="eyebrow">WALK-FORWARD BACKTEST</p><h2>策略绩效对比</h2></div><a class="report-link" href="performance-report.json" download>下载完整绩效报表</a></div>
+      <div id="frequencyVerdict" class="frequency-verdict"></div>
+      <div class="table-scroll"><table class="performance-table"><thead><tr><th>策略</th><th>频率</th><th>交易数</th><th>胜率</th><th>等权收益</th><th>平均 Sharpe</th><th>最差回撤</th><th>盈利品种</th></tr></thead><tbody id="performanceRows"></tbody></table></div>
+      <div id="costAssumptions" class="assumption-grid"></div>
+      <div id="strategySources" class="source-links"></div>
+    </section>
+
+    <section class="panel paper-panel" id="paper">
+      <div class="section-head"><div><p class="eyebrow">FORWARD PAPER TRADING</p><h2>前向模拟盘</h2></div><span id="paperTime" class="scope-note">等待首次记账</span></div>
+      <div id="paperCards" class="paper-cards"></div><p id="paperNote" class="panel-note"></p>
     </section>
 
     <section class="panel" id="matrix">

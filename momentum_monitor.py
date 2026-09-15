@@ -31,6 +31,9 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
+from market_universe import fetch_market_breadth
+from research_backtest import compare_strategies
+
 
 ROOT = Path(__file__).resolve().parent
 DIST = ROOT / "dist"
@@ -38,6 +41,8 @@ STATE_DIR = ROOT / "state"
 CONFIG_PATH = ROOT / "config.json"
 LATEST_PATH = DIST / "latest.json"
 HISTORY_PATH = STATE_DIR / "scan_history.jsonl"
+PAPER_PATH = STATE_DIR / "paper_portfolio.json"
+PERFORMANCE_PATH = DIST / "performance-report.json"
 SINA_ENDPOINT = (
     "https://stock2.finance.sina.com.cn/futures/api/jsonp.php/=/"
     "InnerFuturesNewService.getFewMinLine"
@@ -123,8 +128,15 @@ def request_text(url: str) -> str:
             "Referer": "https://vip.stock.finance.sina.com.cn/",
         },
     )
-    with urllib.request.urlopen(request, timeout=18) as response:
-        return response.read().decode("utf-8", errors="replace")
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(request, timeout=18) as response:
+                return response.read().decode("utf-8", errors="replace")
+        except Exception:
+            if attempt == 2:
+                raise
+            time.sleep(0.6 * (attempt + 1))
+    raise RuntimeError("行情请求失败")
 
 
 def fetch_sina_minute_bars(symbol: str, period: str) -> list[dict[str, Any]]:
@@ -582,8 +594,116 @@ def run_backtest(
         "net_return_pct": (equity - 1) * 100 if returns else None,
         "max_drawdown_pct": max_drawdown * 100 if returns else None,
         "avg_trade_pct": statistics.fmean(returns) * 100 if returns else None,
-        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。",
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。",
     }
+
+
+def aggregate_strategy_performance(results: list[dict[str, Any]], generated_at: datetime, config: dict[str, Any]) -> dict[str, Any]:
+    strategy_rows: dict[str, list[dict[str, Any]]] = {}
+    names: dict[str, str] = {}
+    for asset in results:
+        for row in asset.get("strategy_comparison", []):
+            if row.get("status") != "ok":
+                continue
+            strategy_rows.setdefault(row["key"], []).append(row)
+            names[row["key"]] = row["name"]
+    summary = []
+    for key, rows in strategy_rows.items():
+        trades = sum(row["trades"] for row in rows)
+        winners = sum((row.get("win_rate_pct") or 0) * row["trades"] / 100 for row in rows)
+        returns = [row["net_return_pct"] for row in rows]
+        sharpes = [row["sharpe"] for row in rows]
+        summary.append({
+            "key": key, "name": names[key], "frequency": rows[0]["frequency"], "assets": len(rows),
+            "trades": trades, "win_rate_pct": winners / trades * 100 if trades else None,
+            "equal_weight_return_pct": statistics.fmean(returns), "median_return_pct": statistics.median(returns),
+            "average_sharpe": statistics.fmean(sharpes), "positive_assets": sum(value > 0 for value in returns),
+            "worst_drawdown_pct": min(row["max_drawdown_pct"] for row in rows),
+            "sample_start": min(row["sample_start"] for row in rows), "sample_end": max(row["sample_end"] for row in rows),
+        })
+    summary.sort(key=lambda row: row["equal_weight_return_pct"], reverse=True)
+    daily = next((row for row in summary if row["key"] == "daily_four_factor"), None)
+    five = next((row for row in summary if row["key"] == "five_minute_momentum"), None)
+    enough_intraday = bool(five and five["trades"] >= 30 and five["positive_assets"] >= 5)
+    effective = bool(enough_intraday and five["equal_weight_return_pct"] > 0 and five["average_sharpe"] > 0.5 and (not daily or five["average_sharpe"] >= daily["average_sharpe"]))
+    frequency = {
+        "decision": "keep_5m" if effective else "alert_only",
+        "headline": "保留5分钟执行扫描" if effective else "关闭5分钟定时交易信号，日线收盘刷新主模型",
+        "reason": "5分钟样本在成本后仍具备跨品种正收益与风险调整优势。" if effective else "当前5分钟样本期较短，且尚未同时满足成本后收益、Sharpe和跨品种稳定性门槛。",
+        "criteria": "5分钟总交易≥30、至少5个品种为正、等权收益>0、平均Sharpe>0.5且不低于日线四因子",
+    }
+    return {
+        "generated_at": generated_at.isoformat(timespec="seconds"),
+        "assumptions": {
+            "commission": "开仓万1.2 + 平仓万1.2（单边0.012%，完整往返0.024%）",
+            "slippage": "开仓1跳 + 平仓1跳",
+            "execution": "信号K线收盘后生成，下一根K线开盘执行，避免前视",
+            "price_series": "主力连续未复权；换月跳空会影响收益，结果仅供研究筛选",
+            "portfolio": "跨品种汇总为各品种收益等权平均，不含保证金杠杆和资金容量约束",
+        },
+        "strategies": summary, "frequency_assessment": frequency,
+        "sources": [
+            {"name": "CTAAgents/FDT", "url": "https://github.com/CTAAgents/FDT", "adaptation": "参考DC20/DC55、布林带与MACD独立趋势子信号，构造透明通道共振基线"},
+            {"name": "VeighNa CTA Strategy", "url": "https://github.com/vnpy/vnpy_ctastrategy", "adaptation": "参考通道突破、CCI、ATR止损及下一K线执行框架"},
+        ],
+        "per_asset": [{"id": item["id"], "name": item["name"], "strategies": item.get("strategy_comparison", [])} for item in results if item.get("strategy_comparison")],
+    }
+
+
+def update_paper_portfolio(results: list[dict[str, Any]], generated_at: datetime, config: dict[str, Any]) -> dict[str, Any]:
+    """Forward-only paper ledger, persisted locally or through Actions cache."""
+    valid = [item for item in results if item.get("price") and item.get("strategy_comparison")]
+    strategy_names = {row["key"]: row["name"] for item in valid for row in item["strategy_comparison"] if row["key"] != "five_minute_momentum"}
+    if PAPER_PATH.exists():
+        try:
+            with PAPER_PATH.open("r", encoding="utf-8") as handle:
+                state = json.load(handle)
+        except (OSError, ValueError):
+            state = {}
+    else:
+        state = {}
+    initial_cash = float(config.get("initial_paper_cash", 1_000_000))
+    state.setdefault("started_at", generated_at.isoformat(timespec="seconds"))
+    state.setdefault("initial_cash", initial_cash)
+    state.setdefault("strategies", {})
+    fee = float(config.get("commission_per_side_bps", 1.2)) / 10000
+    slip_ticks = float(config.get("slippage_ticks_per_side", 1))
+    weight = 1 / max(1, len(valid))
+    output = []
+    for key, name in strategy_names.items():
+        ledger = state["strategies"].setdefault(key, {"name": name, "equity": initial_cash, "positions": {}, "last_prices": {}, "last_bars": {}, "trades": 0, "history": []})
+        pnl, friction, changed = 0.0, 0.0, False
+        for asset in valid:
+            symbol, price = asset["symbol"], float(asset["price"])
+            prior_price = ledger["last_prices"].get(symbol)
+            prior_position = int(ledger["positions"].get(symbol, 0))
+            target_row = next((row for row in asset["strategy_comparison"] if row["key"] == key), None)
+            target = int(target_row.get("latest_target", 0)) if target_row else 0
+            if prior_price and ledger["last_bars"].get(symbol) != asset["bar_time"]:
+                pnl += weight * prior_position * (price / prior_price - 1)
+                changed = True
+            turnover = abs(target - prior_position)
+            if turnover:
+                friction += weight * turnover * (fee + slip_ticks * float(next(cfg["tick"] for cfg in config["assets"] if cfg["symbol"] == symbol)) / price)
+                ledger["trades"] += 1 if prior_position == 0 or target != 0 else 0
+                changed = True
+            ledger["positions"][symbol] = target
+            ledger["last_prices"][symbol] = price
+            ledger["last_bars"][symbol] = asset["bar_time"]
+        if changed or not ledger["history"]:
+            ledger["equity"] *= max(0.01, 1 + pnl - friction)
+            ledger["history"].append({"time": generated_at.isoformat(timespec="seconds"), "equity": ledger["equity"]})
+            ledger["history"] = ledger["history"][-500:]
+        peak, max_drawdown = 0.0, 0.0
+        for point in ledger["history"]:
+            peak = max(peak, point["equity"])
+            if peak:
+                max_drawdown = min(max_drawdown, point["equity"] / peak - 1)
+        output.append({"key": key, "name": name, "equity": ledger["equity"], "return_pct": (ledger["equity"] / initial_cash - 1) * 100, "max_drawdown_pct": max_drawdown * 100, "trades": ledger["trades"], "active_positions": sum(value != 0 for value in ledger["positions"].values()), "observations": len(ledger["history"])})
+    state["updated_at"] = generated_at.isoformat(timespec="seconds")
+    atomic_json(PAPER_PATH, state)
+    output.sort(key=lambda row: row["return_pct"], reverse=True)
+    return {"mode": "forward_paper", "started_at": state["started_at"], "updated_at": state["updated_at"], "initial_cash": initial_cash, "strategies": output, "note": "无真实委托；按扫描时点最新价盯市，含开平各万1.2和每侧1跳，首次运行仅建立仓位并计成本。"}
 
 
 def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: datetime) -> dict[str, Any]:
@@ -664,6 +784,7 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
         returns = {"day": percentage_change(daily_closes, 1), "week": percentage_change(daily_closes, 5), "month": percentage_change(daily_closes, 20)}
         position_changes = {"day": percentage_change(holds, 1), "week": percentage_change(holds, 5), "month": percentage_change(holds, 20)}
         technical = technical_snapshot(daily)
+        strategy_comparison = compare_strategies(daily, five, asset, config)
         result = {
             **base,
             **latest,
@@ -684,6 +805,7 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             "capital_bucket": capital_bucket(returns["month"], position_changes["week"]),
             "technical_methods": technical["groups"],
             "risk_levels": research_risk_levels(daily_closes[-1], latest["prior_high"], latest["prior_low"], technical["values"]["atr14"]),
+            "strategy_comparison": strategy_comparison,
             "timeframes": {"week": weekly_trend, "day": {"signal": latest["signal"], "vote": latest["long_count"] - latest["short_count"]}, "hour": hourly_trend, "five": {"signal": five_signal["signal"], "score": five_signal["score"]}},
             "sparkline": sparkline,
             "source": source,
@@ -719,9 +841,14 @@ def scan_once() -> dict[str, Any]:
         generated_at = datetime.now(ZoneInfo(config["timezone"]))
         results: list[dict[str, Any]] = []
         with ThreadPoolExecutor(max_workers=5) as pool:
+            breadth_future = pool.submit(fetch_market_breadth, generated_at)
             futures = {pool.submit(analyze_asset, asset, config, generated_at): asset for asset in config["assets"]}
             for future in as_completed(futures):
                 results.append(future.result())
+            try:
+                market_breadth = breadth_future.result()
+            except Exception as exc:
+                market_breadth = {"status": "error", "error": str(exc), "source": "新浪财经国内期货实时行情"}
         order = {asset["id"]: index for index, asset in enumerate(config["assets"])}
         results.sort(key=lambda item: order[item["id"]])
         counts = {key: sum(item.get("signal") == key for item in results) for key in ("long", "short", "watch_long", "watch_short", "neutral", "missing")}
@@ -730,20 +857,26 @@ def scan_once() -> dict[str, Any]:
             key: [item["id"] for item in results if item.get("capital_bucket") == key]
             for key in bucket_keys
         }
+        performance_report = aggregate_strategy_performance(results, generated_at, config)
+        paper_trading = update_paper_portfolio(results, generated_at, config)
         payload = {
-            "schema_version": 3,
+            "schema_version": 4,
             "generated_at": generated_at.isoformat(timespec="seconds"),
             "interval_seconds": int(config["scan_interval_seconds"]),
             "summary": counts,
             "operation_summary": operation_summary,
+            "market_breadth": market_breadth,
+            "performance": {key: performance_report[key] for key in ("assumptions", "strategies", "frequency_assessment", "sources")},
+            "paper_trading": paper_trading,
             "assets": results,
             "methodology": {
                 "bar": "日线四因子为主；周线和60分钟确认趋势；5分钟仅作盘中预警",
                 "factors": "mom5超过±3% / 突破20日高低 / 收盘相对MA20 / 日线RSI14区间",
                 "decision": "日线四因子至少3项同向触发，再结合周线与小时线给出综合结论",
-                "execution": "日线回测在下一交易日开盘入场，最长持有10个交易日；扫描每5分钟运行",
+                "execution": "核心模型在交易日15:20后刷新；全市场行情在交易时段每15分钟刷新；5分钟策略不进入定时交易信号",
                 "technical": "主流指标层覆盖均线、MACD、ADX、ROC、RSI、KDJ、CCI、ATR、布林带、唐奇安、量比与OBV，仅作交叉验证",
                 "risk": "研究参考线采用2×ATR初始止损、0.618动态跟踪与±0.2%保本触发；不自动下单",
+                "cost": "所有策略对比统一按开仓万1.2、平仓万1.2，并在每一侧额外计1跳滑点",
             },
             "warnings": [
                 "主连换月可能产生跳空，生产使用前应接入后复权连续合约或固定主力合约。",
@@ -752,6 +885,7 @@ def scan_once() -> dict[str, Any]:
                 "公开接口可能限流或中断；实盘研究建议切换至iFinD、Wind、CTP或交易所授权源。",
             ],
         }
+        atomic_json(PERFORMANCE_PATH, performance_report)
         atomic_json(LATEST_PATH, payload)
         append_history(payload)
         return payload
@@ -814,29 +948,61 @@ def read_latest() -> dict[str, Any]:
         return json.load(handle)
 
 
+def refresh_breadth_only() -> dict[str, Any]:
+    """Refresh intraday market breadth without rerunning daily signals or paper books."""
+    if not SCAN_LOCK.acquire(blocking=False):
+        raise RuntimeError("扫描已在进行中")
+    try:
+        config = load_config()
+        generated_at = datetime.now(ZoneInfo(config["timezone"]))
+        payload = read_latest()
+        payload["market_breadth"] = fetch_market_breadth(generated_at)
+        payload["interval_seconds"] = int(config["scan_interval_seconds"])
+        atomic_json(LATEST_PATH, payload)
+        return payload["market_breadth"]
+    finally:
+        SCAN_LOCK.release()
+
+
 def scheduler_loop(interval: int) -> None:
+    last_breadth_slot: int | None = None
+    last_daily_date: str | None = None
     while True:
-        delay = interval - (time.time() % interval) + 2
+        delay = 60 - (time.time() % 60) + 2
         time.sleep(delay)
-        if in_research_session():
+        now = datetime.now(ZoneInfo(load_config()["timezone"]))
+        slot = int(now.timestamp()) // max(300, interval)
+        if in_research_session(now) and slot != last_breadth_slot:
+            try:
+                refresh_breadth_only()
+                last_breadth_slot = slot
+                print(f"[{now.isoformat(timespec='seconds')}] breadth refresh complete")
+            except Exception:
+                traceback.print_exc()
+        if now.weekday() < 5 and dt_time(15, 20) <= now.time() <= dt_time(15, 35) and last_daily_date != now.date().isoformat():
             try:
                 scan_once()
-                print(f"[{datetime.now().isoformat(timespec='seconds')}] scheduled scan complete")
+                last_daily_date = now.date().isoformat()
+                print(f"[{now.isoformat(timespec='seconds')}] daily close scan complete")
             except Exception:
                 traceback.print_exc()
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="期货5分钟动量扫描器")
+    parser = argparse.ArgumentParser(description="期货日线动量与全市场广度监控")
     parser.add_argument("--scan", action="store_true", help="立即扫描一次")
+    parser.add_argument("--breadth-only", action="store_true", help="仅刷新全市场涨跌广度")
     parser.add_argument("--serve", action="store_true", help="启动本地看板")
-    parser.add_argument("--schedule", action="store_true", help="服务运行时每5分钟自动扫描")
+    parser.add_argument("--schedule", action="store_true", help="服务运行时每15分钟更新广度、收盘后更新核心模型")
     parser.add_argument("--respect-session", action="store_true", help="非研究时段跳过单次扫描")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", default=8765, type=int)
     args = parser.parse_args()
-    if not args.scan and not args.serve:
+    if not args.scan and not args.breadth_only and not args.serve:
         args.scan = True
+    if args.breadth_only:
+        breadth = refresh_breadth_only()
+        print(json.dumps({key: breadth.get(key) for key in ("generated_at", "valid", "up", "down", "flat")}, ensure_ascii=False))
     if args.scan:
         if args.respect_session and not in_research_session():
             print("当前不在扫描时段，已跳过。")

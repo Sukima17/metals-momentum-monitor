@@ -1,34 +1,593 @@
 {
-  "schema_version": 3,
-  "generated_at": "2026-09-15T16:38:17+08:00",
-  "interval_seconds": 300,
+  "schema_version": 4,
+  "generated_at": "2026-09-15T22:35:02+08:00",
+  "interval_seconds": 900,
   "summary": {
     "long": 0,
-    "short": 3,
+    "short": 5,
     "watch_long": 1,
-    "watch_short": 5,
+    "watch_short": 3,
     "neutral": 0,
     "missing": 1
   },
   "operation_summary": {
     "trend_long": [],
     "avoid": [
+      "aluminium",
       "zinc"
     ],
     "accumulate": [
+      "lead",
       "lithium",
       "gold",
       "silver"
     ],
-    "divergence": [
-      "aluminium"
-    ],
+    "divergence": [],
     "weak": [
       "copper",
-      "lead",
       "nickel",
       "tin"
     ]
+  },
+  "market_breadth": {
+    "generated_at": "2026-09-15T22:35:02+08:00",
+    "source": "新浪财经国内期货实时行情（主力连续，每品种一条）",
+    "scope": "SHFE/INE、DCE、CZCE、GFEX、CFFEX；覆盖商品、新能源与金融期货",
+    "universe": 86,
+    "valid": 81,
+    "up": 34,
+    "down": 40,
+    "flat": 7,
+    "top_gainers": [
+      {
+        "symbol": "EG0",
+        "name": "乙二醇",
+        "exchange": "DCE",
+        "category": "energy",
+        "price": 6191.0,
+        "previous_settlement": 5958.0,
+        "change_pct": 3.910708291372944,
+        "volume": 967261.0,
+        "hold": 397232.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "PR0",
+        "name": "瓶片",
+        "exchange": "CZCE",
+        "category": "energy",
+        "price": 8560.0,
+        "previous_settlement": 8306.0,
+        "change_pct": 3.0580303395135955,
+        "volume": 51234.0,
+        "hold": 68022.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "PF0",
+        "name": "短纤",
+        "exchange": "CZCE",
+        "category": "energy",
+        "price": 8720.0,
+        "previous_settlement": 8472.0,
+        "change_pct": 2.9272898961284266,
+        "volume": 157444.0,
+        "hold": 241227.0,
+        "quote_time": "2026-09-15 223439"
+      }
+    ],
+    "top_losers": [
+      {
+        "symbol": "EC0",
+        "name": "集运欧线",
+        "exchange": "SHFE/INE",
+        "category": "energy",
+        "price": 2034.0,
+        "previous_settlement": 2114.0,
+        "change_pct": -3.7842951750236553,
+        "volume": 11871.0,
+        "hold": 24415.0,
+        "quote_time": "2026-09-15 150000"
+      },
+      {
+        "symbol": "LC0",
+        "name": "碳酸锂",
+        "exchange": "GFEX",
+        "category": "new_energy",
+        "price": 129120.0,
+        "previous_settlement": 133560.0,
+        "change_pct": -3.3243486073674777,
+        "volume": 187219.0,
+        "hold": 418700.0,
+        "quote_time": "2026-09-15 150106"
+      },
+      {
+        "symbol": "LH0",
+        "name": "生猪",
+        "exchange": "DCE",
+        "category": "agriculture",
+        "price": 11235.0,
+        "previous_settlement": 11530.0,
+        "change_pct": -2.5585429314830876,
+        "volume": 172254.0,
+        "hold": 221287.0,
+        "quote_time": "2026-09-15 150500"
+      }
+    ],
+    "categories": {
+      "precious": {
+        "up": 1,
+        "down": 3,
+        "flat": 0,
+        "valid": 4
+      },
+      "nonferrous": {
+        "up": 3,
+        "down": 6,
+        "flat": 0,
+        "valid": 9
+      },
+      "ferrous": {
+        "up": 3,
+        "down": 5,
+        "flat": 1,
+        "valid": 9
+      },
+      "energy": {
+        "up": 19,
+        "down": 8,
+        "flat": 0,
+        "valid": 27
+      },
+      "agriculture": {
+        "up": 8,
+        "down": 13,
+        "flat": 1,
+        "valid": 22
+      },
+      "new_energy": {
+        "up": 0,
+        "down": 3,
+        "flat": 0,
+        "valid": 3
+      },
+      "financial": {
+        "up": 0,
+        "down": 2,
+        "flat": 5,
+        "valid": 7
+      }
+    },
+    "metal_details": [
+      {
+        "symbol": "RB0",
+        "name": "螺纹钢",
+        "exchange": "SHFE",
+        "category": "ferrous",
+        "price": 3122.0,
+        "previous_settlement": 3103.0,
+        "change_pct": 0.6123106670963496,
+        "volume": 385208.0,
+        "hold": 1584999.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "WR0",
+        "name": "线材",
+        "exchange": "SHFE",
+        "category": "ferrous",
+        "price": 3451.0,
+        "previous_settlement": 3434.0,
+        "change_pct": 0.4950495049504955,
+        "volume": 1.0,
+        "hold": 1.0,
+        "quote_time": "2026-09-09 150000"
+      },
+      {
+        "symbol": "AG0",
+        "name": "白银",
+        "exchange": "SHFE",
+        "category": "precious",
+        "price": 15503.0,
+        "previous_settlement": 15460.0,
+        "change_pct": 0.27813712807245317,
+        "volume": 37923.0,
+        "hold": 202310.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "BC0",
+        "name": "国际铜",
+        "exchange": "SHFE/INE",
+        "category": "nonferrous",
+        "price": 95250.0,
+        "previous_settlement": 95030.0,
+        "change_pct": 0.23150584026097043,
+        "volume": 1527.0,
+        "hold": 12623.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "CU0",
+        "name": "沪铜",
+        "exchange": "SHFE",
+        "category": "nonferrous",
+        "price": 107160.0,
+        "previous_settlement": 106930.0,
+        "change_pct": 0.2150939867202828,
+        "volume": 16915.0,
+        "hold": 176892.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "AL0",
+        "name": "沪铝",
+        "exchange": "SHFE",
+        "category": "nonferrous",
+        "price": 24090.0,
+        "previous_settlement": 24040.0,
+        "change_pct": 0.2079866888519133,
+        "volume": 27806.0,
+        "hold": 222795.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "HC0",
+        "name": "热卷",
+        "exchange": "SHFE",
+        "category": "ferrous",
+        "price": 3317.0,
+        "previous_settlement": 3311.0,
+        "change_pct": 0.18121413470251202,
+        "volume": 146115.0,
+        "hold": 1314201.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "I0",
+        "name": "铁矿石",
+        "exchange": "DCE",
+        "category": "ferrous",
+        "price": 708.0,
+        "previous_settlement": 708.0,
+        "change_pct": 0.0,
+        "volume": 90277.0,
+        "hold": 589292.0,
+        "quote_time": "2026-09-15 223438"
+      },
+      {
+        "symbol": "AU0",
+        "name": "黄金",
+        "exchange": "SHFE",
+        "category": "precious",
+        "price": 930.42,
+        "previous_settlement": 931.22,
+        "change_pct": -0.08590880780052768,
+        "volume": 18605.0,
+        "hold": 170832.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "PB0",
+        "name": "沪铅",
+        "exchange": "SHFE",
+        "category": "nonferrous",
+        "price": 15790.0,
+        "previous_settlement": 15815.0,
+        "change_pct": -0.15807777426494196,
+        "volume": 19380.0,
+        "hold": 63368.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "ZN0",
+        "name": "沪锌",
+        "exchange": "SHFE",
+        "category": "nonferrous",
+        "price": 26070.0,
+        "previous_settlement": 26115.0,
+        "change_pct": -0.1723147616312426,
+        "volume": 35597.0,
+        "hold": 122738.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "AO0",
+        "name": "氧化铝",
+        "exchange": "SHFE",
+        "category": "nonferrous",
+        "price": 2682.0,
+        "previous_settlement": 2688.0,
+        "change_pct": -0.22321428571429047,
+        "volume": 33677.0,
+        "hold": 232408.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "AD0",
+        "name": "铸造铝合金",
+        "exchange": "SHFE",
+        "category": "nonferrous",
+        "price": 23230.0,
+        "previous_settlement": 23290.0,
+        "change_pct": -0.25762129669385514,
+        "volume": 3010.0,
+        "hold": 18677.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "SN0",
+        "name": "沪锡",
+        "exchange": "SHFE",
+        "category": "nonferrous",
+        "price": 393020.0,
+        "previous_settlement": 394520.0,
+        "change_pct": -0.3802088614011989,
+        "volume": 33296.0,
+        "hold": 35666.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "SM0",
+        "name": "锰硅",
+        "exchange": "CZCE",
+        "category": "ferrous",
+        "price": 5784.0,
+        "previous_settlement": 5816.0,
+        "change_pct": -0.5502063273727598,
+        "volume": 212024.0,
+        "hold": 281538.0,
+        "quote_time": "2026-09-15 150000"
+      },
+      {
+        "symbol": "PD0",
+        "name": "钯",
+        "exchange": "GFEX",
+        "category": "precious",
+        "price": 306.4,
+        "previous_settlement": 308.45,
+        "change_pct": -0.6646133895282902,
+        "volume": 1207.0,
+        "hold": 6895.0,
+        "quote_time": "2026-09-15 150106"
+      },
+      {
+        "symbol": "SS0",
+        "name": "不锈钢",
+        "exchange": "SHFE",
+        "category": "ferrous",
+        "price": 13430.0,
+        "previous_settlement": 13545.0,
+        "change_pct": -0.8490217792543331,
+        "volume": 57952.0,
+        "hold": 128907.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "PT0",
+        "name": "铂",
+        "exchange": "GFEX",
+        "category": "precious",
+        "price": 435.25,
+        "previous_settlement": 439.55,
+        "change_pct": -0.978273233989313,
+        "volume": 2490.0,
+        "hold": 10340.0,
+        "quote_time": "2026-09-15 150106"
+      },
+      {
+        "symbol": "J0",
+        "name": "焦炭",
+        "exchange": "DCE",
+        "category": "ferrous",
+        "price": 2052.0,
+        "previous_settlement": 2072.5,
+        "change_pct": -0.9891435464414955,
+        "volume": 8877.0,
+        "hold": 56673.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "SF0",
+        "name": "硅铁",
+        "exchange": "CZCE",
+        "category": "ferrous",
+        "price": 6020.0,
+        "previous_settlement": 6090.0,
+        "change_pct": -1.1494252873563204,
+        "volume": 264788.0,
+        "hold": 323611.0,
+        "quote_time": "2026-09-15 150000"
+      },
+      {
+        "symbol": "JM0",
+        "name": "焦煤",
+        "exchange": "DCE",
+        "category": "ferrous",
+        "price": 1597.5,
+        "previous_settlement": 1617.0,
+        "change_pct": -1.2059369202226389,
+        "volume": 196851.0,
+        "hold": 491808.0,
+        "quote_time": "2026-09-15 223439"
+      },
+      {
+        "symbol": "NI0",
+        "name": "沪镍",
+        "exchange": "SHFE",
+        "category": "nonferrous",
+        "price": 122070.0,
+        "previous_settlement": 124080.0,
+        "change_pct": -1.6199226305609327,
+        "volume": 50890.0,
+        "hold": 132383.0,
+        "quote_time": "2026-09-15 223439"
+      }
+    ],
+    "last_quote": "2026-09-15 223439"
+  },
+  "performance": {
+    "assumptions": {
+      "commission": "开仓万1.2 + 平仓万1.2（单边0.012%，完整往返0.024%）",
+      "slippage": "开仓1跳 + 平仓1跳",
+      "execution": "信号K线收盘后生成，下一根K线开盘执行，避免前视",
+      "price_series": "主力连续未复权；换月跳空会影响收益，结果仅供研究筛选",
+      "portfolio": "跨品种汇总为各品种收益等权平均，不含保证金杠杆和资金容量约束"
+    },
+    "strategies": [
+      {
+        "key": "ma_trend",
+        "name": "移动均线10/30/60",
+        "frequency": "daily",
+        "assets": 9,
+        "trades": 143,
+        "win_rate_pct": 34.96503496503497,
+        "equal_weight_return_pct": 15.037765497885065,
+        "median_return_pct": 0.6077643763760854,
+        "average_sharpe": 0.13522670185076127,
+        "positive_assets": 5,
+        "worst_drawdown_pct": -46.73229147082277,
+        "sample_start": "2024-06-28",
+        "sample_end": "2026-09-15"
+      },
+      {
+        "key": "fibonacci_0618",
+        "name": "斐波那契0.618通道",
+        "frequency": "daily",
+        "assets": 9,
+        "trades": 416,
+        "win_rate_pct": 25.48076923076923,
+        "equal_weight_return_pct": 5.0446345425064045,
+        "median_return_pct": -10.544589541923798,
+        "average_sharpe": -0.1742546779597666,
+        "positive_assets": 3,
+        "worst_drawdown_pct": -47.84643478887762,
+        "sample_start": "2024-06-28",
+        "sample_end": "2026-09-15"
+      },
+      {
+        "key": "five_minute_momentum",
+        "name": "5分钟动量",
+        "frequency": "5m",
+        "assets": 9,
+        "trades": 609,
+        "win_rate_pct": 24.302134646962234,
+        "equal_weight_return_pct": -3.9056235344439907,
+        "median_return_pct": -4.801365443742645,
+        "average_sharpe": -15.60451158170717,
+        "positive_assets": 0,
+        "worst_drawdown_pct": -6.571124359094194,
+        "sample_start": "2026-08-18 09:30:00",
+        "sample_end": "2026-09-15 22:35:00"
+      },
+      {
+        "key": "daily_four_factor",
+        "name": "日线四因子",
+        "frequency": "daily",
+        "assets": 9,
+        "trades": 447,
+        "win_rate_pct": 41.387024608501115,
+        "equal_weight_return_pct": -4.898027670709329,
+        "median_return_pct": -8.914463750512835,
+        "average_sharpe": -0.3616465771889139,
+        "positive_assets": 2,
+        "worst_drawdown_pct": -41.260459036793186,
+        "sample_start": "2024-06-28",
+        "sample_end": "2026-09-15"
+      },
+      {
+        "key": "fdt_channel",
+        "name": "FDT启发通道共振",
+        "frequency": "daily",
+        "assets": 9,
+        "trades": 345,
+        "win_rate_pct": 39.130434782608695,
+        "equal_weight_return_pct": -7.880514682581086,
+        "median_return_pct": -11.221430211780426,
+        "average_sharpe": -0.4330593198641468,
+        "positive_assets": 2,
+        "worst_drawdown_pct": -42.984386598013536,
+        "sample_start": "2024-06-28",
+        "sample_end": "2026-09-15"
+      }
+    ],
+    "frequency_assessment": {
+      "decision": "alert_only",
+      "headline": "日线收盘刷新主模型，5分钟只保留预警",
+      "reason": "当前5分钟样本期较短，且尚未同时满足成本后收益、Sharpe和跨品种稳定性门槛。",
+      "criteria": "5分钟总交易≥30、至少5个品种为正、等权收益>0、平均Sharpe>0.5且不低于日线四因子"
+    },
+    "sources": [
+      {
+        "name": "CTAAgents/FDT",
+        "url": "https://github.com/CTAAgents/FDT",
+        "adaptation": "参考DC20/DC55、布林带与MACD独立趋势子信号，构造透明通道共振基线"
+      },
+      {
+        "name": "VeighNa CTA Strategy",
+        "url": "https://github.com/vnpy/vnpy_ctastrategy",
+        "adaptation": "参考通道突破、CCI、ATR止损及下一K线执行框架"
+      }
+    ]
+  },
+  "paper_trading": {
+    "mode": "forward_paper",
+    "started_at": "2026-09-15T22:28:43+08:00",
+    "updated_at": "2026-09-15T22:35:02+08:00",
+    "initial_cash": 1000000.0,
+    "strategies": [
+      {
+        "key": "daily_four_factor",
+        "name": "日线四因子",
+        "equity": 1000352.8214129716,
+        "return_pct": 0.0352821412971549,
+        "max_drawdown_pct": -0.00016085881788807654,
+        "trades": 2,
+        "active_positions": 2,
+        "observations": 3
+      },
+      {
+        "key": "fibonacci_0618",
+        "name": "斐波那契0.618通道",
+        "equity": 1000322.2656058789,
+        "return_pct": 0.03222656058790019,
+        "max_drawdown_pct": -0.00016085881788807654,
+        "trades": 3,
+        "active_positions": 3,
+        "observations": 3
+      },
+      {
+        "key": "fdt_channel",
+        "name": "FDT启发通道共振",
+        "equity": 1000273.7292707477,
+        "return_pct": 0.027372927074775788,
+        "max_drawdown_pct": -0.00016085881788807654,
+        "trades": 4,
+        "active_positions": 4,
+        "observations": 3
+      },
+      {
+        "key": "five_minute_momentum",
+        "name": "5分钟动量",
+        "equity": 1000085.624843955,
+        "return_pct": 0.008562484395513437,
+        "max_drawdown_pct": -0.012928749833374109,
+        "trades": 5,
+        "active_positions": 3,
+        "observations": 3
+      },
+      {
+        "key": "ma_trend",
+        "name": "移动均线10/30/60",
+        "equity": 999891.3950012848,
+        "return_pct": -0.010860499871523377,
+        "max_drawdown_pct": 0.0,
+        "trades": 6,
+        "active_positions": 6,
+        "observations": 3
+      }
+    ],
+    "note": "无真实委托；按扫描时点最新价盯市，含开平各万1.2和每侧1跳，首次运行仅建立仓位并计成本。"
   },
   "assets": [
     {
@@ -41,12 +600,12 @@
       "decimals": 0,
       "unit": "元/吨",
       "bar_timezone": "Asia/Shanghai",
-      "score": -17,
-      "signal": "watch_short",
-      "momentum_pct": -1.4349693812265807,
+      "score": -45,
+      "signal": "short",
+      "momentum_pct": -3.2453444223467742,
       "threshold_pct": 3.0,
-      "ma20": 108751.5,
-      "rsi": 49.40878378378379,
+      "ma20": 108706.5,
+      "rsi": 42.76094276094276,
       "prior_high": 112330.0,
       "prior_low": 106150.0,
       "long_factors": {
@@ -56,56 +615,56 @@
         "rsi": false
       },
       "short_factors": {
-        "momentum": false,
+        "momentum": true,
         "breakout": false,
         "trend": true,
         "rsi": true
       },
       "long_count": 0,
-      "short_count": 2,
-      "daily_score": -50,
-      "daily_signal": "watch_short",
-      "status": "closed",
-      "status_text": "休市快照",
-      "price": 107030.0,
-      "bar_time": "2026-09-15 15:00:00",
-      "daily_date": "2026-09-14",
-      "age_minutes": 98.3,
+      "short_count": 3,
+      "daily_score": -75,
+      "daily_signal": "short",
+      "status": "ok",
+      "status_text": "实时",
+      "price": 107200.0,
+      "bar_time": "2026-09-15 22:35:00",
+      "daily_date": "2026-09-15",
+      "age_minutes": 0.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": -0.7511127596439127,
+      "change_pct": 0.1588339717836229,
       "returns": {
-        "day": -1.0551426736397862,
-        "week": -1.4349693812265807,
-        "month": -1.5519444951615835
+        "day": -0.7511127596439127,
+        "week": -3.2453444223467742,
+        "month": -0.8338738070971963
       },
       "position_changes": {
-        "day": -5.5656668242013545,
-        "week": -12.413674113658724,
-        "month": -10.933447139436181
+        "day": -4.127712588112531,
+        "week": -21.65781333611767,
+        "month": -6.40641160908727
       },
       "capital_bucket": "weak",
       "technical_methods": {
         "trend": [
           {
             "name": "均线系统",
-            "value": "MA20 108751.50 / MA60 106140.50",
+            "value": "MA20 108706.50 / MA60 106198.00",
             "signal": "neutral",
             "note": "收盘与中长期均线排列"
           },
           {
             "name": "MACD",
-            "value": "DIF 783.76 / 柱 -200.64",
+            "value": "DIF 545.07 / 柱 -542.43",
             "signal": "short",
             "note": "EMA12、EMA26、Signal9"
           },
           {
             "name": "ADX14",
-            "value": "24.4",
+            "value": "23.4",
             "signal": "neutral",
             "note": "≥25 表示趋势较明确"
           }
@@ -113,41 +672,41 @@
         "momentum": [
           {
             "name": "ROC5",
-            "value": "-1.43%",
+            "value": "-3.25%",
             "signal": "short",
             "note": "5日价格动量"
           },
           {
             "name": "RSI14",
-            "value": "49.4",
-            "signal": "neutral",
+            "value": "42.8",
+            "signal": "short",
             "note": "超买超卖与强弱区间"
           },
           {
             "name": "KDJ(9,3)",
-            "value": "K 7.8 / D 45.5",
+            "value": "K 6.7 / D 15.3",
             "signal": "short",
             "note": "随机指标交叉"
           },
           {
             "name": "CCI20",
-            "value": "-45.0",
-            "signal": "neutral",
+            "value": "-117.0",
+            "signal": "short",
             "note": "±100 为强弱参考阈值"
           }
         ],
         "volatility": [
           {
             "name": "ATR14",
-            "value": "1385.71 (1.28%)",
+            "value": "1353.57 (1.26%)",
             "signal": "neutral",
             "note": "真实波幅，用于风险线"
           },
           {
             "name": "布林带20,2",
-            "value": "位置 32.2%",
+            "value": "位置 18.4%",
             "signal": "neutral",
-            "note": "上 111314.11 / 下 106188.89"
+            "note": "上 111355.39 / 下 106057.61"
           },
           {
             "name": "唐奇安20",
@@ -159,58 +718,151 @@
         "volume_position": [
           {
             "name": "量比20",
-            "value": "1.15×",
+            "value": "1.08×",
             "signal": "neutral",
             "note": "当日量 / 前20日均量"
           },
           {
             "name": "OBV20方向",
-            "value": "+517388",
+            "value": "+515855",
             "signal": "long",
             "note": "成交量累积方向，不代表资金流"
           }
         ]
       },
       "risk_levels": {
-        "entry_reference": 107840.0,
-        "long_atr_stop": 105068.57142857143,
-        "short_atr_stop": 110611.42857142857,
-        "long_break_even_trigger": 108055.68,
-        "short_break_even_trigger": 107624.32,
-        "long_fib_trail": 110614.82,
-        "short_fib_trail": 106795.58
+        "entry_reference": 107030.0,
+        "long_atr_stop": 104322.85714285714,
+        "short_atr_stop": 109737.14285714286,
+        "long_break_even_trigger": 107244.06,
+        "short_break_even_trigger": 106815.94,
+        "long_fib_trail": 110305.4,
+        "short_fib_trail": 106486.16
       },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 43,
+          "win_rate_pct": 39.53488372093023,
+          "net_return_pct": -22.7273923587776,
+          "annual_return_pct": -11.376069007546452,
+          "max_drawdown_pct": -25.665454754075924,
+          "sharpe": -1.3753639123703878,
+          "profit_factor": 0.36113830968805116,
+          "avg_trade_pct": -0.5811739722778866,
+          "positive_trades": 17,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 18,
+          "win_rate_pct": 33.33333333333333,
+          "net_return_pct": 0.6077643763760854,
+          "annual_return_pct": 0.28421928122719375,
+          "max_drawdown_pct": -19.387225103786175,
+          "sharpe": 0.09464484012720038,
+          "profit_factor": 1.0957377544732267,
+          "avg_trade_pct": 0.14110587189020868,
+          "positive_trades": 6,
+          "latest_target": 1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 47,
+          "win_rate_pct": 21.27659574468085,
+          "net_return_pct": -4.747550888450247,
+          "annual_return_pct": -2.2525227189597485,
+          "max_drawdown_pct": -21.182059715204748,
+          "sharpe": -0.07623171444671291,
+          "profit_factor": 0.9421294761399924,
+          "avg_trade_pct": -0.050252022098087074,
+          "positive_trades": 10,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 40,
+          "win_rate_pct": 42.5,
+          "net_return_pct": -15.544054632494287,
+          "annual_return_pct": -7.608186961389296,
+          "max_drawdown_pct": -18.443442677587583,
+          "sharpe": -0.8024151293147676,
+          "profit_factor": 0.48829333414266574,
+          "avg_trade_pct": -0.40125663211802165,
+          "positive_trades": 17,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 58,
+          "win_rate_pct": 31.03448275862069,
+          "net_return_pct": -1.4413800320477232,
+          "annual_return_pct": -30.42400025715154,
+          "max_drawdown_pct": -1.9018318338892115,
+          "sharpe": -7.468439934253849,
+          "profit_factor": 0.5625141883582767,
+          "avg_trade_pct": -0.02599157842412371,
+          "positive_trades": 18,
+          "latest_target": -1,
+          "sample_start": "2026-09-01 21:50:00",
+          "sample_end": "2026-09-15 22:35:00",
+          "observations": 938
+        }
+      ],
       "timeframes": {
         "week": {
-          "signal": "strong_long",
-          "vote": 3,
-          "momentum_pct": 0.13928869904356045,
-          "ema8": 107625.52041543076,
-          "ema21": 105214.4963296882,
-          "rsi": 60.77235772357724
+          "signal": "neutral",
+          "vote": 0,
+          "momentum_pct": -0.6128702757916216,
+          "ema8": 107445.52041543076,
+          "ema21": 105140.85996605184,
+          "rsi": 57.61078998073217
         },
         "day": {
-          "signal": "watch_short",
-          "vote": -2
+          "signal": "short",
+          "vote": -3
         },
         "hour": {
-          "signal": "short",
-          "vote": -1,
-          "momentum_pct": 0.17783601647323177,
-          "ema8": 107209.79794301643,
-          "ema21": 107925.78485923789,
-          "rsi": 25.324675324675326
+          "signal": "neutral",
+          "vote": 0,
+          "momentum_pct": 0.4115226337448652,
+          "ema8": 107243.17617790167,
+          "ema21": 107874.34987203444,
+          "rsi": 33.63636363636364
         },
         "five": {
           "signal": "watch_short",
-          "score": -43
+          "score": -37
         }
       },
       "sparkline": [
-        {
-          "time": "2026-06-23",
-          "value": 103580.0
-        },
         {
           "time": "2026-06-24",
           "value": 103550.0
@@ -446,6 +1098,10 @@
         {
           "time": "2026-09-14",
           "value": 107840.0
+        },
+        {
+          "time": "2026-09-15",
+          "value": 107030.0
         }
       ],
       "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
@@ -457,23 +1113,23 @@
         },
         "hourly": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 0
+          "incomplete_bars_excluded": 1
         },
         "five": {
           "duplicate_bars_removed": 0,
           "incomplete_bars_excluded": 0
         },
-        "last_actual_observation": "2026-09-15 15:00:00",
-        "last_daily_close": "2026-09-14",
+        "last_actual_observation": "2026-09-15 22:35:00",
+        "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
       "backtest": {
         "trades": 30,
-        "win_rate_pct": 40.0,
-        "net_return_pct": -0.4716457982815281,
-        "max_drawdown_pct": -13.388652586403992,
-        "avg_trade_pct": 0.05952651022220559,
-        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+        "win_rate_pct": 46.666666666666664,
+        "net_return_pct": 0.007638144532018387,
+        "max_drawdown_pct": -13.344984561568518,
+        "avg_trade_pct": 0.0755265102222055,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
       }
     },
     {
@@ -486,97 +1142,97 @@
       "decimals": 0,
       "unit": "元/吨",
       "bar_timezone": "Asia/Shanghai",
-      "score": 27,
+      "score": 57,
       "signal": "watch_long",
-      "momentum_pct": -1.5765765765765716,
+      "momentum_pct": -1.451349141455438,
       "threshold_pct": 3.0,
-      "ma20": 24055.0,
-      "rsi": 59.271523178807946,
+      "ma20": 24062.5,
+      "rsi": 60.95238095238095,
       "prior_high": 24675.0,
       "prior_low": 23465.0,
       "long_factors": {
         "momentum": false,
         "breakout": false,
-        "trend": false,
+        "trend": true,
         "rsi": true
       },
       "short_factors": {
         "momentum": false,
         "breakout": false,
-        "trend": true,
+        "trend": false,
         "rsi": false
       },
-      "long_count": 1,
-      "short_count": 1,
-      "daily_score": 0,
-      "daily_signal": "neutral",
-      "status": "closed",
-      "status_text": "休市快照",
-      "price": 24105.0,
-      "bar_time": "2026-09-15 15:00:00",
-      "daily_date": "2026-09-14",
-      "age_minutes": 98.3,
+      "long_count": 2,
+      "short_count": 0,
+      "daily_score": 50,
+      "daily_signal": "watch_long",
+      "status": "ok",
+      "status_text": "实时",
+      "price": 24085.0,
+      "bar_time": "2026-09-15 22:35:00",
+      "daily_date": "2026-09-15",
+      "age_minutes": 0.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.2912419388391818,
+      "change_pct": -0.0829703381041269,
       "returns": {
-        "day": -0.825252733649684,
-        "week": -1.5765765765765716,
-        "month": 0.0
+        "day": 0.2912419388391818,
+        "week": -1.451349141455438,
+        "month": 0.6261740763932266
       },
       "position_changes": {
-        "day": -8.857561852500117,
-        "week": -25.323255813953494,
-        "month": -21.371407116592454
+        "day": 14.654894999636682,
+        "week": -14.510342692389555,
+        "month": -13.62349555411313
       },
-      "capital_bucket": "divergence",
+      "capital_bucket": "avoid",
       "technical_methods": {
         "trend": [
           {
             "name": "均线系统",
-            "value": "MA20 24055.00 / MA60 23583.00",
-            "signal": "neutral",
+            "value": "MA20 24062.50 / MA60 23592.75",
+            "signal": "long",
             "note": "收盘与中长期均线排列"
           },
           {
             "name": "MACD",
-            "value": "DIF 160.30 / 柱 -12.20",
+            "value": "DIF 139.12 / 柱 -43.65",
             "signal": "short",
             "note": "EMA12、EMA26、Signal9"
           },
           {
             "name": "ADX14",
-            "value": "32.5",
-            "signal": "short",
+            "value": "33.3",
+            "signal": "long",
             "note": "≥25 表示趋势较明确"
           }
         ],
         "momentum": [
           {
             "name": "ROC5",
-            "value": "-1.58%",
+            "value": "-1.45%",
             "signal": "short",
             "note": "5日价格动量"
           },
           {
             "name": "RSI14",
-            "value": "59.3",
+            "value": "61.0",
             "signal": "long",
             "note": "超买超卖与强弱区间"
           },
           {
             "name": "KDJ(9,3)",
-            "value": "K 15.2 / D 43.2",
+            "value": "K 24.5 / D 25.5",
             "signal": "short",
             "note": "随机指标交叉"
           },
           {
             "name": "CCI20",
-            "value": "-8.8",
+            "value": "0.6",
             "signal": "neutral",
             "note": "±100 为强弱参考阈值"
           }
@@ -584,15 +1240,15 @@
         "volatility": [
           {
             "name": "ATR14",
-            "value": "268.57 (1.12%)",
+            "value": "256.07 (1.06%)",
             "signal": "neutral",
             "note": "真实波幅，用于风险线"
           },
           {
             "name": "布林带20,2",
-            "value": "位置 48.3%",
+            "value": "位置 53.6%",
             "signal": "neutral",
-            "note": "上 24647.25 / 下 23462.75"
+            "note": "上 24653.29 / 下 23471.71"
           },
           {
             "name": "唐奇安20",
@@ -604,58 +1260,151 @@
         "volume_position": [
           {
             "name": "量比20",
-            "value": "0.95×",
+            "value": "0.53×",
             "signal": "neutral",
             "note": "当日量 / 前20日均量"
           },
           {
             "name": "OBV20方向",
-            "value": "+401999",
+            "value": "+615600",
             "signal": "long",
             "note": "成交量累积方向，不代表资金流"
           }
         ]
       },
       "risk_levels": {
-        "entry_reference": 24035.0,
-        "long_atr_stop": 23497.85714285714,
-        "short_atr_stop": 24572.14285714286,
-        "long_break_even_trigger": 24083.07,
-        "short_break_even_trigger": 23986.93,
-        "long_fib_trail": 24430.52,
-        "short_fib_trail": 23682.74
+        "entry_reference": 24105.0,
+        "long_atr_stop": 23592.85714285714,
+        "short_atr_stop": 24617.14285714286,
+        "long_break_even_trigger": 24153.21,
+        "short_break_even_trigger": 24056.79,
+        "long_fib_trail": 24457.26,
+        "short_fib_trail": 23709.48
       },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 37,
+          "win_rate_pct": 40.54054054054054,
+          "net_return_pct": -6.975661212641848,
+          "annual_return_pct": -3.3302496819293537,
+          "max_drawdown_pct": -12.277848487730392,
+          "sharpe": -0.5267865511580233,
+          "profit_factor": 0.6236145615478047,
+          "avg_trade_pct": -0.18534437219533653,
+          "positive_trades": 15,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 13,
+          "win_rate_pct": 61.53846153846154,
+          "net_return_pct": 13.747760481020709,
+          "annual_return_pct": 6.219368813095061,
+          "max_drawdown_pct": -14.358600187917824,
+          "sharpe": 0.5155864516619332,
+          "profit_factor": 2.2325369810089155,
+          "avg_trade_pct": 1.1329374795765357,
+          "positive_trades": 8,
+          "latest_target": 1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 39,
+          "win_rate_pct": 28.205128205128204,
+          "net_return_pct": -10.544589541923798,
+          "annual_return_pct": -5.08552159202983,
+          "max_drawdown_pct": -24.280539332236508,
+          "sharpe": -0.3498966266498155,
+          "profit_factor": 0.7158158995175641,
+          "avg_trade_pct": -0.24966167533925152,
+          "positive_trades": 11,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 39,
+          "win_rate_pct": 28.205128205128204,
+          "net_return_pct": -11.221430211780426,
+          "annual_return_pct": -5.422581020515727,
+          "max_drawdown_pct": -14.722594899750007,
+          "sharpe": -0.8021189420508319,
+          "profit_factor": 0.5559043932018611,
+          "avg_trade_pct": -0.29406871935188184,
+          "positive_trades": 11,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 65,
+          "win_rate_pct": 6.153846153846154,
+          "net_return_pct": -6.571124359094194,
+          "annual_return_pct": -81.6992604403176,
+          "max_drawdown_pct": -6.571124359094194,
+          "sharpe": -37.88009408486514,
+          "profit_factor": 0.03608985984227693,
+          "avg_trade_pct": -0.10449683177380892,
+          "positive_trades": 4,
+          "latest_target": 0,
+          "sample_start": "2026-09-01 21:55:00",
+          "sample_end": "2026-09-15 22:35:00",
+          "observations": 938
+        }
+      ],
       "timeframes": {
         "week": {
           "signal": "strong_long",
           "vote": 2,
-          "momentum_pct": 0.6280092108017499,
-          "ema8": 23960.6474745724,
-          "ema21": 23849.044220293395,
-          "rsi": 48.23848238482385
+          "momentum_pct": 0.9210801758425813,
+          "ema8": 23976.20303012796,
+          "ema21": 23855.40785665703,
+          "rsi": 49.171270718232044
         },
         "day": {
-          "signal": "neutral",
-          "vote": 0
+          "signal": "watch_long",
+          "vote": 2
         },
         "hour": {
           "signal": "strong_long",
           "vote": 2,
-          "momentum_pct": 0.41657987919183626,
-          "ema8": 24060.601341380338,
-          "ema21": 24100.06035023238,
-          "rsi": 63.291139240506325
+          "momentum_pct": 0.49989585503020795,
+          "ema8": 24074.912154406928,
+          "ema21": 24102.327591120345,
+          "rsi": 65.06024096385542
         },
         "five": {
-          "signal": "neutral",
-          "score": 23
+          "signal": "watch_short",
+          "score": -45
         }
       },
       "sparkline": [
-        {
-          "time": "2026-06-23",
-          "value": 23520.0
-        },
         {
           "time": "2026-06-24",
           "value": 23455.0
@@ -891,6 +1640,10 @@
         {
           "time": "2026-09-14",
           "value": 24035.0
+        },
+        {
+          "time": "2026-09-15",
+          "value": 24105.0
         }
       ],
       "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
@@ -902,23 +1655,23 @@
         },
         "hourly": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 0
+          "incomplete_bars_excluded": 1
         },
         "five": {
           "duplicate_bars_removed": 0,
           "incomplete_bars_excluded": 0
         },
-        "last_actual_observation": "2026-09-15 15:00:00",
-        "last_daily_close": "2026-09-14",
+        "last_actual_observation": "2026-09-15 22:35:00",
+        "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
       "backtest": {
         "trades": 27,
         "win_rate_pct": 44.44444444444444,
-        "net_return_pct": -8.063787896502228,
-        "max_drawdown_pct": -15.122503312256208,
-        "avg_trade_pct": -0.27008677017195165,
-        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+        "net_return_pct": -7.664385118498441,
+        "max_drawdown_pct": -14.83449643271616,
+        "avg_trade_pct": -0.2540867701719516,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
       }
     },
     {
@@ -931,14 +1684,14 @@
       "decimals": 0,
       "unit": "元/吨",
       "bar_timezone": "Asia/Shanghai",
-      "score": -63,
-      "signal": "watch_short",
-      "momentum_pct": -2.3750771128932757,
+      "score": -78,
+      "signal": "short",
+      "momentum_pct": -2.2311744654477828,
       "threshold_pct": 3.0,
-      "ma20": 16113.25,
-      "rsi": 36.199095022624434,
+      "ma20": 16106.75,
+      "rsi": 34.93449781659389,
       "prior_high": 16380.0,
-      "prior_low": 15750.0,
+      "prior_low": 15810.0,
       "long_factors": {
         "momentum": false,
         "breakout": false,
@@ -947,55 +1700,55 @@
       },
       "short_factors": {
         "momentum": false,
-        "breakout": false,
+        "breakout": true,
         "trend": true,
         "rsi": true
       },
       "long_count": 0,
-      "short_count": 2,
-      "daily_score": -50,
-      "daily_signal": "watch_short",
-      "status": "closed",
-      "status_text": "休市快照",
-      "price": 15775.0,
-      "bar_time": "2026-09-15 15:00:00",
-      "daily_date": "2026-09-14",
-      "age_minutes": 98.3,
+      "short_count": 3,
+      "daily_score": -75,
+      "daily_signal": "short",
+      "status": "ok",
+      "status_text": "实时",
+      "price": 15790.0,
+      "bar_time": "2026-09-15 22:35:00",
+      "daily_date": "2026-09-15",
+      "age_minutes": 0.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": -0.3159557661927326,
+      "change_pct": 0.09508716323296529,
       "returns": {
-        "day": -1.9212891230244833,
-        "week": -2.3750771128932757,
-        "month": -0.7836990595611271
+        "day": -0.3159557661927326,
+        "week": -2.2311744654477828,
+        "month": -0.8173530336372248
       },
       "position_changes": {
-        "day": 1.655413456191912,
-        "week": -0.9994894249067854,
-        "month": -15.181601272534461
+        "day": 1.8847578414365351,
+        "week": 2.930356663561584,
+        "month": -18.689665494275243
       },
-      "capital_bucket": "weak",
+      "capital_bucket": "accumulate",
       "technical_methods": {
         "trend": [
           {
             "name": "均线系统",
-            "value": "MA20 16113.25 / MA60 15950.33",
+            "value": "MA20 16106.75 / MA60 15940.75",
             "signal": "neutral",
             "note": "收盘与中长期均线排列"
           },
           {
             "name": "MACD",
-            "value": "DIF 37.94 / 柱 -60.90",
+            "value": "DIF 9.63 / 柱 -94.01",
             "signal": "short",
             "note": "EMA12、EMA26、Signal9"
           },
           {
             "name": "ADX14",
-            "value": "29.9",
+            "value": "28.2",
             "signal": "short",
             "note": "≥25 表示趋势较明确"
           }
@@ -1003,25 +1756,25 @@
         "momentum": [
           {
             "name": "ROC5",
-            "value": "-2.38%",
+            "value": "-2.23%",
             "signal": "short",
             "note": "5日价格动量"
           },
           {
             "name": "RSI14",
-            "value": "36.2",
+            "value": "34.9",
             "signal": "short",
             "note": "超买超卖与强弱区间"
           },
           {
             "name": "KDJ(9,3)",
-            "value": "K 3.3 / D 31.0",
+            "value": "K 2.0 / D 16.1",
             "signal": "short",
             "note": "随机指标交叉"
           },
           {
             "name": "CCI20",
-            "value": "-155.7",
+            "value": "-237.2",
             "signal": "short",
             "note": "±100 为强弱参考阈值"
           }
@@ -1029,78 +1782,171 @@
         "volatility": [
           {
             "name": "ATR14",
-            "value": "171.79 (1.09%)",
+            "value": "172.14 (1.09%)",
             "signal": "neutral",
             "note": "真实波幅，用于风险线"
           },
           {
             "name": "布林带20,2",
-            "value": "位置 -8.7%",
+            "value": "位置 -10.9%",
             "signal": "short",
-            "note": "上 16358.73 / 下 15867.77"
+            "note": "上 16379.34 / 下 15834.16"
           },
           {
             "name": "唐奇安20",
-            "value": "高 16380.00 / 低 15750.00",
-            "signal": "neutral",
+            "value": "高 16380.00 / 低 15810.00",
+            "signal": "short",
             "note": "20日区间突破"
           }
         ],
         "volume_position": [
           {
             "name": "量比20",
-            "value": "1.34×",
-            "signal": "short",
+            "value": "0.74×",
+            "signal": "neutral",
             "note": "当日量 / 前20日均量"
           },
           {
             "name": "OBV20方向",
-            "value": "-121881",
+            "value": "-119869",
             "signal": "short",
             "note": "成交量累积方向，不代表资金流"
           }
         ]
       },
       "risk_levels": {
-        "entry_reference": 15825.0,
-        "long_atr_stop": 15481.42857142857,
-        "short_atr_stop": 16168.57142857143,
-        "long_break_even_trigger": 15856.65,
-        "short_break_even_trigger": 15793.35,
-        "long_fib_trail": 16167.99,
-        "short_fib_trail": 15778.65
+        "entry_reference": 15775.0,
+        "long_atr_stop": 15430.714285714286,
+        "short_atr_stop": 16119.285714285714,
+        "long_break_even_trigger": 15806.55,
+        "short_break_even_trigger": 15743.45,
+        "long_fib_trail": 16148.89,
+        "short_fib_trail": 15775.0
       },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 32,
+          "win_rate_pct": 40.625,
+          "net_return_pct": -8.914463750512835,
+          "annual_return_pct": -4.279259914462097,
+          "max_drawdown_pct": -10.725961036649478,
+          "sharpe": -1.03054671092932,
+          "profit_factor": 0.4416095215970808,
+          "avg_trade_pct": -0.2860984903806585,
+          "positive_trades": 13,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 16,
+          "win_rate_pct": 25.0,
+          "net_return_pct": -19.35223078433228,
+          "annual_return_pct": -9.583493662594355,
+          "max_drawdown_pct": -23.398092861952847,
+          "sharpe": -0.9423359749551468,
+          "profit_factor": 0.2432982313607249,
+          "avg_trade_pct": -1.286611552077563,
+          "positive_trades": 4,
+          "latest_target": 1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 45,
+          "win_rate_pct": 22.22222222222222,
+          "net_return_pct": -20.140571606723956,
+          "annual_return_pct": -9.998562591025628,
+          "max_drawdown_pct": -26.124831148614557,
+          "sharpe": -0.9405398562771874,
+          "profit_factor": 0.39538400954794267,
+          "avg_trade_pct": -0.4692725319231261,
+          "positive_trades": 10,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 37,
+          "win_rate_pct": 37.83783783783784,
+          "net_return_pct": -10.265485577788414,
+          "annual_return_pct": -4.946925691509463,
+          "max_drawdown_pct": -14.825295606645705,
+          "sharpe": -0.8527998576665906,
+          "profit_factor": 0.5305529160631313,
+          "avg_trade_pct": -0.27592633910045905,
+          "positive_trades": 14,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 63,
+          "win_rate_pct": 15.873015873015872,
+          "net_return_pct": -4.821154855333876,
+          "annual_return_pct": -70.90414884651433,
+          "max_drawdown_pct": -4.918116278874274,
+          "sharpe": -23.350217212158224,
+          "profit_factor": 0.19742590139214106,
+          "avg_trade_pct": -0.07903093911152259,
+          "positive_trades": 10,
+          "latest_target": 0,
+          "sample_start": "2026-09-01 22:00:00",
+          "sample_end": "2026-09-15 22:35:00",
+          "observations": 938
+        }
+      ],
       "timeframes": {
         "week": {
           "signal": "strong_short",
-          "vote": -2,
-          "momentum_pct": -0.031585596967786955,
-          "ema8": 16005.313390321846,
-          "ema21": 16161.177139336876,
-          "rsi": 45.7089552238806
+          "vote": -3,
+          "momentum_pct": -0.3474415666456121,
+          "ema8": 15994.202279210735,
+          "ema21": 16156.631684791422,
+          "rsi": 44.871794871794876
         },
         "day": {
-          "signal": "watch_short",
-          "vote": -2
+          "signal": "short",
+          "vote": -3
         },
         "hour": {
           "signal": "strong_short",
-          "vote": -3,
-          "momentum_pct": -0.4731861198738141,
-          "ema8": 15824.232683887089,
-          "ema21": 15914.926914105501,
-          "rsi": 16.04938271604938
+          "vote": -2,
+          "momentum_pct": -0.06313131313131493,
+          "ema8": 15825.514309689957,
+          "ema21": 15907.206285550456,
+          "rsi": 26.08695652173914
         },
         "five": {
           "signal": "watch_short",
-          "score": -60
+          "score": -59
         }
       },
       "sparkline": [
-        {
-          "time": "2026-06-23",
-          "value": 16350.0
-        },
         {
           "time": "2026-06-24",
           "value": 16330.0
@@ -1336,6 +2182,10 @@
         {
           "time": "2026-09-14",
           "value": 15825.0
+        },
+        {
+          "time": "2026-09-15",
+          "value": 15775.0
         }
       ],
       "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
@@ -1347,23 +2197,23 @@
         },
         "hourly": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 0
+          "incomplete_bars_excluded": 1
         },
         "five": {
           "duplicate_bars_removed": 0,
           "incomplete_bars_excluded": 0
         },
-        "last_actual_observation": "2026-09-15 15:00:00",
-        "last_daily_close": "2026-09-14",
+        "last_actual_observation": "2026-09-15 22:35:00",
+        "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
       "backtest": {
         "trades": 25,
         "win_rate_pct": 36.0,
-        "net_return_pct": -4.903151150574181,
-        "max_drawdown_pct": -14.862261038783364,
-        "avg_trade_pct": -0.14736153491024667,
-        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+        "net_return_pct": -4.5210649147077175,
+        "max_drawdown_pct": -14.614488138230675,
+        "avg_trade_pct": -0.13136153491024674,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
       }
     },
     {
@@ -1400,19 +2250,19 @@
       "short_count": 3,
       "daily_score": -75,
       "daily_signal": "short",
-      "status": "closed",
-      "status_text": "休市快照",
-      "price": 26145.0,
-      "bar_time": "2026-09-15 15:00:00",
+      "status": "ok",
+      "status_text": "实时",
+      "price": 26065.0,
+      "bar_time": "2026-09-15 22:35:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 98.3,
+      "age_minutes": 0.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.0,
+      "change_pct": -0.3059858481545219,
       "returns": {
         "day": -0.721473324473132,
         "week": -4.944555535357209,
@@ -1515,6 +2365,103 @@
         "long_fib_trail": 27226.5,
         "short_fib_trail": 25598.07
       },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 42,
+          "win_rate_pct": 33.33333333333333,
+          "net_return_pct": -11.295074469760792,
+          "annual_return_pct": -5.459337360170169,
+          "max_drawdown_pct": -13.936681705234754,
+          "sharpe": -0.6570354523236834,
+          "profit_factor": 0.6148770236154238,
+          "avg_trade_pct": -0.26555852133705304,
+          "positive_trades": 14,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 17,
+          "win_rate_pct": 35.294117647058826,
+          "net_return_pct": -10.131508476774965,
+          "annual_return_pct": -4.880477488567059,
+          "max_drawdown_pct": -13.503634001440979,
+          "sharpe": -0.28117936638979096,
+          "profit_factor": 0.680525592442146,
+          "avg_trade_pct": -0.4554523741599299,
+          "positive_trades": 6,
+          "latest_target": 1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 50,
+          "win_rate_pct": 30.0,
+          "net_return_pct": -16.578267519364687,
+          "annual_return_pct": -8.13986855480736,
+          "max_drawdown_pct": -25.70694849639217,
+          "sharpe": -0.5009558178866499,
+          "profit_factor": 0.6700173488926497,
+          "avg_trade_pct": -0.3090621398390603,
+          "positive_trades": 15,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 38,
+          "win_rate_pct": 31.57894736842105,
+          "net_return_pct": -20.728217584996255,
+          "annual_return_pct": -10.309382681056567,
+          "max_drawdown_pct": -22.787996459489037,
+          "sharpe": -1.2223798861767319,
+          "profit_factor": 0.3015246921851784,
+          "avg_trade_pct": -0.5923764378043155,
+          "positive_trades": 12,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 63,
+          "win_rate_pct": 26.984126984126984,
+          "net_return_pct": -3.72296370820705,
+          "annual_return_pct": -61.24624839209981,
+          "max_drawdown_pct": -3.72296370820705,
+          "sharpe": -14.899446816262227,
+          "profit_factor": 0.30813721625137797,
+          "avg_trade_pct": -0.061395806364840336,
+          "positive_trades": 17,
+          "latest_target": -1,
+          "sample_start": "2026-09-01 21:50:00",
+          "sample_end": "2026-09-15 22:35:00",
+          "observations": 938
+        }
+      ],
       "timeframes": {
         "week": {
           "signal": "strong_long",
@@ -1531,14 +2478,14 @@
         "hour": {
           "signal": "strong_short",
           "vote": -3,
-          "momentum_pct": -0.22896393817973815,
-          "ema8": 26188.548136542282,
-          "ema21": 26445.792647386676,
-          "rsi": 23.33333333333333
+          "momentum_pct": -0.28615032430370224,
+          "ema8": 26176.648550643997,
+          "ema21": 26417.538770351523,
+          "rsi": 23.728813559322035
         },
         "five": {
-          "signal": "neutral",
-          "score": 34
+          "signal": "watch_short",
+          "score": -52
         }
       },
       "sparkline": [
@@ -1792,23 +2739,23 @@
         },
         "hourly": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 0
+          "incomplete_bars_excluded": 1
         },
         "five": {
           "duplicate_bars_removed": 0,
           "incomplete_bars_excluded": 0
         },
-        "last_actual_observation": "2026-09-15 15:00:00",
+        "last_actual_observation": "2026-09-15 22:35:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
       "backtest": {
         "trades": 29,
         "win_rate_pct": 44.827586206896555,
-        "net_return_pct": -12.952679282002421,
-        "max_drawdown_pct": -21.047818797872797,
-        "avg_trade_pct": -0.4177509845603538,
-        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+        "net_return_pct": -12.545684960098857,
+        "max_drawdown_pct": -20.715520012781518,
+        "avg_trade_pct": -0.40175098456035385,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
       }
     },
     {
@@ -1845,19 +2792,19 @@
       "short_count": 2,
       "daily_score": -50,
       "daily_signal": "watch_short",
-      "status": "closed",
-      "status_text": "休市快照",
-      "price": 123950.0,
-      "bar_time": "2026-09-15 15:00:00",
+      "status": "ok",
+      "status_text": "实时",
+      "price": 122220.0,
+      "bar_time": "2026-09-15 22:35:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 98.3,
+      "age_minutes": 0.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.0,
+      "change_pct": -1.3957240822912498,
       "returns": {
         "day": -0.3777527728661023,
         "week": -2.708006279434849,
@@ -1960,6 +2907,103 @@
         "long_fib_trail": 128603.54,
         "short_fib_trail": 123950.0
       },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 51,
+          "win_rate_pct": 35.294117647058826,
+          "net_return_pct": -20.62304900605453,
+          "annual_return_pct": -10.253666724464416,
+          "max_drawdown_pct": -24.108201584738566,
+          "sharpe": -0.7921109569156838,
+          "profit_factor": 0.6189768590577029,
+          "avg_trade_pct": -0.41213739601486776,
+          "positive_trades": 18,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 20,
+          "win_rate_pct": 30.0,
+          "net_return_pct": -31.23665673383681,
+          "annual_return_pct": -16.089217822919867,
+          "max_drawdown_pct": -41.292637942901656,
+          "sharpe": -0.8169301237354822,
+          "profit_factor": 0.27507535496829383,
+          "avg_trade_pct": -1.7097500542942328,
+          "positive_trades": 6,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 62,
+          "win_rate_pct": 25.806451612903224,
+          "net_return_pct": -44.16242057614267,
+          "annual_return_pct": -23.88679052691478,
+          "max_drawdown_pct": -47.84643478887762,
+          "sharpe": -1.3611146896682964,
+          "profit_factor": 0.3513420611961744,
+          "avg_trade_pct": -0.875611166335368,
+          "positive_trades": 16,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 35,
+          "win_rate_pct": 57.14285714285714,
+          "net_return_pct": -4.262542034113181,
+          "annual_return_pct": -2.0197078624193288,
+          "max_drawdown_pct": -13.87080534440922,
+          "sharpe": -0.14206860016619113,
+          "profit_factor": 0.857282647866177,
+          "avg_trade_pct": -0.10450967261062119,
+          "positive_trades": 20,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 72,
+          "win_rate_pct": 23.61111111111111,
+          "net_return_pct": -4.8454165631427015,
+          "annual_return_pct": -71.08889082501064,
+          "max_drawdown_pct": -4.9695046236137514,
+          "sharpe": -21.26660495626751,
+          "profit_factor": 0.24140296421001142,
+          "avg_trade_pct": -0.0692256834369903,
+          "positive_trades": 17,
+          "latest_target": -1,
+          "sample_start": "2026-09-01 21:50:00",
+          "sample_end": "2026-09-15 22:35:00",
+          "observations": 938
+        }
+      ],
       "timeframes": {
         "week": {
           "signal": "strong_short",
@@ -1976,14 +3020,14 @@
         "hour": {
           "signal": "strong_short",
           "vote": -3,
-          "momentum_pct": -0.33770201817158174,
-          "ema8": 124230.85947690015,
-          "ema21": 125019.06752599789,
-          "rsi": 32.35955056179776
+          "momentum_pct": -1.20346598202824,
+          "ema8": 123988.44625981123,
+          "ema21": 124848.24320545263,
+          "rsi": 28.80000000000001
         },
         "five": {
-          "signal": "neutral",
-          "score": -22
+          "signal": "watch_short",
+          "score": -89
         }
       },
       "sparkline": [
@@ -2237,23 +3281,23 @@
         },
         "hourly": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 0
+          "incomplete_bars_excluded": 1
         },
         "five": {
           "duplicate_bars_removed": 0,
           "incomplete_bars_excluded": 0
         },
-        "last_actual_observation": "2026-09-15 15:00:00",
+        "last_actual_observation": "2026-09-15 22:35:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
       "backtest": {
         "trades": 33,
         "win_rate_pct": 36.36363636363637,
-        "net_return_pct": -27.380189791802888,
-        "max_drawdown_pct": -40.5558317992913,
-        "avg_trade_pct": -0.8693594931738028,
-        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+        "net_return_pct": -26.99165020202201,
+        "max_drawdown_pct": -40.32194470259951,
+        "avg_trade_pct": -0.8533594931738029,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
       }
     },
     {
@@ -2287,10 +3331,10 @@
       "bar_timezone": "Asia/Shanghai",
       "score": -70,
       "signal": "watch_short",
-      "momentum_pct": -6.933895921237698,
+      "momentum_pct": -10.008363534987453,
       "threshold_pct": 3.0,
-      "ma20": 149571.0,
-      "rsi": 29.01263453439401,
+      "ma20": 148257.0,
+      "rsi": 23.865698729582576,
       "prior_high": 162860.0,
       "prior_low": 128080.0,
       "long_factors": {
@@ -2309,47 +3353,47 @@
       "short_count": 2,
       "daily_score": -50,
       "daily_signal": "watch_short",
-      "status": "closed",
-      "status_text": "休市快照",
+      "status": "stale",
+      "status_text": "行情陈旧",
       "price": 129120.0,
       "bar_time": "2026-09-15 15:00:00",
-      "daily_date": "2026-09-14",
-      "age_minutes": 98.3,
+      "daily_date": "2026-09-15",
+      "age_minutes": 455.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": -2.433126794619922,
+      "change_pct": 0.0,
       "returns": {
-        "day": -1.8394896899569746,
-        "week": -6.933895921237698,
-        "month": -13.785016286644947
+        "day": -2.433126794619922,
+        "week": -10.008363534987453,
+        "month": -16.911196911196914
       },
       "position_changes": {
-        "day": 0.9776933796541654,
-        "week": 4.197764027990147,
-        "month": 35.97849860247524
+        "day": 1.730660362459524,
+        "week": 5.048974348681301,
+        "month": 34.51690215959546
       },
       "capital_bucket": "accumulate",
       "technical_methods": {
         "trend": [
           {
             "name": "均线系统",
-            "value": "MA20 149571.00 / MA60 150263.33",
+            "value": "MA20 148257.00 / MA60 149795.00",
             "signal": "short",
             "note": "收盘与中长期均线排列"
           },
           {
             "name": "MACD",
-            "value": "DIF -3676.76 / 柱 -4520.21",
+            "value": "DIF -4543.95 / 柱 -5003.67",
             "signal": "short",
             "note": "EMA12、EMA26、Signal9"
           },
           {
             "name": "ADX14",
-            "value": "31.8",
+            "value": "33.7",
             "signal": "short",
             "note": "≥25 表示趋势较明确"
           }
@@ -2357,25 +3401,25 @@
         "momentum": [
           {
             "name": "ROC5",
-            "value": "-6.93%",
+            "value": "-10.01%",
             "signal": "short",
             "note": "5日价格动量"
           },
           {
             "name": "RSI14",
-            "value": "29.0",
+            "value": "23.9",
             "signal": "short",
             "note": "超买超卖与强弱区间"
           },
           {
             "name": "KDJ(9,3)",
-            "value": "K 14.2 / D 13.7",
-            "signal": "long",
+            "value": "K 6.5 / D 13.4",
+            "signal": "short",
             "note": "随机指标交叉"
           },
           {
             "name": "CCI20",
-            "value": "-164.8",
+            "value": "-162.3",
             "signal": "short",
             "note": "±100 为强弱参考阈值"
           }
@@ -2383,15 +3427,15 @@
         "volatility": [
           {
             "name": "ATR14",
-            "value": "5945.71 (4.49%)",
+            "value": "5878.57 (4.55%)",
             "signal": "neutral",
             "note": "真实波幅，用于风险线"
           },
           {
             "name": "布林带20,2",
-            "value": "位置 -2.6%",
+            "value": "位置 -2.0%",
             "signal": "short",
-            "note": "上 165950.02 / 下 133191.98"
+            "note": "上 166647.73 / 下 129866.27"
           },
           {
             "name": "唐奇安20",
@@ -2403,35 +3447,132 @@
         "volume_position": [
           {
             "name": "量比20",
-            "value": "0.62×",
+            "value": "0.96×",
             "signal": "neutral",
             "note": "当日量 / 前20日均量"
           },
           {
             "name": "OBV20方向",
-            "value": "-633750",
+            "value": "-986796",
             "signal": "short",
             "note": "成交量累积方向，不代表资金流"
           }
         ]
       },
       "risk_levels": {
-        "entry_reference": 132340.0,
-        "long_atr_stop": 120448.57142857143,
-        "short_atr_stop": 144231.42857142858,
-        "long_break_even_trigger": 132604.68,
-        "short_break_even_trigger": 132075.32,
-        "long_fib_trail": 151201.36,
-        "short_fib_trail": 129707.32
+        "entry_reference": 129120.0,
+        "long_atr_stop": 117362.85714285714,
+        "short_atr_stop": 140877.14285714287,
+        "long_break_even_trigger": 129378.24,
+        "short_break_even_trigger": 128861.76,
+        "long_fib_trail": 149971.32,
+        "short_fib_trail": 128477.28
       },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 68,
+          "win_rate_pct": 45.588235294117645,
+          "net_return_pct": -23.142070537465585,
+          "annual_return_pct": -11.599156705998837,
+          "max_drawdown_pct": -41.260459036793186,
+          "sharpe": -0.17531385815091693,
+          "profit_factor": 0.9092533827953474,
+          "avg_trade_pct": -0.16825733881355606,
+          "positive_trades": 31,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 13,
+          "win_rate_pct": 61.53846153846154,
+          "net_return_pct": 86.08956741368404,
+          "annual_return_pct": 33.763676913114395,
+          "max_drawdown_pct": -39.32811205964432,
+          "sharpe": 0.8848427835630325,
+          "profit_factor": 3.6890551426155542,
+          "avg_trade_pct": 6.28959662872004,
+          "positive_trades": 8,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 38,
+          "win_rate_pct": 28.947368421052634,
+          "net_return_pct": 101.35981281078541,
+          "annual_return_pct": 38.797393647457845,
+          "max_drawdown_pct": -37.056180118232994,
+          "sharpe": 0.975802104631731,
+          "profit_factor": 2.3746254454459255,
+          "avg_trade_pct": 2.353737028129933,
+          "positive_trades": 11,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 49,
+          "win_rate_pct": 40.816326530612244,
+          "net_return_pct": -39.02738192106051,
+          "annual_return_pct": -20.68472375638524,
+          "max_drawdown_pct": -42.984386598013536,
+          "sharpe": -0.9017160120322012,
+          "profit_factor": 0.53161285201583,
+          "avg_trade_pct": -0.8662241832325772,
+          "positive_trades": 20,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 70,
+          "win_rate_pct": 31.428571428571427,
+          "net_return_pct": -2.283673795723107,
+          "annual_return_pct": -24.367735851526007,
+          "max_drawdown_pct": -5.125121436232427,
+          "sharpe": -1.4581938227210416,
+          "profit_factor": 0.8668402654487836,
+          "avg_trade_pct": -0.031088182223509814,
+          "positive_trades": 22,
+          "latest_target": 0,
+          "sample_start": "2026-08-18 09:30:00",
+          "sample_end": "2026-09-15 15:00:00",
+          "observations": 938
+        }
+      ],
       "timeframes": {
         "week": {
           "signal": "strong_short",
           "vote": -3,
-          "momentum_pct": -14.751352744138114,
-          "ema8": 144440.29111014982,
-          "ema21": 150858.60378624912,
-          "rsi": 32.64382676147382
+          "momentum_pct": -16.825560422571506,
+          "ema8": 143724.73555459428,
+          "ema21": 150565.87651352186,
+          "rsi": 31.81603402110568
         },
         "day": {
           "signal": "watch_short",
@@ -2451,10 +3592,6 @@
         }
       },
       "sparkline": [
-        {
-          "time": "2026-06-23",
-          "value": 157220.0
-        },
         {
           "time": "2026-06-24",
           "value": 162740.0
@@ -2690,6 +3827,10 @@
         {
           "time": "2026-09-14",
           "value": 132340.0
+        },
+        {
+          "time": "2026-09-15",
+          "value": 129120.0
         }
       ],
       "source": "新浪财经日线/60分钟/5分钟（AKShare同源接口）",
@@ -2708,16 +3849,16 @@
           "incomplete_bars_excluded": 0
         },
         "last_actual_observation": "2026-09-15 15:00:00",
-        "last_daily_close": "2026-09-14",
+        "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
       "backtest": {
         "trades": 45,
         "win_rate_pct": 51.11111111111111,
-        "net_return_pct": 6.142921614422736,
-        "max_drawdown_pct": -45.797247161341524,
-        "avg_trade_pct": 0.47498362475320655,
-        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+        "net_return_pct": 9.182573009562267,
+        "max_drawdown_pct": -45.75666653068182,
+        "avg_trade_pct": 0.5413748610599358,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
       }
     },
     {
@@ -2730,7 +3871,7 @@
       "decimals": 0,
       "unit": "元/吨",
       "bar_timezone": "Asia/Shanghai",
-      "score": -78,
+      "score": -58,
       "signal": "short",
       "momentum_pct": -6.220312686478103,
       "threshold_pct": 3.0,
@@ -2754,19 +3895,19 @@
       "short_count": 3,
       "daily_score": -75,
       "daily_signal": "short",
-      "status": "closed",
-      "status_text": "休市快照",
-      "price": 392890.0,
-      "bar_time": "2026-09-15 15:00:00",
+      "status": "ok",
+      "status_text": "实时",
+      "price": 393130.0,
+      "bar_time": "2026-09-15 22:35:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 98.3,
+      "age_minutes": 0.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.0,
+      "change_pct": 0.06108580009671627,
       "returns": {
         "day": -1.2963195578444942,
         "week": -6.220312686478103,
@@ -2869,6 +4010,103 @@
         "long_fib_trail": 416744.8,
         "short_fib_trail": 392890.0
       },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 49,
+          "win_rate_pct": 42.857142857142854,
+          "net_return_pct": -6.102817848738318,
+          "annual_return_pct": -2.9064415560098755,
+          "max_drawdown_pct": -23.748207413417312,
+          "sharpe": -0.003699493679221307,
+          "profit_factor": 1.040662734255029,
+          "avg_trade_pct": 0.05276166073711026,
+          "positive_trades": 21,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 14,
+          "win_rate_pct": 14.285714285714285,
+          "net_return_pct": -19.67283342766771,
+          "annual_return_pct": -9.752032623425999,
+          "max_drawdown_pct": -35.49088016791404,
+          "sharpe": -0.21878362018011796,
+          "profit_factor": 0.7572386691860906,
+          "avg_trade_pct": -0.9572651410421984,
+          "positive_trades": 2,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 49,
+          "win_rate_pct": 24.489795918367346,
+          "net_return_pct": -37.857922238288744,
+          "annual_return_pct": -19.975754621813614,
+          "max_drawdown_pct": -42.49908260815379,
+          "sharpe": -0.6195934974922374,
+          "profit_factor": 0.5214542442351257,
+          "avg_trade_pct": -0.821617289379661,
+          "positive_trades": 12,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 32,
+          "win_rate_pct": 28.125,
+          "net_return_pct": -26.704387720486157,
+          "annual_return_pct": -13.542569576896712,
+          "max_drawdown_pct": -28.631887636215335,
+          "sharpe": -0.8359899685572398,
+          "profit_factor": 0.39349397789975393,
+          "avg_trade_pct": -0.8907267572380979,
+          "positive_trades": 9,
+          "latest_target": -1,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 80,
+          "win_rate_pct": 21.25,
+          "net_return_pct": -4.801365443742645,
+          "annual_return_pct": -70.75262274799039,
+          "max_drawdown_pct": -5.011485699563112,
+          "sharpe": -18.819190744484352,
+          "profit_factor": 0.3210989860944562,
+          "avg_trade_pct": -0.061429655890712496,
+          "positive_trades": 17,
+          "latest_target": 0,
+          "sample_start": "2026-09-01 21:50:00",
+          "sample_end": "2026-09-15 22:35:00",
+          "observations": 938
+        }
+      ],
       "timeframes": {
         "week": {
           "signal": "strong_short",
@@ -2883,16 +4121,16 @@
           "vote": -3
         },
         "hour": {
-          "signal": "strong_short",
-          "vote": -3,
-          "momentum_pct": -0.5845141700404843,
-          "ema8": 395117.88765813253,
-          "ema21": 400967.7226275244,
-          "rsi": 15.5579399141631
+          "signal": "neutral",
+          "vote": 0,
+          "momentum_pct": 0.1063937582328478,
+          "ema8": 395131.6904007697,
+          "ema21": 400441.5660250222,
+          "rsi": 26.97505197505197
         },
         "five": {
           "signal": "watch_short",
-          "score": -51
+          "score": -62
         }
       },
       "sparkline": [
@@ -3146,23 +4384,23 @@
         },
         "hourly": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 0
+          "incomplete_bars_excluded": 1
         },
         "five": {
           "duplicate_bars_removed": 0,
           "incomplete_bars_excluded": 0
         },
-        "last_actual_observation": "2026-09-15 15:00:00",
+        "last_actual_observation": "2026-09-15 22:35:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
       "backtest": {
         "trades": 38,
         "win_rate_pct": 36.84210526315789,
-        "net_return_pct": -43.525157108749426,
-        "max_drawdown_pct": -49.058841871286276,
-        "avg_trade_pct": -1.2775708191393365,
-        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+        "net_return_pct": -43.174780025812545,
+        "max_drawdown_pct": -48.97138978188884,
+        "avg_trade_pct": -1.2615708191393362,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
       }
     },
     {
@@ -3199,19 +4437,19 @@
       "short_count": 1,
       "daily_score": -25,
       "daily_signal": "neutral",
-      "status": "closed",
-      "status_text": "休市快照",
-      "price": 932.3,
-      "bar_time": "2026-09-15 15:00:00",
+      "status": "ok",
+      "status_text": "实时",
+      "price": 930.36,
+      "bar_time": "2026-09-15 22:35:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 98.3,
+      "age_minutes": 0.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.0,
+      "change_pct": -0.20808752547463172,
       "returns": {
         "day": -0.5652730375426684,
         "week": -2.184404901796211,
@@ -3314,6 +4552,103 @@
         "long_fib_trail": 983.6434399999999,
         "short_fib_trail": 931.01456
       },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 48,
+          "win_rate_pct": 43.75,
+          "net_return_pct": 16.90354243811938,
+          "annual_return_pct": 7.589671665613351,
+          "max_drawdown_pct": -11.290317724866906,
+          "sharpe": 0.6371319111169033,
+          "profit_factor": 1.527665281836768,
+          "avg_trade_pct": 0.3521022437674196,
+          "positive_trades": 21,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 17,
+          "win_rate_pct": 35.294117647058826,
+          "net_return_pct": 67.27252638107193,
+          "annual_return_pct": 27.24842701283523,
+          "max_drawdown_pct": -14.248796147672548,
+          "sharpe": 1.3160390443749526,
+          "profit_factor": 4.483574077433723,
+          "avg_trade_pct": 3.2910438168553213,
+          "positive_trades": 6,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 43,
+          "win_rate_pct": 20.930232558139537,
+          "net_return_pct": 22.07941105659188,
+          "annual_return_pct": 9.795221938041632,
+          "max_drawdown_pct": -25.26428314883381,
+          "sharpe": 0.5718200518040886,
+          "profit_factor": 1.5605179960285018,
+          "avg_trade_pct": 0.5450674957292281,
+          "positive_trades": 9,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 32,
+          "win_rate_pct": 53.125,
+          "net_return_pct": 36.17274582828214,
+          "annual_return_pct": 15.560136625168886,
+          "max_drawdown_pct": -15.431669852528673,
+          "sharpe": 1.1540219866214123,
+          "profit_factor": 2.6542814308421225,
+          "avg_trade_pct": 1.0456088393475318,
+          "positive_trades": 17,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 71,
+          "win_rate_pct": 33.80281690140845,
+          "net_return_pct": -1.2781479142714103,
+          "annual_return_pct": -29.950234763117844,
+          "max_drawdown_pct": -2.63771197723901,
+          "sharpe": -3.4890190914698387,
+          "profit_factor": 0.7688483293107651,
+          "avg_trade_pct": -0.017845860323061367,
+          "positive_trades": 24,
+          "latest_target": 0,
+          "sample_start": "2026-09-03 10:10:00",
+          "sample_end": "2026-09-15 22:35:00",
+          "observations": 938
+        }
+      ],
       "timeframes": {
         "week": {
           "signal": "strong_short",
@@ -3330,14 +4665,14 @@
         "hour": {
           "signal": "strong_short",
           "vote": -3,
-          "momentum_pct": -0.42295943434516037,
-          "ema8": 933.8344396256443,
-          "ema21": 937.6775037174139,
-          "rsi": 37.64236902050101
+          "momentum_pct": -0.1370273626514762,
+          "ema8": 933.6134530421679,
+          "ema21": 937.2377306521944,
+          "rsi": 35.13033175355454
         },
         "five": {
-          "signal": "neutral",
-          "score": -20
+          "signal": "watch_short",
+          "score": -50
         }
       },
       "sparkline": [
@@ -3591,23 +4926,23 @@
         },
         "hourly": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 0
+          "incomplete_bars_excluded": 1
         },
         "five": {
           "duplicate_bars_removed": 0,
           "incomplete_bars_excluded": 0
         },
-        "last_actual_observation": "2026-09-15 15:00:00",
+        "last_actual_observation": "2026-09-15 22:35:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
       "backtest": {
         "trades": 30,
         "win_rate_pct": 46.666666666666664,
-        "net_return_pct": 9.848448102715523,
-        "max_drawdown_pct": -16.26294055842602,
-        "avg_trade_pct": 0.460636878197326,
-        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+        "net_return_pct": 10.37607301032355,
+        "max_drawdown_pct": -16.233569004725567,
+        "avg_trade_pct": 0.47663687819732603,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
       }
     },
     {
@@ -3620,7 +4955,7 @@
       "decimals": 0,
       "unit": "元/千克",
       "bar_timezone": "Asia/Shanghai",
-      "score": -78,
+      "score": -52,
       "signal": "short",
       "momentum_pct": -4.173643410852712,
       "threshold_pct": 3.0,
@@ -3644,19 +4979,19 @@
       "short_count": 3,
       "daily_score": -75,
       "daily_signal": "short",
-      "status": "closed",
-      "status_text": "休市快照",
-      "price": 15452.0,
-      "bar_time": "2026-09-15 15:00:00",
+      "status": "ok",
+      "status_text": "实时",
+      "price": 15506.0,
+      "bar_time": "2026-09-15 22:35:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 98.3,
+      "age_minutes": 0.0,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.0,
+      "change_pct": 0.34946932435930833,
       "returns": {
         "day": -0.489438433797007,
         "week": -4.173643410852712,
@@ -3759,6 +5094,103 @@
         "long_fib_trail": 16648.448,
         "short_fib_trail": 15370.424
       },
+      "strategy_comparison": [
+        {
+          "key": "daily_four_factor",
+          "name": "日线四因子",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 77,
+          "win_rate_pct": 45.45454545454545,
+          "net_return_pct": 38.79473770944817,
+          "annual_return_pct": 16.59709364993578,
+          "max_drawdown_pct": -32.013193709260555,
+          "sharpe": 0.6689058297101083,
+          "profit_factor": 1.4262682002672222,
+          "avg_trade_pct": 0.5587180116833997,
+          "positive_trades": 35,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "ma_trend",
+          "name": "移动均线10/30/60",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 15,
+          "win_rate_pct": 26.666666666666668,
+          "net_return_pct": 48.015500251424584,
+          "annual_return_pct": 20.163382387819475,
+          "max_drawdown_pct": -46.73229147082277,
+          "sharpe": 0.6651562821902709,
+          "profit_factor": 2.4060205386875384,
+          "avg_trade_pct": 5.779933484812254,
+          "positive_trades": 4,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fibonacci_0618",
+          "name": "斐波那契0.618通道",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 43,
+          "win_rate_pct": 27.906976744186046,
+          "net_return_pct": 55.99380938607445,
+          "annual_return_pct": 23.154922798004442,
+          "max_drawdown_pct": -41.481019256642895,
+          "sharpe": 0.7324179443471804,
+          "profit_factor": 2.041841117897263,
+          "avg_trade_pct": 1.858486096186473,
+          "positive_trades": 12,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "fdt_channel",
+          "name": "FDT启发通道共振",
+          "status": "ok",
+          "frequency": "daily",
+          "trades": 43,
+          "win_rate_pct": 34.883720930232556,
+          "net_return_pct": 20.65612171120732,
+          "annual_return_pct": 9.193765374175511,
+          "max_drawdown_pct": -22.61287428794534,
+          "sharpe": 0.5079325305658206,
+          "profit_factor": 1.4792059991392843,
+          "avg_trade_pct": 0.5491684658378937,
+          "positive_trades": 15,
+          "latest_target": 0,
+          "sample_start": "2024-06-28",
+          "sample_end": "2026-09-15",
+          "observations": 538
+        },
+        {
+          "key": "five_minute_momentum",
+          "name": "5分钟动量",
+          "status": "ok",
+          "frequency": "5m",
+          "trades": 67,
+          "win_rate_pct": 28.35820895522388,
+          "net_return_pct": -5.385385138433207,
+          "annual_return_pct": -78.38652300321176,
+          "max_drawdown_pct": -5.385385138433207,
+          "sharpe": -11.809397572882334,
+          "profit_factor": 0.4542043109674361,
+          "avg_trade_pct": -0.08218642168480272,
+          "positive_trades": 19,
+          "latest_target": 0,
+          "sample_start": "2026-09-03 10:05:00",
+          "sample_end": "2026-09-15 22:35:00",
+          "observations": 938
+        }
+      ],
       "timeframes": {
         "week": {
           "signal": "strong_short",
@@ -3773,16 +5205,16 @@
           "vote": -3
         },
         "hour": {
-          "signal": "strong_short",
-          "vote": -3,
-          "momentum_pct": -0.9233136701718436,
-          "ema8": 15500.832387092045,
-          "ema21": 15592.276138151314,
-          "rsi": 34.65045592705167
+          "signal": "long",
+          "vote": 1,
+          "momentum_pct": 0.6633178773827852,
+          "ema8": 15529.758523293813,
+          "ema21": 15595.796489228467,
+          "rsi": 47.75212636695018
         },
         "five": {
           "signal": "watch_short",
-          "score": -38
+          "score": -44
         }
       },
       "sparkline": [
@@ -4036,23 +5468,23 @@
         },
         "hourly": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 0
+          "incomplete_bars_excluded": 1
         },
         "five": {
           "duplicate_bars_removed": 0,
           "incomplete_bars_excluded": 0
         },
-        "last_actual_observation": "2026-09-15 15:00:00",
+        "last_actual_observation": "2026-09-15 22:35:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
       "backtest": {
         "trades": 45,
         "win_rate_pct": 46.666666666666664,
-        "net_return_pct": 2.2439188654391984,
-        "max_drawdown_pct": -52.371464050838554,
-        "avg_trade_pct": 0.6185021090830383,
-        "note": "滚动样本内快速检验，含双边费率和2跳滑点；不等同于独立样本回测。"
+        "net_return_pct": 2.9864743489391277,
+        "max_drawdown_pct": -52.303966468728326,
+        "avg_trade_pct": 0.6345021090830384,
+        "note": "滚动样本内快速检验，开平各收万1.2并各计1跳滑点；不等同于独立样本回测。"
       }
     }
   ],
@@ -4062,7 +5494,8 @@
     "decision": "日线四因子至少3项同向触发，再结合周线与小时线给出综合结论",
     "execution": "日线回测在下一交易日开盘入场，最长持有10个交易日；扫描每5分钟运行",
     "technical": "主流指标层覆盖均线、MACD、ADX、ROC、RSI、KDJ、CCI、ATR、布林带、唐奇安、量比与OBV，仅作交叉验证",
-    "risk": "研究参考线采用2×ATR初始止损、0.618动态跟踪与±0.2%保本触发；不自动下单"
+    "risk": "研究参考线采用2×ATR初始止损、0.618动态跟踪与±0.2%保本触发；不自动下单",
+    "cost": "所有策略对比统一按开仓万1.2、平仓万1.2，并在每一侧额外计1跳滑点"
   },
   "warnings": [
     "主连换月可能产生跳空，生产使用前应接入后复权连续合约或固定主力合约。",

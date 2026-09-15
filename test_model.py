@@ -11,6 +11,8 @@ from momentum_monitor import (
     rolling_rsi,
     technical_snapshot,
 )
+from market_universe import UNIVERSE
+from research_backtest import compare_strategies, run_strategy
 
 
 def make_bars(direction: int) -> list[dict]:
@@ -67,4 +69,11 @@ if __name__ == "__main__":
     levels = research_risk_levels(100, 110, 90, 2)
     assert levels["long_atr_stop"] == 96 and levels["short_atr_stop"] == 104
     assert levels["long_break_even_trigger"] == 100.2
-    print("signal, technical toolkit, capital quadrant and risk checks OK")
+    comparison = compare_strategies(make_bars(1), make_bars(1), {"tick": 0.1}, config)
+    assert len(comparison) == 5
+    assert {row["frequency"] for row in comparison} == {"daily", "5m"}
+    friction_test = run_strategy(make_bars(1), lambda bars, index: 1, 0.1, "daily", 0.00012, 1, 60)
+    assert friction_test["trades"] == 1 and friction_test["net_return_pct"] is not None
+    assert {row[2] for row in UNIVERSE} >= {"SHFE", "SHFE/INE", "DCE", "CZCE", "GFEX", "CFFEX"}
+    assert {row[3] for row in UNIVERSE} >= {"precious", "nonferrous", "ferrous", "energy", "agriculture", "new_energy", "financial"}
+    print("signal, strategy comparison, market universe and risk checks OK")
