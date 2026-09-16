@@ -67,9 +67,9 @@ if __name__ == "__main__":
     assert set(technical["groups"]) == {"trend", "momentum", "volatility", "volume_position"}
     assert sum(len(group) for group in technical["groups"].values()) == 12
     assert capital_bucket(3.0, 2.0) == "trend_long"
-    assert capital_bucket(3.0, -2.0) == "avoid"
-    assert capital_bucket(-3.0, 2.0) == "accumulate"
-    assert capital_bucket(-3.0, -2.0) == "weak"
+    assert capital_bucket(3.0, -2.0) == "warn_long"
+    assert capital_bucket(-3.0, 2.0) == "trend_short"
+    assert capital_bucket(-3.0, -2.0) == "warn_short"
     levels = research_risk_levels(100, 110, 90, 2)
     assert levels["long_atr_stop"] == 96 and levels["short_atr_stop"] == 104
     assert levels["long_break_even_trigger"] == 100.2

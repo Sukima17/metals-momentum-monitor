@@ -77,29 +77,11 @@ def fetch_market_breadth(generated_at: datetime) -> dict[str, Any]:
             "breadth_ratio": breadth_ratio, "strength_score": strength_score,
             "members": member_rows,
         }
-    ranked_sectors = sorted(
-        ({"category": key, **value} for key, value in categories.items() if value["valid"]),
-        key=lambda item: item["strength_score"], reverse=True,
-    )
-    for index, sector in enumerate(ranked_sectors):
-        sector["allocation"] = "relative_long" if index < 2 else "relative_short" if index >= len(ranked_sectors) - 2 else "neutral"
-        sector["rank"] = index + 1
-    sector_allocation = {
-        "as_of": generated_at.isoformat(timespec="seconds"),
-        "stance": "market_neutral_relative_value",
-        "long": [sector for sector in ranked_sectors if sector["allocation"] == "relative_long"],
-        "short": [sector for sector in ranked_sectors if sector["allocation"] == "relative_short"],
-        "neutral": [sector for sector in ranked_sectors if sector["allocation"] == "neutral"],
-        "spread_score": ranked_sectors[0]["strength_score"] - ranked_sectors[-1]["strength_score"] if len(ranked_sectors) > 1 else 0,
-        "method": "板块内每个主力连续等权：强弱分=60×涨跌家数差/有效品种数+20×板块平均涨跌幅；做多前2、做空后2，其余中性，并展开全部品种贡献",
-        "note": "这是当日截面相对强弱配置，不代表七板块均已完成日线策略回测；金融板块同时含股指与国债，使用前应复核内部方向。",
-    }
     return {
         "generated_at": generated_at.isoformat(timespec="seconds"), "source": "新浪财经国内期货实时行情（主力连续，每品种一条）",
         "scope": "SHFE/INE、DCE、CZCE、GFEX、CFFEX；覆盖商品、新能源与金融期货",
         "universe": len(UNIVERSE), "valid": len(rows), "up": sum(row["change_pct"] > 0.005 for row in rows), "down": sum(row["change_pct"] < -0.005 for row in rows), "flat": sum(abs(row["change_pct"]) <= 0.005 for row in rows),
         "top_gainers": rows[:3], "top_losers": list(reversed(rows[-3:])), "categories": categories,
-        "sector_allocation": sector_allocation,
         "metal_details": [row for row in rows if row["category"] in ("precious", "nonferrous", "ferrous")],
         "last_quote": max((row["quote_time"] for row in rows), default=None),
     }

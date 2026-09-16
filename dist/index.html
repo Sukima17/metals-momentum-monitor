@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <meta name="description" content="国内商品动量模型：金属、黑色与七大期货板块的多周期信号、模拟盘、支撑压力和头寸变化">
+  <meta name="description" content="国内商品动量模型：金属与黑色多周期信号、模拟盘、全市场广度、支撑压力和头寸变化">
   <title>金属与黑色多周期技术研究工作台</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -13,15 +13,14 @@
     <div class="brand"><span class="brand-mark">M</span><div><b>商品动量模型</b><small>COMMODITY MOMENTUM MODEL</small></div></div>
     <nav aria-label="主导航">
       <button class="nav-item active" data-scroll="overview"><span>01</span> 总览</button>
-      <button class="nav-item" data-scroll="market"><span>02</span> 全市场</button>
-      <button class="nav-item" data-scroll="allocation"><span>03</span> 板块配置</button>
-      <button class="nav-item" data-scroll="capital"><span>04</span> 资金结构</button>
-      <button class="nav-item" data-scroll="changes"><span>05</span> 信号变化</button>
-      <button class="nav-item" data-scroll="matrix"><span>06</span> 信号矩阵</button>
-      <button class="nav-item" data-scroll="performance"><span>07</span> 策略回测</button>
-      <button class="nav-item" data-scroll="paper"><span>08</span> 模拟盘持仓</button>
-      <button class="nav-item" data-scroll="technical"><span>09</span> 技术全景</button>
-      <button class="nav-item" data-scroll="method"><span>10</span> 模型口径</button>
+      <button class="nav-item" data-scroll="capital"><span>02</span> 资金结构</button>
+      <button class="nav-item" data-scroll="changes"><span>03</span> 信号变化</button>
+      <button class="nav-item" data-scroll="matrix"><span>04</span> 信号矩阵</button>
+      <button class="nav-item" data-scroll="performance"><span>05</span> 策略回测</button>
+      <button class="nav-item" data-scroll="paper"><span>06</span> 模拟盘持仓</button>
+      <button class="nav-item" data-scroll="market"><span>07</span> 全市场</button>
+      <button class="nav-item" data-scroll="technical"><span>08</span> 技术全景</button>
+      <button class="nav-item" data-scroll="method"><span>09</span> 模型口径</button>
     </nav>
     <div class="rail-foot"><i></i><span>日线主模型</span><small>周 / 60分确认 · 5分仅对照</small></div>
   </aside>
@@ -39,28 +38,10 @@
 
     <section id="majorAlert" class="major-alert" hidden aria-live="assertive"></section>
 
-    <section class="panel market-panel" id="market">
-      <div class="section-head"><div><p class="eyebrow">DOMESTIC FUTURES BREADTH</p><h2>国内期货全市场</h2></div><span id="marketScope" class="scope-note">加载中</span></div>
-      <div id="breadthStats" class="breadth-stats"></div>
-      <div class="top3-grid"><div><h3>涨幅 TOP3</h3><div id="topGainers" class="top-list"></div></div><div><h3>跌幅 TOP3</h3><div id="topLosers" class="top-list"></div></div></div>
-      <div id="categoryBreadth" class="category-breadth"></div>
-      <details class="metal-details"><summary>贵金属 / 有色 / 黑色明细</summary><div class="table-scroll"><table><thead><tr><th>类别</th><th>品种</th><th>交易所</th><th>最新价</th><th>涨跌幅</th><th>成交量</th><th>持仓量</th></tr></thead><tbody id="metalDetailRows"></tbody></table></div></details>
-      <p id="marketFoot" class="panel-note"></p>
-    </section>
-
-    <section class="panel allocation-panel" id="allocation">
-      <div class="section-head"><div><p class="eyebrow">CROSS-SECTOR LONG / SHORT</p><h2>七大板块多空配置</h2></div><span id="allocationTime" class="scope-note">等待行情</span></div>
-      <div id="allocationLead" class="allocation-lead"></div>
-      <div id="allocationCards" class="allocation-cards"></div>
-      <h3 class="subsection-title">板块内品种拆解 · 主力连续等权贡献</h3>
-      <div id="allocationBreakdown" class="allocation-breakdown"></div>
-      <p id="allocationNote" class="panel-note"></p>
-    </section>
-
     <section class="panel capital-panel" id="capital">
       <div class="section-head"><div><p class="eyebrow">PRICE × OPEN INTEREST</p><h2>操作总结 · 价格与品种总持仓</h2></div><span class="scope-note">月价格 × 5日全合约持仓变化</span></div>
       <div id="capitalGroups" class="capital-groups"></div>
-      <p class="panel-note">优先读取“沪铜加权、沪镍加权”等品种加权合约的汇总持仓字段；没有该序列时再加总全部挂牌分月合约，并展示合约数与覆盖率。该口径可降低主力换月噪声，但仍不等同于资金净流入。</p>
+      <p class="panel-note">四象限方向：涨价增仓＝多头增仓；跌价增仓＝空头增仓；涨价减仓＝警惕继续追多；跌价减仓＝警惕继续追空。增减仓无法识别多空双方身份，因此只作结构提示，不直接构成开仓信号。优先读取品种加权合约；没有时加总全部挂牌分月合约。</p>
     </section>
 
     <section class="panel change-panel" id="changes">
@@ -72,6 +53,11 @@
     <section class="panel" id="matrix">
       <div class="section-head"><div><p class="eyebrow">SIGNAL MATRIX</p><h2>金属与黑色信号矩阵</h2></div><div class="filters" role="group" aria-label="筛选信号"><button class="filter active" data-filter="all">全部</button><button class="filter" data-filter="metals">金属</button><button class="filter" data-filter="ferrous">黑色</button><button class="filter" data-filter="long">偏多</button><button class="filter" data-filter="short">偏空</button><button class="filter" data-filter="watch">观察</button><button class="filter" data-filter="missing">异常</button></div></div>
       <div id="cards" class="cards" aria-live="polite"></div>
+    </section>
+
+    <section class="detail-grid" id="detail">
+      <article class="panel detail-panel"><div class="section-head compact"><div><p class="eyebrow">DAILY FOUR FACTORS</p><h2 id="detailTitle">选择品种查看因子</h2></div><div class="detail-tools"><label for="detailAssetSelect">切换品种</label><select id="detailAssetSelect" aria-label="选择品种"></select><span id="detailBadge" class="detail-badge">—</span></div></div><div id="detailContent" class="empty-detail">点击品种卡片或使用右上角选项，查看四因子、多周期结论与真实日期曲线。</div></article>
+      <article class="panel ranking-panel"><div class="section-head compact"><div><p class="eyebrow">CROSS-SECTION</p><h2>动量强弱排名</h2></div></div><div id="ranking" class="ranking"></div></article>
     </section>
 
     <section class="panel performance-panel" id="performance">
@@ -92,9 +78,13 @@
       <div id="paperChangeLog" class="change-log"></div><p id="paperNote" class="panel-note"></p>
     </section>
 
-    <section class="detail-grid" id="detail">
-      <article class="panel detail-panel"><div class="section-head compact"><div><p class="eyebrow">DAILY FOUR FACTORS</p><h2 id="detailTitle">选择品种查看因子</h2></div><span id="detailBadge" class="detail-badge">—</span></div><div id="detailContent" class="empty-detail">点击品种卡片，查看四因子、多周期结论与真实日期曲线。</div></article>
-      <article class="panel ranking-panel"><div class="section-head compact"><div><p class="eyebrow">CROSS-SECTION</p><h2>动量强弱排名</h2></div></div><div id="ranking" class="ranking"></div></article>
+    <section class="panel market-panel" id="market">
+      <div class="section-head"><div><p class="eyebrow">DOMESTIC FUTURES BREADTH</p><h2>国内期货全市场</h2></div><span id="marketScope" class="scope-note">加载中</span></div>
+      <div id="breadthStats" class="breadth-stats"></div>
+      <div class="top3-grid"><div><h3>涨幅 TOP3</h3><div id="topGainers" class="top-list"></div></div><div><h3>跌幅 TOP3</h3><div id="topLosers" class="top-list"></div></div></div>
+      <div id="categoryBreadth" class="category-breadth"></div>
+      <details class="metal-details"><summary>贵金属 / 有色 / 黑色明细</summary><div class="table-scroll"><table><thead><tr><th>类别</th><th>品种</th><th>交易所</th><th>最新价</th><th>涨跌幅</th><th>成交量</th><th>持仓量</th></tr></thead><tbody id="metalDetailRows"></tbody></table></div></details>
+      <p id="marketFoot" class="panel-note"></p>
     </section>
 
     <section class="panel technical-panel" id="technical">

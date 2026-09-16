@@ -630,16 +630,16 @@ def technical_snapshot(bars: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def capital_bucket(price_month: float | None, position_week: float | None) -> str:
-    """Classify price/OI quadrants from screenshot 2; OI remains a proxy."""
+    """Classify price/OI quadrants without treating OI as directional capital flow."""
     if price_month is None or position_week is None or abs(price_month) < 0.15 or abs(position_week) < 0.15:
         return "divergence"
     if price_month > 0 and position_week > 0:
         return "trend_long"
     if price_month > 0 and position_week < 0:
-        return "avoid"
+        return "warn_long"
     if price_month < 0 and position_week > 0:
-        return "accumulate"
-    return "weak"
+        return "trend_short"
+    return "warn_short"
 
 
 def research_risk_levels(
@@ -1365,7 +1365,7 @@ def scan_once() -> dict[str, Any]:
         order = {asset["id"]: index for index, asset in enumerate(config["assets"])}
         results.sort(key=lambda item: order[item["id"]])
         counts = {key: sum(item.get("signal") == key for item in results) for key in ("long", "short", "watch_long", "watch_short", "neutral", "missing")}
-        bucket_keys = ("trend_long", "avoid", "accumulate", "divergence", "weak")
+        bucket_keys = ("trend_long", "warn_long", "trend_short", "warn_short", "divergence")
         operation_summary = {
             key: [item["id"] for item in results if item.get("capital_bucket") == key]
             for key in bucket_keys
@@ -1374,7 +1374,7 @@ def scan_once() -> dict[str, Any]:
         paper_trading = update_paper_portfolio(results, generated_at, config)
         signal_changes = update_signal_change_log(results, generated_at)
         payload = {
-            "schema_version": 7,
+            "schema_version": 8,
             "generated_at": generated_at.isoformat(timespec="seconds"),
             "interval_seconds": int(config["scan_interval_seconds"]),
             "summary": counts,
@@ -1389,7 +1389,7 @@ def scan_once() -> dict[str, Any]:
                 "factors": "mom5超过±3% / 突破20日高低 / 收盘相对MA20 / 日线RSI14区间",
                 "decision": "日线四因子至少3项同向触发，再结合周线与小时线给出综合结论",
                 "execution": "核心模型在交易日15:20后刷新；全市场行情在交易时段每15分钟刷新；5分钟策略不进入定时交易信号",
-                "allocation": "七板块按板块内全部主力连续等权汇总当日涨跌广度与平均涨幅；页面同时展开每个品种的方向和贡献",
+                "capital_structure": "价格上涨且总持仓增加归为多头增仓；价格下跌且总持仓增加归为空头增仓；上涨缩仓提示警惕追多，下跌缩仓提示警惕追空。该分类只描述价格与总持仓组合，不判定多空持仓归属",
                 "open_interest": "优先读取行情商的品种加权合约持仓字段；若无该序列，将全部挂牌分月合约持仓逐日求和；两者均失败才明确标记主连降级",
                 "technical": "主流指标层覆盖均线、MACD、ADX、ROC、RSI、KDJ、CCI、ATR、布林带、唐奇安、量比与OBV，仅作交叉验证",
                 "risk": "支撑压力综合20日高低、MA20、布林带与ATR；方向信号与仓位分离，ATR波动率升至历史高分位时分档降至75%/50%/25%，不自动下单",
@@ -1398,7 +1398,6 @@ def scan_once() -> dict[str, Any]:
             "warnings": [
                 "主连换月可能产生跳空，生产使用前应接入后复权连续合约或固定主力合约。",
                 "品种加权合约或全分月合约汇总持仓可降低主力换月扰动，但仍不可直接解释为资金净流入或流出；页面展示数据口径与降级状态。",
-                "七板块配置是当日截面相对强弱，不等同于全部板块已经完成日线策略回测。",
                 "黑色板块覆盖螺纹钢、热卷、不锈钢、铁矿石、焦炭、焦煤、硅铁与锰硅主力连续；已按要求删除线材。",
                 "公开接口可能限流或中断；实盘研究建议切换至iFinD、Wind、CTP或交易所授权源。",
             ],

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-16T00:28:46+08:00",
+  "generated_at": "2026-09-16T08:00:47+08:00",
   "assumptions": {
     "commission": "开仓万1.2 + 平仓万1.2（单边0.012%，完整往返0.024%）",
     "slippage": "开仓1跳 + 平仓1跳",
@@ -43,15 +43,15 @@
       "name": "5分钟动量",
       "frequency": "5m",
       "assets": 17,
-      "trades": 1153,
-      "win_rate_pct": 22.20294882914137,
-      "equal_weight_return_pct": -4.986744152212744,
-      "median_return_pct": -4.83414195483336,
-      "average_sharpe": -16.824744720799924,
+      "trades": 1151,
+      "win_rate_pct": 22.328410078192874,
+      "equal_weight_return_pct": -4.9060582595881135,
+      "median_return_pct": -4.693884785142077,
+      "average_sharpe": -16.57633309514761,
       "positive_assets": 0,
       "worst_drawdown_pct": -12.21942414857039,
       "sample_start": "2026-08-18 09:30:00",
-      "sample_end": "2026-09-16 00:25:00"
+      "sample_end": "2026-09-16 02:30:00"
     },
     {
       "key": "fibonacci_0618",
@@ -188,18 +188,18 @@
           "name": "5分钟动量",
           "status": "ok",
           "frequency": "5m",
-          "trades": 60,
-          "win_rate_pct": 30.0,
-          "net_return_pct": -1.6136707246807602,
-          "annual_return_pct": -33.399974928251495,
-          "max_drawdown_pct": -2.0733176090032113,
-          "sharpe": -8.324375441780578,
-          "profit_factor": 0.5445628050110927,
-          "avg_trade_pct": -0.027018387574921632,
+          "trades": 59,
+          "win_rate_pct": 30.508474576271187,
+          "net_return_pct": -1.5628887696754301,
+          "annual_return_pct": -32.535762984241615,
+          "max_drawdown_pct": -2.0733176090031447,
+          "sharpe": -8.064693836571228,
+          "profit_factor": 0.5525722900866743,
+          "avg_trade_pct": -0.026601854839165183,
           "positive_trades": 18,
           "latest_target": 0,
-          "sample_start": "2026-09-01 23:40:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "sample_start": "2026-09-02 00:15:00",
+          "sample_end": "2026-09-16 01:00:00",
           "observations": 938
         }
       ]
@@ -299,8 +299,8 @@
           "avg_trade_pct": -0.10369027747369566,
           "positive_trades": 4,
           "latest_target": 0,
-          "sample_start": "2026-09-01 23:45:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "sample_start": "2026-09-02 00:20:00",
+          "sample_end": "2026-09-16 01:00:00",
           "observations": 938
         }
       ]
@@ -390,18 +390,18 @@
           "name": "5分钟动量",
           "status": "ok",
           "frequency": "5m",
-          "trades": 63,
-          "win_rate_pct": 15.873015873015872,
-          "net_return_pct": -4.83414195483336,
-          "annual_return_pct": -71.00318025298954,
-          "max_drawdown_pct": -4.836527972417204,
-          "sharpe": -23.392382381241845,
-          "profit_factor": 0.1983875287683509,
-          "avg_trade_pct": -0.07855362480252064,
+          "trades": 62,
+          "win_rate_pct": 16.129032258064516,
+          "net_return_pct": -4.693884785142077,
+          "annual_return_pct": -69.91632975218809,
+          "max_drawdown_pct": -4.69627431928199,
+          "sharpe": -22.811230679362062,
+          "profit_factor": 0.20323295520246235,
+          "avg_trade_pct": -0.07744657621043961,
           "positive_trades": 10,
           "latest_target": 0,
-          "sample_start": "2026-09-01 23:50:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "sample_start": "2026-09-02 00:25:00",
+          "sample_end": "2026-09-16 01:00:00",
           "observations": 938
         }
       ]
@@ -501,8 +501,8 @@
           "avg_trade_pct": -0.05494440899788737,
           "positive_trades": 19,
           "latest_target": 0,
-          "sample_start": "2026-09-01 23:40:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "sample_start": "2026-09-02 00:15:00",
+          "sample_end": "2026-09-16 01:00:00",
           "observations": 938
         }
       ]
@@ -602,8 +602,8 @@
           "avg_trade_pct": -0.058772658422447,
           "positive_trades": 18,
           "latest_target": 0,
-          "sample_start": "2026-09-01 23:40:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "sample_start": "2026-09-02 00:15:00",
+          "sample_end": "2026-09-16 01:00:00",
           "observations": 938
         }
       ]
@@ -804,8 +804,8 @@
           "avg_trade_pct": -0.06096756137354312,
           "positive_trades": 17,
           "latest_target": 0,
-          "sample_start": "2026-09-01 23:40:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "sample_start": "2026-09-02 00:15:00",
+          "sample_end": "2026-09-16 01:00:00",
           "observations": 938
         }
       ]
@@ -897,16 +897,16 @@
           "frequency": "5m",
           "trades": 70,
           "win_rate_pct": 34.285714285714285,
-          "net_return_pct": -1.2276539526809849,
-          "annual_return_pct": -30.121167552076365,
-          "max_drawdown_pct": -2.63771197723901,
-          "sharpe": -3.4229676205390214,
-          "profit_factor": 0.7779995828170826,
-          "avg_trade_pct": -0.017367674019422488,
+          "net_return_pct": -1.2226668832896137,
+          "annual_return_pct": -27.18747452897965,
+          "max_drawdown_pct": -2.637711977239021,
+          "sharpe": -3.2146102034878696,
+          "profit_factor": 0.7719489772173707,
+          "avg_trade_pct": -0.017803670344824555,
           "positive_trades": 24,
-          "latest_target": 0,
-          "sample_start": "2026-09-03 14:15:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "latest_target": 1,
+          "sample_start": "2026-09-03 22:20:00",
+          "sample_end": "2026-09-16 02:30:00",
           "observations": 938
         }
       ]
@@ -997,17 +997,17 @@
           "status": "ok",
           "frequency": "5m",
           "trades": 67,
-          "win_rate_pct": 29.850746268656714,
-          "net_return_pct": -5.03304006803379,
-          "annual_return_pct": -77.65044935279897,
-          "max_drawdown_pct": -5.156851927558204,
-          "sharpe": -11.276694407112444,
-          "profit_factor": 0.47860293391401804,
-          "avg_trade_pct": -0.07663708267214817,
-          "positive_trades": 20,
-          "latest_target": 0,
-          "sample_start": "2026-09-03 14:10:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "win_rate_pct": 31.343283582089555,
+          "net_return_pct": -3.857406087503046,
+          "annual_return_pct": -63.74386215387939,
+          "max_drawdown_pct": -5.089485826436024,
+          "sharpe": -8.102887495163474,
+          "profit_factor": 0.5741340385189279,
+          "avg_trade_pct": -0.05853907156163274,
+          "positive_trades": 21,
+          "latest_target": 1,
+          "sample_start": "2026-09-03 22:15:00",
+          "sample_end": "2026-09-16 02:30:00",
           "observations": 938
         }
       ]
@@ -1309,8 +1309,8 @@
           "avg_trade_pct": -0.12030087219270509,
           "positive_trades": 11,
           "latest_target": 0,
-          "sample_start": "2026-09-01 23:40:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "sample_start": "2026-09-02 00:15:00",
+          "sample_end": "2026-09-16 01:00:00",
           "observations": 938
         }
       ]

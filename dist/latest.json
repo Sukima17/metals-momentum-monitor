@@ -1,18 +1,18 @@
 {
-  "schema_version": 6,
-  "generated_at": "2026-09-16T00:28:46+08:00",
+  "schema_version": 8,
+  "generated_at": "2026-09-16T08:00:47+08:00",
   "interval_seconds": 900,
   "summary": {
     "long": 0,
     "short": 6,
     "watch_long": 2,
-    "watch_short": 8,
-    "neutral": 1,
+    "watch_short": 7,
+    "neutral": 2,
     "missing": 0
   },
   "operation_summary": {
     "trend_long": [],
-    "avoid": [
+    "warn_long": [
       "aluminium",
       "zinc",
       "rebar",
@@ -21,7 +21,7 @@
       "coking_coal",
       "ferrosilicon"
     ],
-    "accumulate": [
+    "trend_short": [
       "lead",
       "nickel",
       "lithium",
@@ -31,20 +31,20 @@
       "stainless_steel",
       "iron_ore"
     ],
-    "divergence": [],
-    "weak": [
+    "warn_short": [
       "copper",
       "ferromanganese"
-    ]
+    ],
+    "divergence": []
   },
   "market_breadth": {
-    "generated_at": "2026-09-16T00:33:02+08:00",
+    "generated_at": "2026-09-16T08:00:47+08:00",
     "source": "新浪财经国内期货实时行情（主力连续，每品种一条）",
     "scope": "SHFE/INE、DCE、CZCE、GFEX、CFFEX；覆盖商品、新能源与金融期货",
     "universe": 85,
     "valid": 80,
-    "up": 33,
-    "down": 38,
+    "up": 32,
+    "down": 39,
     "flat": 9,
     "top_gainers": [
       {
@@ -128,22 +128,22 @@
         "down": 2,
         "flat": 0,
         "valid": 4,
-        "average_change_pct": -0.24973953872018118,
-        "median_change_pct": -0.2367331460860711,
+        "average_change_pct": -0.04021998706190966,
+        "median_change_pct": -0.15404591857806627,
         "breadth_ratio": 0.0,
-        "strength_score": -4.994790774403624,
+        "strength_score": -0.8043997412381931,
         "members": [
           {
             "symbol": "AG0",
             "name": "白银",
             "exchange": "SHFE",
             "category": "precious",
-            "price": 15530.0,
+            "price": 15634.0,
             "previous_settlement": 15460.0,
-            "change_pct": 0.4527813712807305,
-            "volume": 56798.0,
-            "hold": 202433.0,
-            "quote_time": "2026-09-16 003303",
+            "change_pct": 1.1254851228978069,
+            "volume": 63980.0,
+            "hold": 202103.0,
+            "quote_time": "2026-09-16 023000",
             "signal": "long",
             "weight": 0.25
           },
@@ -152,12 +152,12 @@
             "name": "黄金",
             "exchange": "SHFE",
             "category": "precious",
-            "price": 933.0,
+            "price": 934.54,
             "previous_settlement": 931.22,
-            "change_pct": 0.191147097356148,
-            "volume": 32960.0,
-            "hold": 170907.0,
-            "quote_time": "2026-09-16 003303",
+            "change_pct": 0.35652155237215766,
+            "volume": 39560.0,
+            "hold": 170641.0,
+            "quote_time": "2026-09-16 023000",
             "signal": "long",
             "weight": 0.25
           },
@@ -192,14 +192,14 @@
         ]
       },
       "nonferrous": {
-        "up": 5,
-        "down": 4,
+        "up": 4,
+        "down": 5,
         "flat": 0,
         "valid": 9,
-        "average_change_pct": -0.18799004883904968,
-        "median_change_pct": 0.012673628713377738,
-        "breadth_ratio": 0.1111111111111111,
-        "strength_score": 2.9068656898856724,
+        "average_change_pct": -0.19564232011712251,
+        "median_change_pct": -0.022812531684068826,
+        "breadth_ratio": -0.1111111111111111,
+        "strength_score": -10.579513069009117,
         "members": [
           {
             "symbol": "AL0",
@@ -209,9 +209,9 @@
             "price": 24135.0,
             "previous_settlement": 24040.0,
             "change_pct": 0.39517470881864636,
-            "volume": 34887.0,
-            "hold": 222771.0,
-            "quote_time": "2026-09-16 003303",
+            "volume": 35723.0,
+            "hold": 222781.0,
+            "quote_time": "2026-09-16 010000",
             "signal": "long",
             "weight": 0.1111111111111111
           },
@@ -220,26 +220,12 @@
             "name": "国际铜",
             "exchange": "SHFE/INE",
             "category": "nonferrous",
-            "price": 95380.0,
+            "price": 95390.0,
             "previous_settlement": 95030.0,
-            "change_pct": 0.3683047458697297,
-            "volume": 2370.0,
-            "hold": 12610.0,
-            "quote_time": "2026-09-16 003303",
-            "signal": "long",
-            "weight": 0.1111111111111111
-          },
-          {
-            "symbol": "ZN0",
-            "name": "沪锌",
-            "exchange": "SHFE",
-            "category": "nonferrous",
-            "price": 26195.0,
-            "previous_settlement": 26115.0,
-            "change_pct": 0.3063373540111103,
-            "volume": 55436.0,
-            "hold": 123910.0,
-            "quote_time": "2026-09-16 003303",
+            "change_pct": 0.37882773860886676,
+            "volume": 2439.0,
+            "hold": 12595.0,
+            "quote_time": "2026-09-16 010000",
             "signal": "long",
             "weight": 0.1111111111111111
           },
@@ -248,12 +234,26 @@
             "name": "沪铜",
             "exchange": "SHFE",
             "category": "nonferrous",
-            "price": 107250.0,
+            "price": 107200.0,
             "previous_settlement": 106930.0,
-            "change_pct": 0.29926119891516834,
-            "volume": 26435.0,
-            "hold": 175532.0,
-            "quote_time": "2026-09-16 003301",
+            "change_pct": 0.25250163658467883,
+            "volume": 27392.0,
+            "hold": 175198.0,
+            "quote_time": "2026-09-16 010000",
+            "signal": "long",
+            "weight": 0.1111111111111111
+          },
+          {
+            "symbol": "ZN0",
+            "name": "沪锌",
+            "exchange": "SHFE",
+            "category": "nonferrous",
+            "price": 26170.0,
+            "previous_settlement": 26115.0,
+            "change_pct": 0.2106069308826397,
+            "volume": 56441.0,
+            "hold": 123898.0,
+            "quote_time": "2026-09-16 010000",
             "signal": "long",
             "weight": 0.1111111111111111
           },
@@ -262,13 +262,13 @@
             "name": "沪锡",
             "exchange": "SHFE",
             "category": "nonferrous",
-            "price": 394570.0,
+            "price": 394430.0,
             "previous_settlement": 394520.0,
-            "change_pct": 0.012673628713377738,
-            "volume": 52350.0,
-            "hold": 35193.0,
-            "quote_time": "2026-09-16 003303",
-            "signal": "long",
+            "change_pct": -0.022812531684068826,
+            "volume": 54094.0,
+            "hold": 34815.0,
+            "quote_time": "2026-09-16 010000",
+            "signal": "short",
             "weight": 0.1111111111111111
           },
           {
@@ -279,9 +279,9 @@
             "price": 23275.0,
             "previous_settlement": 23290.0,
             "change_pct": -0.06440532417346656,
-            "volume": 3903.0,
-            "hold": 18824.0,
-            "quote_time": "2026-09-16 003303",
+            "volume": 3974.0,
+            "hold": 18795.0,
+            "quote_time": "2026-09-16 010000",
             "signal": "short",
             "weight": 0.1111111111111111
           },
@@ -293,9 +293,9 @@
             "price": 15780.0,
             "previous_settlement": 15815.0,
             "change_pct": -0.22130888397091653,
-            "volume": 25017.0,
-            "hold": 62879.0,
-            "quote_time": "2026-09-16 003300",
+            "volume": 25598.0,
+            "hold": 62815.0,
+            "quote_time": "2026-09-16 010000",
             "signal": "short",
             "weight": 0.1111111111111111
           },
@@ -304,12 +304,12 @@
             "name": "氧化铝",
             "exchange": "SHFE",
             "category": "nonferrous",
-            "price": 2680.0,
+            "price": 2682.0,
             "previous_settlement": 2688.0,
-            "change_pct": -0.29761904761904656,
-            "volume": 45563.0,
-            "hold": 233408.0,
-            "quote_time": "2026-09-16 003303",
+            "change_pct": -0.22321428571429047,
+            "volume": 46823.0,
+            "hold": 232837.0,
+            "quote_time": "2026-09-16 010000",
             "signal": "short",
             "weight": 0.1111111111111111
           },
@@ -318,12 +318,12 @@
             "name": "沪镍",
             "exchange": "SHFE",
             "category": "nonferrous",
-            "price": 120990.0,
+            "price": 121020.0,
             "previous_settlement": 124080.0,
-            "change_pct": -2.49032882011605,
-            "volume": 109163.0,
-            "hold": 132951.0,
-            "quote_time": "2026-09-16 003303",
+            "change_pct": -2.466150870406192,
+            "volume": 114686.0,
+            "hold": 131448.0,
+            "quote_time": "2026-09-16 010000",
             "signal": "short",
             "weight": 0.1111111111111111
           }
@@ -334,10 +334,10 @@
         "down": 5,
         "flat": 1,
         "valid": 8,
-        "average_change_pct": -0.6134958166570337,
+        "average_change_pct": -0.6181100654573293,
         "median_change_pct": -0.8498158073645401,
         "breadth_ratio": -0.375,
-        "strength_score": -34.76991633314067,
+        "strength_score": -34.862201309146585,
         "members": [
           {
             "symbol": "RB0",
@@ -424,20 +424,6 @@
             "weight": 0.125
           },
           {
-            "symbol": "SS0",
-            "name": "不锈钢",
-            "exchange": "SHFE",
-            "category": "ferrous",
-            "price": 13360.0,
-            "previous_settlement": 13545.0,
-            "change_pct": -1.3658176448874126,
-            "volume": 100062.0,
-            "hold": 134775.0,
-            "quote_time": "2026-09-16 003302",
-            "signal": "short",
-            "weight": 0.125
-          },
-          {
             "symbol": "JM0",
             "name": "焦煤",
             "exchange": "DCE",
@@ -450,6 +436,20 @@
             "quote_time": "2026-09-15 230000",
             "signal": "short",
             "weight": 0.125
+          },
+          {
+            "symbol": "SS0",
+            "name": "不锈钢",
+            "exchange": "SHFE",
+            "category": "ferrous",
+            "price": 13355.0,
+            "previous_settlement": 13545.0,
+            "change_pct": -1.4027316352897778,
+            "volume": 102249.0,
+            "hold": 134430.0,
+            "quote_time": "2026-09-16 010000",
+            "signal": "short",
+            "weight": 0.125
           }
         ]
       },
@@ -458,10 +458,10 @@
         "down": 7,
         "flat": 3,
         "valid": 27,
-        "average_change_pct": 0.863594426243295,
+        "average_change_pct": 0.8954847236203184,
         "median_change_pct": 0.9337068160597539,
         "breadth_ratio": 0.37037037037037035,
-        "strength_score": 39.49411074708812,
+        "strength_score": 40.131916694628586,
         "members": [
           {
             "symbol": "EG0",
@@ -534,6 +534,20 @@
             "weight": 0.037037037037037035
           },
           {
+            "symbol": "SC0",
+            "name": "原油",
+            "exchange": "SHFE/INE",
+            "category": "energy",
+            "price": 860.0,
+            "previous_settlement": 836.2,
+            "change_pct": 2.8462090408992946,
+            "volume": 147933.0,
+            "hold": 42083.0,
+            "quote_time": "2026-09-16 023000",
+            "signal": "long",
+            "weight": 0.037037037037037035
+          },
+          {
             "symbol": "PX0",
             "name": "对二甲苯",
             "exchange": "CZCE",
@@ -544,20 +558,6 @@
             "volume": 191179.0,
             "hold": 178187.0,
             "quote_time": "2026-09-15 230000",
-            "signal": "long",
-            "weight": 0.037037037037037035
-          },
-          {
-            "symbol": "SC0",
-            "name": "原油",
-            "exchange": "SHFE/INE",
-            "category": "energy",
-            "price": 852.8,
-            "previous_settlement": 836.2,
-            "change_pct": 1.9851710117196664,
-            "volume": 120312.0,
-            "hold": 42886.0,
-            "quote_time": "2026-09-16 003303",
             "signal": "long",
             "weight": 0.037037037037037035
           },
@@ -1328,1245 +1328,19 @@
         ]
       }
     },
-    "sector_allocation": {
-      "as_of": "2026-09-16T00:33:02+08:00",
-      "stance": "market_neutral_relative_value",
-      "long": [
-        {
-          "category": "energy",
-          "up": 17,
-          "down": 7,
-          "flat": 3,
-          "valid": 27,
-          "average_change_pct": 0.863594426243295,
-          "median_change_pct": 0.9337068160597539,
-          "breadth_ratio": 0.37037037037037035,
-          "strength_score": 39.49411074708812,
-          "members": [
-            {
-              "symbol": "EG0",
-              "name": "乙二醇",
-              "exchange": "DCE",
-              "category": "energy",
-              "price": 6225.0,
-              "previous_settlement": 5958.0,
-              "change_pct": 4.4813695871097625,
-              "volume": 1111823.0,
-              "hold": 382047.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "PR0",
-              "name": "瓶片",
-              "exchange": "CZCE",
-              "category": "energy",
-              "price": 8592.0,
-              "previous_settlement": 8306.0,
-              "change_pct": 3.4432940043342075,
-              "volume": 60267.0,
-              "hold": 68123.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "PF0",
-              "name": "短纤",
-              "exchange": "CZCE",
-              "category": "energy",
-              "price": 8734.0,
-              "previous_settlement": 8472.0,
-              "change_pct": 3.0925401322001944,
-              "volume": 177891.0,
-              "hold": 242490.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "BU0",
-              "name": "沥青",
-              "exchange": "SHFE",
-              "category": "energy",
-              "price": 5441.0,
-              "previous_settlement": 5279.0,
-              "change_pct": 3.0687630232998586,
-              "volume": 164608.0,
-              "hold": 272831.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "LU0",
-              "name": "低硫燃油",
-              "exchange": "SHFE/INE",
-              "category": "energy",
-              "price": 5793.0,
-              "previous_settlement": 5624.0,
-              "change_pct": 3.004978662873392,
-              "volume": 70294.0,
-              "hold": 73996.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "PX0",
-              "name": "对二甲苯",
-              "exchange": "CZCE",
-              "category": "energy",
-              "price": 9756.0,
-              "previous_settlement": 9490.0,
-              "change_pct": 2.802950474183352,
-              "volume": 191179.0,
-              "hold": 178187.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "SC0",
-              "name": "原油",
-              "exchange": "SHFE/INE",
-              "category": "energy",
-              "price": 852.8,
-              "previous_settlement": 836.2,
-              "change_pct": 1.9851710117196664,
-              "volume": 120312.0,
-              "hold": 42886.0,
-              "quote_time": "2026-09-16 003303",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "BZ0",
-              "name": "纯苯",
-              "exchange": "DCE",
-              "category": "energy",
-              "price": 9205.0,
-              "previous_settlement": 9045.0,
-              "change_pct": 1.7689331122166863,
-              "volume": 38874.0,
-              "hold": 20356.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "PL0",
-              "name": "丙烯",
-              "exchange": "CZCE",
-              "category": "energy",
-              "price": 9396.0,
-              "previous_settlement": 9252.0,
-              "change_pct": 1.5564202334630295,
-              "volume": 25777.0,
-              "hold": 25067.0,
-              "quote_time": "2026-09-15 225957",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "FU0",
-              "name": "燃油",
-              "exchange": "SHFE/INE",
-              "category": "energy",
-              "price": 4551.0,
-              "previous_settlement": 4482.0,
-              "change_pct": 1.53949129852744,
-              "volume": 445297.0,
-              "hold": 226794.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "SP0",
-              "name": "纸浆",
-              "exchange": "SHFE",
-              "category": "energy",
-              "price": 4814.0,
-              "previous_settlement": 4742.0,
-              "change_pct": 1.5183466891606878,
-              "volume": 193619.0,
-              "hold": 214950.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "EB0",
-              "name": "苯乙烯",
-              "exchange": "DCE",
-              "category": "energy",
-              "price": 10022.0,
-              "previous_settlement": 9874.0,
-              "change_pct": 1.498885963135499,
-              "volume": 203083.0,
-              "hold": 251570.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "TA0",
-              "name": "PTA",
-              "exchange": "CZCE",
-              "category": "energy",
-              "price": 6532.0,
-              "previous_settlement": 6436.0,
-              "change_pct": 1.4916096954630254,
-              "volume": 871730.0,
-              "hold": 1192354.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "L0",
-              "name": "塑料",
-              "exchange": "DCE",
-              "category": "energy",
-              "price": 8648.0,
-              "previous_settlement": 8568.0,
-              "change_pct": 0.9337068160597539,
-              "volume": 276390.0,
-              "hold": 447225.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "PP0",
-              "name": "聚丙烯",
-              "exchange": "DCE",
-              "category": "energy",
-              "price": 8968.0,
-              "previous_settlement": 8903.0,
-              "change_pct": 0.7300909805683542,
-              "volume": 324474.0,
-              "hold": 659329.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "PG0",
-              "name": "液化气",
-              "exchange": "DCE",
-              "category": "energy",
-              "price": 6893.0,
-              "previous_settlement": 6860.0,
-              "change_pct": 0.4810495626822231,
-              "volume": 31871.0,
-              "hold": 100962.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "MA0",
-              "name": "甲醇",
-              "exchange": "CZCE",
-              "category": "energy",
-              "price": 3029.0,
-              "previous_settlement": 3024.0,
-              "change_pct": 0.16534391534390736,
-              "volume": 294368.0,
-              "hold": 646466.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "RU0",
-              "name": "橡胶",
-              "exchange": "SHFE",
-              "category": "energy",
-              "price": 18775.0,
-              "previous_settlement": 18775.0,
-              "change_pct": 0.0,
-              "volume": 91901.0,
-              "hold": 141620.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "neutral",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "NR0",
-              "name": "20号胶",
-              "exchange": "SHFE/INE",
-              "category": "energy",
-              "price": 15890.0,
-              "previous_settlement": 15890.0,
-              "change_pct": 0.0,
-              "volume": 21184.0,
-              "hold": 67212.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "neutral",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "OP0",
-              "name": "胶版印刷纸",
-              "exchange": "SHFE",
-              "category": "energy",
-              "price": 3790.0,
-              "previous_settlement": 3790.0,
-              "change_pct": 0.0,
-              "volume": 4179.0,
-              "hold": 20988.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "neutral",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "BR0",
-              "name": "丁二烯橡胶",
-              "exchange": "SHFE",
-              "category": "energy",
-              "price": 14630.0,
-              "previous_settlement": 14705.0,
-              "change_pct": -0.5100306018361089,
-              "volume": 30156.0,
-              "hold": 84334.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "short",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "SH0",
-              "name": "烧碱",
-              "exchange": "CZCE",
-              "category": "energy",
-              "price": 1877.0,
-              "previous_settlement": 1888.0,
-              "change_pct": -0.5826271186440635,
-              "volume": 141609.0,
-              "hold": 211096.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "short",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "SA0",
-              "name": "纯碱",
-              "exchange": "CZCE",
-              "category": "energy",
-              "price": 1009.0,
-              "previous_settlement": 1018.0,
-              "change_pct": -0.8840864440078589,
-              "volume": 339999.0,
-              "hold": 1302134.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "short",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "UR0",
-              "name": "尿素",
-              "exchange": "CZCE",
-              "category": "energy",
-              "price": 1789.0,
-              "previous_settlement": 1806.0,
-              "change_pct": -0.9413067552602405,
-              "volume": 134379.0,
-              "hold": 248514.0,
-              "quote_time": "2026-09-15 150000",
-              "signal": "short",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "FG0",
-              "name": "玻璃",
-              "exchange": "CZCE",
-              "category": "energy",
-              "price": 908.0,
-              "previous_settlement": 922.0,
-              "change_pct": -1.5184381778741818,
-              "volume": 408154.0,
-              "hold": 1259439.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "short",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "V0",
-              "name": "PVC",
-              "exchange": "DCE",
-              "category": "energy",
-              "price": 4838.0,
-              "previous_settlement": 4938.0,
-              "change_pct": -2.025111381125966,
-              "volume": 564042.0,
-              "hold": 1151976.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "short",
-              "weight": 0.037037037037037035
-            },
-            {
-              "symbol": "EC0",
-              "name": "集运欧线",
-              "exchange": "SHFE/INE",
-              "category": "energy",
-              "price": 2034.0,
-              "previous_settlement": 2114.0,
-              "change_pct": -3.7842951750236553,
-              "volume": 11871.0,
-              "hold": 24415.0,
-              "quote_time": "2026-09-15 150000",
-              "signal": "short",
-              "weight": 0.037037037037037035
-            }
-          ],
-          "allocation": "relative_long",
-          "rank": 1
-        },
-        {
-          "category": "nonferrous",
-          "up": 5,
-          "down": 4,
-          "flat": 0,
-          "valid": 9,
-          "average_change_pct": -0.18799004883904968,
-          "median_change_pct": 0.012673628713377738,
-          "breadth_ratio": 0.1111111111111111,
-          "strength_score": 2.9068656898856724,
-          "members": [
-            {
-              "symbol": "AL0",
-              "name": "沪铝",
-              "exchange": "SHFE",
-              "category": "nonferrous",
-              "price": 24135.0,
-              "previous_settlement": 24040.0,
-              "change_pct": 0.39517470881864636,
-              "volume": 34887.0,
-              "hold": 222771.0,
-              "quote_time": "2026-09-16 003303",
-              "signal": "long",
-              "weight": 0.1111111111111111
-            },
-            {
-              "symbol": "BC0",
-              "name": "国际铜",
-              "exchange": "SHFE/INE",
-              "category": "nonferrous",
-              "price": 95380.0,
-              "previous_settlement": 95030.0,
-              "change_pct": 0.3683047458697297,
-              "volume": 2370.0,
-              "hold": 12610.0,
-              "quote_time": "2026-09-16 003303",
-              "signal": "long",
-              "weight": 0.1111111111111111
-            },
-            {
-              "symbol": "ZN0",
-              "name": "沪锌",
-              "exchange": "SHFE",
-              "category": "nonferrous",
-              "price": 26195.0,
-              "previous_settlement": 26115.0,
-              "change_pct": 0.3063373540111103,
-              "volume": 55436.0,
-              "hold": 123910.0,
-              "quote_time": "2026-09-16 003303",
-              "signal": "long",
-              "weight": 0.1111111111111111
-            },
-            {
-              "symbol": "CU0",
-              "name": "沪铜",
-              "exchange": "SHFE",
-              "category": "nonferrous",
-              "price": 107250.0,
-              "previous_settlement": 106930.0,
-              "change_pct": 0.29926119891516834,
-              "volume": 26435.0,
-              "hold": 175532.0,
-              "quote_time": "2026-09-16 003301",
-              "signal": "long",
-              "weight": 0.1111111111111111
-            },
-            {
-              "symbol": "SN0",
-              "name": "沪锡",
-              "exchange": "SHFE",
-              "category": "nonferrous",
-              "price": 394570.0,
-              "previous_settlement": 394520.0,
-              "change_pct": 0.012673628713377738,
-              "volume": 52350.0,
-              "hold": 35193.0,
-              "quote_time": "2026-09-16 003303",
-              "signal": "long",
-              "weight": 0.1111111111111111
-            },
-            {
-              "symbol": "AD0",
-              "name": "铸造铝合金",
-              "exchange": "SHFE",
-              "category": "nonferrous",
-              "price": 23275.0,
-              "previous_settlement": 23290.0,
-              "change_pct": -0.06440532417346656,
-              "volume": 3903.0,
-              "hold": 18824.0,
-              "quote_time": "2026-09-16 003303",
-              "signal": "short",
-              "weight": 0.1111111111111111
-            },
-            {
-              "symbol": "PB0",
-              "name": "沪铅",
-              "exchange": "SHFE",
-              "category": "nonferrous",
-              "price": 15780.0,
-              "previous_settlement": 15815.0,
-              "change_pct": -0.22130888397091653,
-              "volume": 25017.0,
-              "hold": 62879.0,
-              "quote_time": "2026-09-16 003300",
-              "signal": "short",
-              "weight": 0.1111111111111111
-            },
-            {
-              "symbol": "AO0",
-              "name": "氧化铝",
-              "exchange": "SHFE",
-              "category": "nonferrous",
-              "price": 2680.0,
-              "previous_settlement": 2688.0,
-              "change_pct": -0.29761904761904656,
-              "volume": 45563.0,
-              "hold": 233408.0,
-              "quote_time": "2026-09-16 003303",
-              "signal": "short",
-              "weight": 0.1111111111111111
-            },
-            {
-              "symbol": "NI0",
-              "name": "沪镍",
-              "exchange": "SHFE",
-              "category": "nonferrous",
-              "price": 120990.0,
-              "previous_settlement": 124080.0,
-              "change_pct": -2.49032882011605,
-              "volume": 109163.0,
-              "hold": 132951.0,
-              "quote_time": "2026-09-16 003303",
-              "signal": "short",
-              "weight": 0.1111111111111111
-            }
-          ],
-          "allocation": "relative_long",
-          "rank": 2
-        }
-      ],
-      "short": [
-        {
-          "category": "ferrous",
-          "up": 2,
-          "down": 5,
-          "flat": 1,
-          "valid": 8,
-          "average_change_pct": -0.6134958166570337,
-          "median_change_pct": -0.8498158073645401,
-          "breadth_ratio": -0.375,
-          "strength_score": -34.76991633314067,
-          "members": [
-            {
-              "symbol": "RB0",
-              "name": "螺纹钢",
-              "exchange": "SHFE",
-              "category": "ferrous",
-              "price": 3121.0,
-              "previous_settlement": 3103.0,
-              "change_pct": 0.5800837898807698,
-              "volume": 401646.0,
-              "hold": 1582227.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.125
-            },
-            {
-              "symbol": "HC0",
-              "name": "热卷",
-              "exchange": "SHFE",
-              "category": "ferrous",
-              "price": 3316.0,
-              "previous_settlement": 3311.0,
-              "change_pct": 0.15101177891876372,
-              "volume": 154636.0,
-              "hold": 1313593.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.125
-            },
-            {
-              "symbol": "I0",
-              "name": "铁矿石",
-              "exchange": "DCE",
-              "category": "ferrous",
-              "price": 708.0,
-              "previous_settlement": 708.0,
-              "change_pct": 0.0,
-              "volume": 98800.0,
-              "hold": 587499.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "neutral",
-              "weight": 0.125
-            },
-            {
-              "symbol": "SM0",
-              "name": "锰硅",
-              "exchange": "CZCE",
-              "category": "ferrous",
-              "price": 5784.0,
-              "previous_settlement": 5816.0,
-              "change_pct": -0.5502063273727598,
-              "volume": 212024.0,
-              "hold": 281538.0,
-              "quote_time": "2026-09-15 150000",
-              "signal": "short",
-              "weight": 0.125
-            },
-            {
-              "symbol": "SF0",
-              "name": "硅铁",
-              "exchange": "CZCE",
-              "category": "ferrous",
-              "price": 6020.0,
-              "previous_settlement": 6090.0,
-              "change_pct": -1.1494252873563204,
-              "volume": 264788.0,
-              "hold": 323611.0,
-              "quote_time": "2026-09-15 150000",
-              "signal": "short",
-              "weight": 0.125
-            },
-            {
-              "symbol": "J0",
-              "name": "焦炭",
-              "exchange": "DCE",
-              "category": "ferrous",
-              "price": 2048.0,
-              "previous_settlement": 2072.5,
-              "change_pct": -1.1821471652593507,
-              "volume": 9445.0,
-              "hold": 56550.0,
-              "quote_time": "2026-09-15 225959",
-              "signal": "short",
-              "weight": 0.125
-            },
-            {
-              "symbol": "SS0",
-              "name": "不锈钢",
-              "exchange": "SHFE",
-              "category": "ferrous",
-              "price": 13360.0,
-              "previous_settlement": 13545.0,
-              "change_pct": -1.3658176448874126,
-              "volume": 100062.0,
-              "hold": 134775.0,
-              "quote_time": "2026-09-16 003302",
-              "signal": "short",
-              "weight": 0.125
-            },
-            {
-              "symbol": "JM0",
-              "name": "焦煤",
-              "exchange": "DCE",
-              "category": "ferrous",
-              "price": 1594.5,
-              "previous_settlement": 1617.0,
-              "change_pct": -1.3914656771799594,
-              "volume": 216508.0,
-              "hold": 487121.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "short",
-              "weight": 0.125
-            }
-          ],
-          "allocation": "relative_short",
-          "rank": 6
-        },
-        {
-          "category": "new_energy",
-          "up": 0,
-          "down": 3,
-          "flat": 0,
-          "valid": 3,
-          "average_change_pct": -2.0363058972987296,
-          "median_change_pct": -1.5734265734265729,
-          "breadth_ratio": -1.0,
-          "strength_score": -100.0,
-          "members": [
-            {
-              "symbol": "PS0",
-              "name": "多晶硅",
-              "exchange": "GFEX",
-              "category": "new_energy",
-              "price": 36705.0,
-              "previous_settlement": 37155.0,
-              "change_pct": -1.2111425111021368,
-              "volume": 46673.0,
-              "hold": 108909.0,
-              "quote_time": "2026-09-15 150106",
-              "signal": "short",
-              "weight": 0.3333333333333333
-            },
-            {
-              "symbol": "SI0",
-              "name": "工业硅",
-              "exchange": "GFEX",
-              "category": "new_energy",
-              "price": 8445.0,
-              "previous_settlement": 8580.0,
-              "change_pct": -1.5734265734265729,
-              "volume": 170690.0,
-              "hold": 324194.0,
-              "quote_time": "2026-09-15 150317",
-              "signal": "short",
-              "weight": 0.3333333333333333
-            },
-            {
-              "symbol": "LC0",
-              "name": "碳酸锂",
-              "exchange": "GFEX",
-              "category": "new_energy",
-              "price": 129120.0,
-              "previous_settlement": 133560.0,
-              "change_pct": -3.3243486073674777,
-              "volume": 187219.0,
-              "hold": 418700.0,
-              "quote_time": "2026-09-15 150106",
-              "signal": "short",
-              "weight": 0.3333333333333333
-            }
-          ],
-          "allocation": "relative_short",
-          "rank": 7
-        }
-      ],
-      "neutral": [
-        {
-          "category": "precious",
-          "up": 2,
-          "down": 2,
-          "flat": 0,
-          "valid": 4,
-          "average_change_pct": -0.24973953872018118,
-          "median_change_pct": -0.2367331460860711,
-          "breadth_ratio": 0.0,
-          "strength_score": -4.994790774403624,
-          "members": [
-            {
-              "symbol": "AG0",
-              "name": "白银",
-              "exchange": "SHFE",
-              "category": "precious",
-              "price": 15530.0,
-              "previous_settlement": 15460.0,
-              "change_pct": 0.4527813712807305,
-              "volume": 56798.0,
-              "hold": 202433.0,
-              "quote_time": "2026-09-16 003303",
-              "signal": "long",
-              "weight": 0.25
-            },
-            {
-              "symbol": "AU0",
-              "name": "黄金",
-              "exchange": "SHFE",
-              "category": "precious",
-              "price": 933.0,
-              "previous_settlement": 931.22,
-              "change_pct": 0.191147097356148,
-              "volume": 32960.0,
-              "hold": 170907.0,
-              "quote_time": "2026-09-16 003303",
-              "signal": "long",
-              "weight": 0.25
-            },
-            {
-              "symbol": "PD0",
-              "name": "钯",
-              "exchange": "GFEX",
-              "category": "precious",
-              "price": 306.4,
-              "previous_settlement": 308.45,
-              "change_pct": -0.6646133895282902,
-              "volume": 1207.0,
-              "hold": 6895.0,
-              "quote_time": "2026-09-15 150106",
-              "signal": "short",
-              "weight": 0.25
-            },
-            {
-              "symbol": "PT0",
-              "name": "铂",
-              "exchange": "GFEX",
-              "category": "precious",
-              "price": 435.25,
-              "previous_settlement": 439.55,
-              "change_pct": -0.978273233989313,
-              "volume": 2490.0,
-              "hold": 10340.0,
-              "quote_time": "2026-09-15 150106",
-              "signal": "short",
-              "weight": 0.25
-            }
-          ],
-          "allocation": "neutral",
-          "rank": 3
-        },
-        {
-          "category": "financial",
-          "up": 0,
-          "down": 2,
-          "flat": 5,
-          "valid": 7,
-          "average_change_pct": -0.007814961201308661,
-          "median_change_pct": -0.002773540424350074,
-          "breadth_ratio": -0.2857142857142857,
-          "strength_score": -17.299156366883317,
-          "members": [
-            {
-              "symbol": "T0",
-              "name": "10年国债",
-              "exchange": "CFFEX",
-              "category": "financial",
-              "price": 109.45,
-              "previous_settlement": 109.45,
-              "change_pct": 0.0,
-              "volume": 68414.0,
-              "hold": 402634.0,
-              "quote_time": "15:15:00 400",
-              "signal": "neutral",
-              "weight": 0.14285714285714285
-            },
-            {
-              "symbol": "TS0",
-              "name": "2年国债",
-              "exchange": "CFFEX",
-              "category": "financial",
-              "price": 102.6,
-              "previous_settlement": 102.6,
-              "change_pct": 0.0,
-              "volume": 32852.0,
-              "hold": 70809.0,
-              "quote_time": "15:15:00 400",
-              "signal": "neutral",
-              "weight": 0.14285714285714285
-            },
-            {
-              "symbol": "IC0",
-              "name": "中证500股指",
-              "exchange": "CFFEX",
-              "category": "financial",
-              "price": 7350.8,
-              "previous_settlement": 7351.0,
-              "change_pct": -0.0027207182696220578,
-              "volume": 50975.0,
-              "hold": 125992.0,
-              "quote_time": "15:00:00 400",
-              "signal": "neutral",
-              "weight": 0.14285714285714285
-            },
-            {
-              "symbol": "IM0",
-              "name": "中证1000股指",
-              "exchange": "CFFEX",
-              "category": "financial",
-              "price": 7210.8,
-              "previous_settlement": 7211.0,
-              "change_pct": -0.002773540424350074,
-              "volume": 79189.0,
-              "hold": 191858.0,
-              "quote_time": "15:00:00 400",
-              "signal": "neutral",
-              "weight": 0.14285714285714285
-            },
-            {
-              "symbol": "TF0",
-              "name": "5年国债",
-              "exchange": "CFFEX",
-              "category": "financial",
-              "price": 106.485,
-              "previous_settlement": 106.49,
-              "change_pct": -0.004695276551780481,
-              "volume": 65118.0,
-              "hold": 207499.0,
-              "quote_time": "15:15:00 400",
-              "signal": "neutral",
-              "weight": 0.14285714285714285
-            },
-            {
-              "symbol": "IH0",
-              "name": "上证50股指",
-              "exchange": "CFFEX",
-              "category": "financial",
-              "price": 2782.0,
-              "previous_settlement": 2782.6,
-              "change_pct": -0.02156256738301554,
-              "volume": 15865.0,
-              "hold": 54231.0,
-              "quote_time": "15:00:00 400",
-              "signal": "short",
-              "weight": 0.14285714285714285
-            },
-            {
-              "symbol": "IF0",
-              "name": "沪深300股指",
-              "exchange": "CFFEX",
-              "category": "financial",
-              "price": 4355.8,
-              "previous_settlement": 4356.8,
-              "change_pct": -0.022952625780392477,
-              "volume": 41354.0,
-              "hold": 134671.0,
-              "quote_time": "15:00:00 400",
-              "signal": "short",
-              "weight": 0.14285714285714285
-            }
-          ],
-          "allocation": "neutral",
-          "rank": 4
-        },
-        {
-          "category": "agriculture",
-          "up": 7,
-          "down": 15,
-          "flat": 0,
-          "valid": 22,
-          "average_change_pct": -0.45523783642533683,
-          "median_change_pct": -0.16846762628890954,
-          "breadth_ratio": -0.36363636363636365,
-          "strength_score": -30.922938546688556,
-          "members": [
-            {
-              "symbol": "RM0",
-              "name": "菜粕",
-              "exchange": "CZCE",
-              "category": "agriculture",
-              "price": 2317.0,
-              "previous_settlement": 2286.0,
-              "change_pct": 1.3560804899387602,
-              "volume": 294896.0,
-              "hold": 542945.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "M0",
-              "name": "豆粕",
-              "exchange": "DCE",
-              "category": "agriculture",
-              "price": 3414.0,
-              "previous_settlement": 3374.0,
-              "change_pct": 1.1855364552459946,
-              "volume": 570286.0,
-              "hold": 2747526.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "B0",
-              "name": "豆二",
-              "exchange": "DCE",
-              "category": "agriculture",
-              "price": 4117.0,
-              "previous_settlement": 4081.0,
-              "change_pct": 0.8821367311933281,
-              "volume": 67813.0,
-              "hold": 190370.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "OI0",
-              "name": "菜油",
-              "exchange": "CZCE",
-              "category": "agriculture",
-              "price": 10138.0,
-              "previous_settlement": 10101.0,
-              "change_pct": 0.366300366300365,
-              "volume": 61765.0,
-              "hold": 271516.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "CS0",
-              "name": "玉米淀粉",
-              "exchange": "DCE",
-              "category": "agriculture",
-              "price": 2462.0,
-              "previous_settlement": 2454.0,
-              "change_pct": 0.32599837000815146,
-              "volume": 78025.0,
-              "hold": 328023.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "Y0",
-              "name": "豆油",
-              "exchange": "DCE",
-              "category": "agriculture",
-              "price": 8967.0,
-              "previous_settlement": 8960.0,
-              "change_pct": 0.07812499999999556,
-              "volume": 97227.0,
-              "hold": 664536.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "long",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "BB0",
-              "name": "胶合板",
-              "exchange": "DCE",
-              "category": "agriculture",
-              "price": 146.75,
-              "previous_settlement": 146.7,
-              "change_pct": 0.034083162917530885,
-              "volume": 6.0,
-              "hold": 30.0,
-              "quote_time": "2026-09-15 150352",
-              "signal": "long",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "P0",
-              "name": "棕榈油",
-              "exchange": "DCE",
-              "category": "agriculture",
-              "price": 10030.0,
-              "previous_settlement": 10031.0,
-              "change_pct": -0.009969095803008532,
-              "volume": 161660.0,
-              "hold": 585593.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "short",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "RR0",
-              "name": "粳米",
-              "exchange": "DCE",
-              "category": "agriculture",
-              "price": 3602.0,
-              "previous_settlement": 3604.0,
-              "change_pct": -0.05549389567147678,
-              "volume": 164.0,
-              "hold": 20990.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "short",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "C0",
-              "name": "玉米",
-              "exchange": "DCE",
-              "category": "agriculture",
-              "price": 2210.0,
-              "previous_settlement": 2212.0,
-              "change_pct": -0.0904159132007254,
-              "volume": 242819.0,
-              "hold": 1142426.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "short",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "FB0",
-              "name": "纤维板",
-              "exchange": "DCE",
-              "category": "agriculture",
-              "price": 1269.5,
-              "previous_settlement": 1271.5,
-              "change_pct": -0.1572945340149401,
-              "volume": 2498.0,
-              "hold": 8793.0,
-              "quote_time": "2026-09-15 150352",
-              "signal": "short",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "LG0",
-              "name": "原木",
-              "exchange": "DCE",
-              "category": "agriculture",
-              "price": 833.5,
-              "previous_settlement": 835.0,
-              "change_pct": -0.179640718562879,
-              "volume": 3261.0,
-              "hold": 14309.0,
-              "quote_time": "2026-09-15 150352",
-              "signal": "short",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "SR0",
-              "name": "白糖",
-              "exchange": "CZCE",
-              "category": "agriculture",
-              "price": 5348.0,
-              "previous_settlement": 5369.0,
-              "change_pct": -0.39113428943937656,
-              "volume": 120146.0,
-              "hold": 612080.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "short",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "A0",
-              "name": "豆一",
-              "exchange": "DCE",
-              "category": "agriculture",
-              "price": 5019.0,
-              "previous_settlement": 5041.0,
-              "change_pct": -0.4364213449712384,
-              "volume": 81005.0,
-              "hold": 338357.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "short",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "PK0",
-              "name": "花生",
-              "exchange": "CZCE",
-              "category": "agriculture",
-              "price": 7780.0,
-              "previous_settlement": 7818.0,
-              "change_pct": -0.4860578152980355,
-              "volume": 89567.0,
-              "hold": 245767.0,
-              "quote_time": "2026-09-15 150000",
-              "signal": "short",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "CF0",
-              "name": "棉花",
-              "exchange": "CZCE",
-              "category": "agriculture",
-              "price": 15990.0,
-              "previous_settlement": 16110.0,
-              "change_pct": -0.7448789571694592,
-              "volume": 142492.0,
-              "hold": 528869.0,
-              "quote_time": "2026-09-15 230000",
-              "signal": "short",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "CY0",
-              "name": "棉纱",
-              "exchange": "CZCE",
-              "category": "agriculture",
-              "price": 21880.0,
-              "previous_settlement": 22130.0,
-              "change_pct": -1.1296882060551239,
-              "volume": 5940.0,
-              "hold": 12850.0,
-              "quote_time": "2026-09-15 225959",
-              "signal": "short",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "AP0",
-              "name": "苹果",
-              "exchange": "CZCE",
-              "category": "agriculture",
-              "price": 7388.0,
-              "previous_settlement": 7478.0,
-              "change_pct": -1.2035303557100807,
-              "volume": 69275.0,
-              "hold": 110073.0,
-              "quote_time": "2026-09-15 150000",
-              "signal": "short",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "RS0",
-              "name": "菜籽",
-              "exchange": "CZCE",
-              "category": "agriculture",
-              "price": 5589.0,
-              "previous_settlement": 5698.0,
-              "change_pct": -1.9129519129519101,
-              "volume": 16.0,
-              "hold": 16.0,
-              "quote_time": "2026-09-15 150000",
-              "signal": "short",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "JD0",
-              "name": "鸡蛋",
-              "exchange": "DCE",
-              "category": "agriculture",
-              "price": 3769.0,
-              "previous_settlement": 3860.0,
-              "change_pct": -2.3575129533678796,
-              "volume": 368512.0,
-              "hold": 285210.0,
-              "quote_time": "2026-09-15 150500",
-              "signal": "short",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "CJ0",
-              "name": "红枣",
-              "exchange": "CZCE",
-              "category": "agriculture",
-              "price": 7320.0,
-              "previous_settlement": 7510.0,
-              "change_pct": -2.5299600532623145,
-              "volume": 158032.0,
-              "hold": 236475.0,
-              "quote_time": "2026-09-15 150000",
-              "signal": "short",
-              "weight": 0.045454545454545456
-            },
-            {
-              "symbol": "LH0",
-              "name": "生猪",
-              "exchange": "DCE",
-              "category": "agriculture",
-              "price": 11235.0,
-              "previous_settlement": 11530.0,
-              "change_pct": -2.5585429314830876,
-              "volume": 172254.0,
-              "hold": 221287.0,
-              "quote_time": "2026-09-15 150500",
-              "signal": "short",
-              "weight": 0.045454545454545456
-            }
-          ],
-          "allocation": "neutral",
-          "rank": 5
-        }
-      ],
-      "spread_score": 139.49411074708811,
-      "method": "板块内每个主力连续等权：强弱分=60×涨跌家数差/有效品种数+20×板块平均涨跌幅；做多前2、做空后2，其余中性，并展开全部品种贡献",
-      "note": "这是当日截面相对强弱配置，不代表七板块均已完成日线策略回测；金融板块同时含股指与国债，使用前应复核内部方向。"
-    },
     "metal_details": [
+      {
+        "symbol": "AG0",
+        "name": "白银",
+        "exchange": "SHFE",
+        "category": "precious",
+        "price": 15634.0,
+        "previous_settlement": 15460.0,
+        "change_pct": 1.1254851228978069,
+        "volume": 63980.0,
+        "hold": 202103.0,
+        "quote_time": "2026-09-16 023000"
+      },
       {
         "symbol": "RB0",
         "name": "螺纹钢",
@@ -2580,18 +1354,6 @@
         "quote_time": "2026-09-15 230000"
       },
       {
-        "symbol": "AG0",
-        "name": "白银",
-        "exchange": "SHFE",
-        "category": "precious",
-        "price": 15530.0,
-        "previous_settlement": 15460.0,
-        "change_pct": 0.4527813712807305,
-        "volume": 56798.0,
-        "hold": 202433.0,
-        "quote_time": "2026-09-16 003303"
-      },
-      {
         "symbol": "AL0",
         "name": "沪铝",
         "exchange": "SHFE",
@@ -2599,57 +1361,57 @@
         "price": 24135.0,
         "previous_settlement": 24040.0,
         "change_pct": 0.39517470881864636,
-        "volume": 34887.0,
-        "hold": 222771.0,
-        "quote_time": "2026-09-16 003303"
+        "volume": 35723.0,
+        "hold": 222781.0,
+        "quote_time": "2026-09-16 010000"
       },
       {
         "symbol": "BC0",
         "name": "国际铜",
         "exchange": "SHFE/INE",
         "category": "nonferrous",
-        "price": 95380.0,
+        "price": 95390.0,
         "previous_settlement": 95030.0,
-        "change_pct": 0.3683047458697297,
-        "volume": 2370.0,
-        "hold": 12610.0,
-        "quote_time": "2026-09-16 003303"
-      },
-      {
-        "symbol": "ZN0",
-        "name": "沪锌",
-        "exchange": "SHFE",
-        "category": "nonferrous",
-        "price": 26195.0,
-        "previous_settlement": 26115.0,
-        "change_pct": 0.3063373540111103,
-        "volume": 55436.0,
-        "hold": 123910.0,
-        "quote_time": "2026-09-16 003303"
-      },
-      {
-        "symbol": "CU0",
-        "name": "沪铜",
-        "exchange": "SHFE",
-        "category": "nonferrous",
-        "price": 107250.0,
-        "previous_settlement": 106930.0,
-        "change_pct": 0.29926119891516834,
-        "volume": 26435.0,
-        "hold": 175532.0,
-        "quote_time": "2026-09-16 003301"
+        "change_pct": 0.37882773860886676,
+        "volume": 2439.0,
+        "hold": 12595.0,
+        "quote_time": "2026-09-16 010000"
       },
       {
         "symbol": "AU0",
         "name": "黄金",
         "exchange": "SHFE",
         "category": "precious",
-        "price": 933.0,
+        "price": 934.54,
         "previous_settlement": 931.22,
-        "change_pct": 0.191147097356148,
-        "volume": 32960.0,
-        "hold": 170907.0,
-        "quote_time": "2026-09-16 003303"
+        "change_pct": 0.35652155237215766,
+        "volume": 39560.0,
+        "hold": 170641.0,
+        "quote_time": "2026-09-16 023000"
+      },
+      {
+        "symbol": "CU0",
+        "name": "沪铜",
+        "exchange": "SHFE",
+        "category": "nonferrous",
+        "price": 107200.0,
+        "previous_settlement": 106930.0,
+        "change_pct": 0.25250163658467883,
+        "volume": 27392.0,
+        "hold": 175198.0,
+        "quote_time": "2026-09-16 010000"
+      },
+      {
+        "symbol": "ZN0",
+        "name": "沪锌",
+        "exchange": "SHFE",
+        "category": "nonferrous",
+        "price": 26170.0,
+        "previous_settlement": 26115.0,
+        "change_pct": 0.2106069308826397,
+        "volume": 56441.0,
+        "hold": 123898.0,
+        "quote_time": "2026-09-16 010000"
       },
       {
         "symbol": "HC0",
@@ -2664,18 +1426,6 @@
         "quote_time": "2026-09-15 230000"
       },
       {
-        "symbol": "SN0",
-        "name": "沪锡",
-        "exchange": "SHFE",
-        "category": "nonferrous",
-        "price": 394570.0,
-        "previous_settlement": 394520.0,
-        "change_pct": 0.012673628713377738,
-        "volume": 52350.0,
-        "hold": 35193.0,
-        "quote_time": "2026-09-16 003303"
-      },
-      {
         "symbol": "I0",
         "name": "铁矿石",
         "exchange": "DCE",
@@ -2688,6 +1438,18 @@
         "quote_time": "2026-09-15 230000"
       },
       {
+        "symbol": "SN0",
+        "name": "沪锡",
+        "exchange": "SHFE",
+        "category": "nonferrous",
+        "price": 394430.0,
+        "previous_settlement": 394520.0,
+        "change_pct": -0.022812531684068826,
+        "volume": 54094.0,
+        "hold": 34815.0,
+        "quote_time": "2026-09-16 010000"
+      },
+      {
         "symbol": "AD0",
         "name": "铸造铝合金",
         "exchange": "SHFE",
@@ -2695,9 +1457,9 @@
         "price": 23275.0,
         "previous_settlement": 23290.0,
         "change_pct": -0.06440532417346656,
-        "volume": 3903.0,
-        "hold": 18824.0,
-        "quote_time": "2026-09-16 003303"
+        "volume": 3974.0,
+        "hold": 18795.0,
+        "quote_time": "2026-09-16 010000"
       },
       {
         "symbol": "PB0",
@@ -2707,21 +1469,21 @@
         "price": 15780.0,
         "previous_settlement": 15815.0,
         "change_pct": -0.22130888397091653,
-        "volume": 25017.0,
-        "hold": 62879.0,
-        "quote_time": "2026-09-16 003300"
+        "volume": 25598.0,
+        "hold": 62815.0,
+        "quote_time": "2026-09-16 010000"
       },
       {
         "symbol": "AO0",
         "name": "氧化铝",
         "exchange": "SHFE",
         "category": "nonferrous",
-        "price": 2680.0,
+        "price": 2682.0,
         "previous_settlement": 2688.0,
-        "change_pct": -0.29761904761904656,
-        "volume": 45563.0,
-        "hold": 233408.0,
-        "quote_time": "2026-09-16 003303"
+        "change_pct": -0.22321428571429047,
+        "volume": 46823.0,
+        "hold": 232837.0,
+        "quote_time": "2026-09-16 010000"
       },
       {
         "symbol": "SM0",
@@ -2784,18 +1546,6 @@
         "quote_time": "2026-09-15 225959"
       },
       {
-        "symbol": "SS0",
-        "name": "不锈钢",
-        "exchange": "SHFE",
-        "category": "ferrous",
-        "price": 13360.0,
-        "previous_settlement": 13545.0,
-        "change_pct": -1.3658176448874126,
-        "volume": 100062.0,
-        "hold": 134775.0,
-        "quote_time": "2026-09-16 003302"
-      },
-      {
         "symbol": "JM0",
         "name": "焦煤",
         "exchange": "DCE",
@@ -2808,19 +1558,31 @@
         "quote_time": "2026-09-15 230000"
       },
       {
+        "symbol": "SS0",
+        "name": "不锈钢",
+        "exchange": "SHFE",
+        "category": "ferrous",
+        "price": 13355.0,
+        "previous_settlement": 13545.0,
+        "change_pct": -1.4027316352897778,
+        "volume": 102249.0,
+        "hold": 134430.0,
+        "quote_time": "2026-09-16 010000"
+      },
+      {
         "symbol": "NI0",
         "name": "沪镍",
         "exchange": "SHFE",
         "category": "nonferrous",
-        "price": 120990.0,
+        "price": 121020.0,
         "previous_settlement": 124080.0,
-        "change_pct": -2.49032882011605,
-        "volume": 109163.0,
-        "hold": 132951.0,
-        "quote_time": "2026-09-16 003303"
+        "change_pct": -2.466150870406192,
+        "volume": 114686.0,
+        "hold": 131448.0,
+        "quote_time": "2026-09-16 010000"
       }
     ],
-    "last_quote": "2026-09-16 003303"
+    "last_quote": "2026-09-16 023000"
   },
   "performance": {
     "assumptions": {
@@ -2866,15 +1628,15 @@
         "name": "5分钟动量",
         "frequency": "5m",
         "assets": 17,
-        "trades": 1153,
-        "win_rate_pct": 22.20294882914137,
-        "equal_weight_return_pct": -4.986744152212744,
-        "median_return_pct": -4.83414195483336,
-        "average_sharpe": -16.824744720799924,
+        "trades": 1151,
+        "win_rate_pct": 22.328410078192874,
+        "equal_weight_return_pct": -4.9060582595881135,
+        "median_return_pct": -4.693884785142077,
+        "average_sharpe": -16.57633309514761,
         "positive_assets": 0,
         "worst_drawdown_pct": -12.21942414857039,
         "sample_start": "2026-08-18 09:30:00",
-        "sample_end": "2026-09-16 00:25:00"
+        "sample_end": "2026-09-16 02:30:00"
       },
       {
         "key": "fibonacci_0618",
@@ -2929,7 +1691,7 @@
   "paper_trading": {
     "mode": "forward_paper",
     "started_at": "2026-09-15T22:28:43+08:00",
-    "updated_at": "2026-09-16T00:28:46+08:00",
+    "updated_at": "2026-09-16T08:00:47+08:00",
     "initial_cash": 1000000.0,
     "scope": [
       {
@@ -2987,42 +1749,42 @@
       {
         "key": "ma_trend",
         "name": "移动均线10/30/60",
-        "equity": 1001014.166900047,
-        "return_pct": 0.10141669000469644,
+        "equity": 1001010.6877103869,
+        "return_pct": 0.10106877103870371,
         "max_drawdown_pct": -0.020053886161452983,
         "trades": 13,
         "active_positions": 7,
-        "observations": 10
+        "observations": 11
       },
       {
         "key": "fdt_channel",
         "name": "FDT启发通道共振",
-        "equity": 1000427.7663282584,
-        "return_pct": 0.0427766328258361,
+        "equity": 1000676.9163180079,
+        "return_pct": 0.06769163180078142,
         "max_drawdown_pct": -0.037362687118236426,
         "trades": 6,
         "active_positions": 5,
-        "observations": 10
-      },
-      {
-        "key": "daily_four_factor",
-        "name": "日线四因子",
-        "equity": 1000403.3051098831,
-        "return_pct": 0.040330510988306756,
-        "max_drawdown_pct": -0.02770745853760692,
-        "trades": 4,
-        "active_positions": 2,
-        "observations": 10
+        "observations": 11
       },
       {
         "key": "fibonacci_0618",
         "name": "斐波那契0.618通道",
-        "equity": 1000371.4068159483,
-        "return_pct": 0.0371406815948383,
+        "equity": 1000588.855363749,
+        "return_pct": 0.05888553637489746,
         "max_drawdown_pct": -0.026910148835868064,
         "trades": 6,
         "active_positions": 4,
-        "observations": 10
+        "observations": 11
+      },
+      {
+        "key": "daily_four_factor",
+        "name": "日线四因子",
+        "equity": 1000508.5238705039,
+        "return_pct": 0.050852387050381864,
+        "max_drawdown_pct": -0.02770745853760692,
+        "trades": 4,
+        "active_positions": 2,
+        "observations": 11
       }
     ],
     "positions": [
@@ -3035,8 +1797,8 @@
         "side": -1,
         "position_size_pct": 100.0,
         "entry_price": 13375.0,
-        "current_price": 13370.0,
-        "unrealized_pct": 0.037383177570093906,
+        "current_price": 13355.0,
+        "unrealized_pct": 0.14953271028037562,
         "volatility_control": {
           "atr_pct": 1.2558580380180084,
           "percentile_252": 31.746031746031743,
@@ -3048,7 +1810,7 @@
           "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
         },
         "entry_time": "2026-09-15T23:00:25+08:00",
-        "bar_time": "2026-09-16 00:25:00"
+        "bar_time": "2026-09-16 01:00:00"
       },
       {
         "strategy_key": "fdt_channel",
@@ -3059,8 +1821,8 @@
         "side": -1,
         "position_size_pct": 100.0,
         "entry_price": 15775.0,
-        "current_price": 15785.0,
-        "unrealized_pct": -0.06339144215530279,
+        "current_price": 15780.0,
+        "unrealized_pct": -0.0316957210776625,
         "volatility_control": {
           "atr_pct": 1.0912383971021056,
           "percentile_252": 59.92063492063492,
@@ -3072,7 +1834,7 @@
           "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
         },
         "entry_time": "2026-09-15T22:28:43+08:00",
-        "bar_time": "2026-09-16 00:25:00"
+        "bar_time": "2026-09-16 01:00:00"
       },
       {
         "strategy_key": "fdt_channel",
@@ -3083,8 +1845,8 @@
         "side": -1,
         "position_size_pct": 100.0,
         "entry_price": 393210.0,
-        "current_price": 394780.0,
-        "unrealized_pct": -0.3992777396302216,
+        "current_price": 394430.0,
+        "unrealized_pct": -0.3102667785661595,
         "volatility_control": {
           "atr_pct": 2.2279954767419454,
           "percentile_252": 36.904761904761905,
@@ -3096,7 +1858,7 @@
           "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
         },
         "entry_time": "2026-09-15T22:28:43+08:00",
-        "bar_time": "2026-09-16 00:25:00"
+        "bar_time": "2026-09-16 01:00:00"
       },
       {
         "strategy_key": "fdt_channel",
@@ -3107,8 +1869,8 @@
         "side": -1,
         "position_size_pct": 100.0,
         "entry_price": 121510.0,
-        "current_price": 121070.0,
-        "unrealized_pct": 0.3621101143938765,
+        "current_price": 121050.0,
+        "unrealized_pct": 0.37856966504814515,
         "volatility_control": {
           "atr_pct": 1.556503198294243,
           "percentile_252": 33.33333333333333,
@@ -3120,7 +1882,7 @@
           "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
         },
         "entry_time": "2026-09-15T22:28:43+08:00",
-        "bar_time": "2026-09-16 00:25:00"
+        "bar_time": "2026-09-16 01:00:00"
       },
       {
         "strategy_key": "fdt_channel",
@@ -3155,8 +1917,8 @@
         "side": -1,
         "position_size_pct": 100.0,
         "entry_price": 13375.0,
-        "current_price": 13370.0,
-        "unrealized_pct": 0.037383177570093906,
+        "current_price": 13355.0,
+        "unrealized_pct": 0.14953271028037562,
         "volatility_control": {
           "atr_pct": 1.2558580380180084,
           "percentile_252": 31.746031746031743,
@@ -3168,7 +1930,7 @@
           "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
         },
         "entry_time": "2026-09-15T23:00:25+08:00",
-        "bar_time": "2026-09-16 00:25:00"
+        "bar_time": "2026-09-16 01:00:00"
       },
       {
         "strategy_key": "fibonacci_0618",
@@ -3179,8 +1941,8 @@
         "side": -1,
         "position_size_pct": 100.0,
         "entry_price": 393210.0,
-        "current_price": 394780.0,
-        "unrealized_pct": -0.3992777396302216,
+        "current_price": 394430.0,
+        "unrealized_pct": -0.3102667785661595,
         "volatility_control": {
           "atr_pct": 2.2279954767419454,
           "percentile_252": 36.904761904761905,
@@ -3192,7 +1954,7 @@
           "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
         },
         "entry_time": "2026-09-15T22:28:43+08:00",
-        "bar_time": "2026-09-16 00:25:00"
+        "bar_time": "2026-09-16 01:00:00"
       },
       {
         "strategy_key": "fibonacci_0618",
@@ -3203,8 +1965,8 @@
         "side": -1,
         "position_size_pct": 100.0,
         "entry_price": 121510.0,
-        "current_price": 121070.0,
-        "unrealized_pct": 0.3621101143938765,
+        "current_price": 121050.0,
+        "unrealized_pct": 0.37856966504814515,
         "volatility_control": {
           "atr_pct": 1.556503198294243,
           "percentile_252": 33.33333333333333,
@@ -3216,7 +1978,7 @@
           "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
         },
         "entry_time": "2026-09-15T22:28:43+08:00",
-        "bar_time": "2026-09-16 00:25:00"
+        "bar_time": "2026-09-16 01:00:00"
       },
       {
         "strategy_key": "fibonacci_0618",
@@ -3251,8 +2013,8 @@
         "side": -1,
         "position_size_pct": 100.0,
         "entry_price": 393210.0,
-        "current_price": 394780.0,
-        "unrealized_pct": -0.3992777396302216,
+        "current_price": 394430.0,
+        "unrealized_pct": -0.3102667785661595,
         "volatility_control": {
           "atr_pct": 2.2279954767419454,
           "percentile_252": 36.904761904761905,
@@ -3264,7 +2026,7 @@
           "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
         },
         "entry_time": "2026-09-15T22:28:43+08:00",
-        "bar_time": "2026-09-16 00:25:00"
+        "bar_time": "2026-09-16 01:00:00"
       },
       {
         "strategy_key": "daily_four_factor",
@@ -3275,8 +2037,8 @@
         "side": -1,
         "position_size_pct": 100.0,
         "entry_price": 121510.0,
-        "current_price": 121070.0,
-        "unrealized_pct": 0.3621101143938765,
+        "current_price": 121050.0,
+        "unrealized_pct": 0.37856966504814515,
         "volatility_control": {
           "atr_pct": 1.556503198294243,
           "percentile_252": 33.33333333333333,
@@ -3288,7 +2050,7 @@
           "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
         },
         "entry_time": "2026-09-15T22:28:43+08:00",
-        "bar_time": "2026-09-16 00:25:00"
+        "bar_time": "2026-09-16 01:00:00"
       },
       {
         "strategy_key": "ma_trend",
@@ -3299,8 +2061,8 @@
         "side": -1,
         "position_size_pct": 100.0,
         "entry_price": 13375.0,
-        "current_price": 13370.0,
-        "unrealized_pct": 0.037383177570093906,
+        "current_price": 13355.0,
+        "unrealized_pct": 0.14953271028037562,
         "volatility_control": {
           "atr_pct": 1.2558580380180084,
           "percentile_252": 31.746031746031743,
@@ -3312,7 +2074,7 @@
           "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
         },
         "entry_time": "2026-09-15T23:00:25+08:00",
-        "bar_time": "2026-09-16 00:25:00"
+        "bar_time": "2026-09-16 01:00:00"
       },
       {
         "strategy_key": "ma_trend",
@@ -3323,8 +2085,8 @@
         "side": 1,
         "position_size_pct": 100.0,
         "entry_price": 15775.0,
-        "current_price": 15785.0,
-        "unrealized_pct": 0.06339144215530279,
+        "current_price": 15780.0,
+        "unrealized_pct": 0.0316957210776625,
         "volatility_control": {
           "atr_pct": 1.0912383971021056,
           "percentile_252": 59.92063492063492,
@@ -3336,7 +2098,7 @@
           "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
         },
         "entry_time": "2026-09-15T22:28:43+08:00",
-        "bar_time": "2026-09-16 00:25:00"
+        "bar_time": "2026-09-16 01:00:00"
       },
       {
         "strategy_key": "ma_trend",
@@ -3347,8 +2109,8 @@
         "side": 1,
         "position_size_pct": 100.0,
         "entry_price": 107030.0,
-        "current_price": 107260.0,
-        "unrealized_pct": 0.2148930206484101,
+        "current_price": 107200.0,
+        "unrealized_pct": 0.1588339717836229,
         "volatility_control": {
           "atr_pct": 1.2646654476048105,
           "percentile_252": 32.142857142857146,
@@ -3360,7 +2122,7 @@
           "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
         },
         "entry_time": "2026-09-15T22:28:43+08:00",
-        "bar_time": "2026-09-16 00:25:00"
+        "bar_time": "2026-09-16 01:00:00"
       },
       {
         "strategy_key": "ma_trend",
@@ -3371,8 +2133,8 @@
         "side": 1,
         "position_size_pct": 100.0,
         "entry_price": 24110.0,
-        "current_price": 24140.0,
-        "unrealized_pct": 0.12442969722106234,
+        "current_price": 24135.0,
+        "unrealized_pct": 0.10369141435089269,
         "volatility_control": {
           "atr_pct": 1.0623166503689216,
           "percentile_252": 30.555555555555557,
@@ -3384,7 +2146,7 @@
           "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
         },
         "entry_time": "2026-09-15T22:28:43+08:00",
-        "bar_time": "2026-09-16 00:25:00"
+        "bar_time": "2026-09-16 01:00:00"
       },
       {
         "strategy_key": "ma_trend",
@@ -3395,8 +2157,8 @@
         "side": 1,
         "position_size_pct": 25.0,
         "entry_price": 26085.0,
-        "current_price": 26195.0,
-        "unrealized_pct": 0.4216982940387304,
+        "current_price": 26170.0,
+        "unrealized_pct": 0.3258577726662937,
         "volatility_control": {
           "atr_pct": 2.0886266153047566,
           "percentile_252": 93.65079365079364,
@@ -3408,7 +2170,7 @@
           "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
         },
         "entry_time": "2026-09-15T22:28:43+08:00",
-        "bar_time": "2026-09-16 00:25:00"
+        "bar_time": "2026-09-16 01:00:00"
       },
       {
         "strategy_key": "ma_trend",
@@ -3419,8 +2181,8 @@
         "side": -1,
         "position_size_pct": 100.0,
         "entry_price": 121510.0,
-        "current_price": 121070.0,
-        "unrealized_pct": 0.3621101143938765,
+        "current_price": 121050.0,
+        "unrealized_pct": 0.37856966504814515,
         "volatility_control": {
           "atr_pct": 1.556503198294243,
           "percentile_252": 33.33333333333333,
@@ -3432,7 +2194,7 @@
           "method": "ATR14/收盘价；使用最近252个交易日分位与相对20日均值的跃升倍数"
         },
         "entry_time": "2026-09-15T22:28:43+08:00",
-        "bar_time": "2026-09-16 00:25:00"
+        "bar_time": "2026-09-16 01:00:00"
       },
       {
         "strategy_key": "ma_trend",
@@ -3767,9 +2529,44 @@
     "note": "无真实委托；仅跟踪指定10个品种，含开平各万1.2和每侧1跳。方向与仓位分离，高波动可只减仓不改方向；完整净值与头寸变化可下载追溯，不回填历史收益。"
   },
   "signal_changes": {
-    "updated_at": "2026-09-16T00:28:46+08:00",
-    "current_changes": [],
+    "updated_at": "2026-09-16T08:00:47+08:00",
+    "current_changes": [
+      {
+        "event_id": "gold:2026-09-16 02:30:00:watch_short>neutral",
+        "time": "2026-09-16T08:00:47+08:00",
+        "observation": "2026-09-16 02:30:00",
+        "asset_id": "gold",
+        "asset": "黄金",
+        "symbol": "AU0",
+        "from_signal": "watch_short",
+        "to_signal": "neutral",
+        "from_score": -48,
+        "to_score": -15,
+        "score_delta": 33,
+        "daily_from": "neutral",
+        "daily_to": "neutral",
+        "severity": "important",
+        "reason": "综合信号状态变化"
+      }
+    ],
     "recent_events": [
+      {
+        "event_id": "gold:2026-09-16 02:30:00:watch_short>neutral",
+        "time": "2026-09-16T08:00:47+08:00",
+        "observation": "2026-09-16 02:30:00",
+        "asset_id": "gold",
+        "asset": "黄金",
+        "symbol": "AU0",
+        "from_signal": "watch_short",
+        "to_signal": "neutral",
+        "from_score": -48,
+        "to_score": -15,
+        "score_delta": 33,
+        "daily_from": "neutral",
+        "daily_to": "neutral",
+        "severity": "important",
+        "reason": "综合信号状态变化"
+      },
       {
         "event_id": "zinc:2026-09-16 00:15:00:short>watch_long",
         "time": "2026-09-16T00:16:11+08:00",
@@ -3844,140 +2641,44 @@
       "short_count": 3,
       "daily_score": -75,
       "daily_signal": "short",
-      "status": "ok",
-      "status_text": "实时",
-      "price": 107260.0,
-      "bar_time": "2026-09-16 00:25:00",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 107200.0,
+      "bar_time": "2026-09-16 01:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 3.8,
+      "age_minutes": 420.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.2148930206484101,
+      "change_pct": 0.1588339717836229,
       "returns": {
         "day": -0.7511127596439127,
         "week": -3.2453444223467742,
         "month": -0.8338738070971963
       },
       "position_changes": {
-        "day": 1.0281971589141126,
-        "week": -8.7675374448146,
-        "month": -5.250120427702942,
-        "mode": "aggregate_all_contracts",
-        "contract_count": 12,
+        "day": 1.0281952314985743,
+        "week": -8.779721605372902,
+        "month": -5.249944620837333,
+        "mode": "weighted_contract",
+        "series_name": "沪铜加权",
+        "series_code": "cufi",
+        "contract_count": null,
         "coverage_pct": 100.0,
-        "constituents": [
-          {
-            "symbol": "CU2610",
-            "name": "铜连续",
-            "latest_hold": 180075.0,
-            "share_pct": 32.891273518187894,
-            "week_change_pct": -21.65781333611767,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "CU2611",
-            "name": "铜2611",
-            "latest_hold": 131781.0,
-            "share_pct": 24.476712708579605,
-            "week_change_pct": 5.266479215260245,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "CU2612",
-            "name": "铜2612",
-            "latest_hold": 92036.0,
-            "share_pct": 17.278550138725226,
-            "week_change_pct": 11.338809382674242,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "CU2701",
-            "name": "铜2701",
-            "latest_hold": 42804.0,
-            "share_pct": 8.075475515606353,
-            "week_change_pct": 8.880014244651901,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "CU2703",
-            "name": "铜2703",
-            "latest_hold": 26729.0,
-            "share_pct": 5.006472594976667,
-            "week_change_pct": 9.522638803523865,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "CU2702",
-            "name": "铜2702",
-            "latest_hold": 20883.0,
-            "share_pct": 3.9193389148146554,
-            "week_change_pct": 15.990890913130418,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "CU2704",
-            "name": "铜2704",
-            "latest_hold": 12696.0,
-            "share_pct": 2.3769691769594354,
-            "week_change_pct": 11.849176284027841,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "CU2705",
-            "name": "铜2705",
-            "latest_hold": 9987.0,
-            "share_pct": 1.868153896015092,
-            "week_change_pct": 26.003028009084026,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "CU2706",
-            "name": "铜2706",
-            "latest_hold": 8617.0,
-            "share_pct": 1.6088754170655446,
-            "week_change_pct": 31.61753474873987,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "CU2708",
-            "name": "铜2708",
-            "latest_hold": 5438.0,
-            "share_pct": 1.0196913012444992,
-            "week_change_pct": 75.19329896907216,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "CU2707",
-            "name": "铜2707",
-            "latest_hold": 4972.0,
-            "share_pct": 0.9305174891202328,
-            "week_change_pct": 39.93808049535603,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "CU2609",
-            "name": "铜2609",
-            "latest_hold": 2925.0,
-            "share_pct": 0.5479693287047879,
-            "week_change_pct": -92.46619446233098,
-            "as_of": "2026-09-15"
-          }
-        ],
+        "constituents": [],
         "as_of": "2026-09-15",
-        "method": "将当前挂牌且取得历史数据的全部分月合约持仓量逐日求和，再计算品种总持仓的1/5/20日变化；连续合约本身不重复计入",
-        "failures": [],
-        "weighted_contract_error": "Remote end closed connection without response",
+        "method": "优先直接读取东方财富品种加权合约的持仓量字段；该字段为品种各分月合约汇总持仓，连续合约不重复计入",
+        "source": "东方财富期货加权合约日线",
         "continuous_proxy": {
           "day": -4.127712588112531,
           "week": -21.65781333611767,
           "month": -6.40641160908727
         }
       },
-      "capital_bucket": "weak",
+      "capital_bucket": "warn_short",
       "technical_methods": {
         "trend": [
           {
@@ -4060,9 +2761,9 @@
           },
           {
             "name": "OI 5日变化",
-            "value": "-8.77%",
+            "value": "-8.78%",
             "signal": "short",
-            "note": "全合约汇总 · 12合约 · 覆盖率100.0%"
+            "note": "加权合约 · None合约 · 覆盖率100.0%"
           }
         ]
       },
@@ -4188,18 +2889,18 @@
           "name": "5分钟动量",
           "status": "ok",
           "frequency": "5m",
-          "trades": 60,
-          "win_rate_pct": 30.0,
-          "net_return_pct": -1.6136707246807602,
-          "annual_return_pct": -33.399974928251495,
-          "max_drawdown_pct": -2.0733176090032113,
-          "sharpe": -8.324375441780578,
-          "profit_factor": 0.5445628050110927,
-          "avg_trade_pct": -0.027018387574921632,
+          "trades": 59,
+          "win_rate_pct": 30.508474576271187,
+          "net_return_pct": -1.5628887696754301,
+          "annual_return_pct": -32.535762984241615,
+          "max_drawdown_pct": -2.0733176090031447,
+          "sharpe": -8.064693836571228,
+          "profit_factor": 0.5525722900866743,
+          "avg_trade_pct": -0.026601854839165183,
           "positive_trades": 18,
           "latest_target": 0,
-          "sample_start": "2026-09-01 23:40:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "sample_start": "2026-09-02 00:15:00",
+          "sample_end": "2026-09-16 01:00:00",
           "observations": 938
         }
       ],
@@ -4219,14 +2920,14 @@
         "hour": {
           "signal": "strong_short",
           "vote": -2,
-          "momentum_pct": -0.027969420100693032,
-          "ema8": 107194.76089774299,
-          "ema21": 107741.85939837557,
-          "rsi": 37.5
+          "momentum_pct": -0.08388479821045403,
+          "ema8": 107195.925142689,
+          "ema21": 107692.5994530687,
+          "rsi": 34.795321637426895
         },
         "five": {
-          "signal": "watch_long",
-          "score": 40
+          "signal": "neutral",
+          "score": 9
         }
       },
       "sparkline": [
@@ -4480,15 +3181,15 @@
         },
         "hourly": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 1
+          "incomplete_bars_excluded": 0
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 1
+          "incomplete_bars_excluded": 0
         },
         "cache_errors": {},
         "cache_retrieved_at": {},
-        "last_actual_observation": "2026-09-16 00:25:00",
+        "last_actual_observation": "2026-09-16 01:00:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -4536,19 +3237,19 @@
       "short_count": 0,
       "daily_score": 50,
       "daily_signal": "watch_long",
-      "status": "ok",
-      "status_text": "实时",
-      "price": 24140.0,
-      "bar_time": "2026-09-16 00:25:00",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 24135.0,
+      "bar_time": "2026-09-16 01:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 3.8,
+      "age_minutes": 420.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.1451980916822304,
+      "change_pct": 0.12445550715618481,
       "returns": {
         "day": 0.2912419388391818,
         "week": -1.451349141455438,
@@ -4557,119 +3258,23 @@
       "position_changes": {
         "day": -1.6275533409817577,
         "week": -7.715503447704897,
-        "month": -7.517462991859647,
-        "mode": "aggregate_all_contracts",
-        "contract_count": 12,
+        "month": -7.518643440412786,
+        "mode": "weighted_contract",
+        "series_name": "沪铝加权",
+        "series_code": "alfi",
+        "contract_count": null,
         "coverage_pct": 100.0,
-        "constituents": [
-          {
-            "symbol": "AL2611",
-            "name": "铝2611",
-            "latest_hold": 220901.0,
-            "share_pct": 38.37375546904606,
-            "week_change_pct": 17.98880473448634,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "AL2610",
-            "name": "铝连续",
-            "latest_hold": 169625.0,
-            "share_pct": 28.926516691356323,
-            "week_change_pct": -34.35437992221212,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "AL2612",
-            "name": "铝2612",
-            "latest_hold": 81324.0,
-            "share_pct": 14.172666827436526,
-            "week_change_pct": 13.79715661032128,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "AL2701",
-            "name": "铝2701",
-            "latest_hold": 42203.0,
-            "share_pct": 7.212939676852585,
-            "week_change_pct": -5.080743106472941,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "AL2702",
-            "name": "铝2702",
-            "latest_hold": 19142.0,
-            "share_pct": 3.303131567161608,
-            "week_change_pct": 8.226380957765599,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "AL2703",
-            "name": "铝2703",
-            "latest_hold": 15473.0,
-            "share_pct": 2.663554621559238,
-            "week_change_pct": 24.071846684307594,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "AL2704",
-            "name": "铝2704",
-            "latest_hold": 10911.0,
-            "share_pct": 1.8780790298687426,
-            "week_change_pct": 21.09877913429523,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "AL2609",
-            "name": "铝2609",
-            "latest_hold": 10395.0,
-            "share_pct": 1.7905742928997141,
-            "week_change_pct": -48.3862959285005,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "AL2705",
-            "name": "铝2705",
-            "latest_hold": 4495.0,
-            "share_pct": 0.7744513728597513,
-            "week_change_pct": 10.117589416952466,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "AL2706",
-            "name": "铝2706",
-            "latest_hold": 2837.0,
-            "share_pct": 0.4893719640334861,
-            "week_change_pct": 46.76668391101914,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "AL2707",
-            "name": "铝2707",
-            "latest_hold": 1644.0,
-            "share_pct": 0.2862851827608778,
-            "week_change_pct": 89.40092165898616,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "AL2708",
-            "name": "铝2708",
-            "latest_hold": 688.0,
-            "share_pct": 0.12867330416508768,
-            "week_change_pct": 88.4931506849315,
-            "as_of": "2026-09-15"
-          }
-        ],
+        "constituents": [],
         "as_of": "2026-09-15",
-        "method": "将当前挂牌且取得历史数据的全部分月合约持仓量逐日求和，再计算品种总持仓的1/5/20日变化；连续合约本身不重复计入",
-        "failures": [],
-        "weighted_contract_error": "Remote end closed connection without response",
+        "method": "优先直接读取东方财富品种加权合约的持仓量字段；该字段为品种各分月合约汇总持仓，连续合约不重复计入",
+        "source": "东方财富期货加权合约日线",
         "continuous_proxy": {
           "day": 14.654894999636682,
           "week": -14.510342692389555,
           "month": -13.62349555411313
         }
       },
-      "capital_bucket": "avoid",
+      "capital_bucket": "warn_long",
       "technical_methods": {
         "trend": [
           {
@@ -4754,7 +3359,7 @@
             "name": "OI 5日变化",
             "value": "-7.72%",
             "signal": "short",
-            "note": "全合约汇总 · 12合约 · 覆盖率100.0%"
+            "note": "加权合约 · None合约 · 覆盖率100.0%"
           }
         ]
       },
@@ -4890,8 +3495,8 @@
           "avg_trade_pct": -0.10369027747369566,
           "positive_trades": 4,
           "latest_target": 0,
-          "sample_start": "2026-09-01 23:45:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "sample_start": "2026-09-02 00:20:00",
+          "sample_end": "2026-09-16 01:00:00",
           "observations": 938
         }
       ],
@@ -4911,14 +3516,14 @@
         "hour": {
           "signal": "strong_long",
           "vote": 2,
-          "momentum_pct": 0.2907580477673921,
-          "ema8": 24093.095006986907,
-          "ema21": 24105.188091834996,
-          "rsi": 67.03296703296704
+          "momentum_pct": 0.18679950186799577,
+          "ema8": 24102.407227656484,
+          "ema21": 24107.89826530454,
+          "rsi": 58.44155844155844
         },
         "five": {
           "signal": "neutral",
-          "score": 28
+          "score": 21
         }
       },
       "sparkline": [
@@ -5172,15 +3777,15 @@
         },
         "hourly": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 1
+          "incomplete_bars_excluded": 0
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 1
+          "incomplete_bars_excluded": 0
         },
         "cache_errors": {},
         "cache_retrieved_at": {},
-        "last_actual_observation": "2026-09-16 00:25:00",
+        "last_actual_observation": "2026-09-16 01:00:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -5228,124 +3833,44 @@
       "short_count": 3,
       "daily_score": -75,
       "daily_signal": "short",
-      "status": "ok",
-      "status_text": "实时",
-      "price": 15785.0,
-      "bar_time": "2026-09-16 00:25:00",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 15780.0,
+      "bar_time": "2026-09-16 01:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 3.8,
+      "age_minutes": 420.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.06339144215530279,
+      "change_pct": 0.0316957210776625,
       "returns": {
         "day": -0.3159557661927326,
         "week": -2.2311744654477828,
         "month": -0.8173530336372248
       },
       "position_changes": {
-        "day": 5.981082742631982,
-        "week": 14.99710666752394,
-        "month": 17.337783755412683,
-        "mode": "aggregate_all_contracts",
-        "contract_count": 10,
+        "day": 5.97417970628491,
+        "week": 14.974635587234308,
+        "month": 17.24837928099012,
+        "mode": "weighted_contract",
+        "series_name": "沪铅加权",
+        "series_code": "pbfi",
+        "contract_count": null,
         "coverage_pct": 100.0,
-        "constituents": [
-          {
-            "symbol": "PB2611",
-            "name": "铅2611",
-            "latest_hold": 61088.0,
-            "share_pct": 44.51589107636207,
-            "week_change_pct": 24.692290420689524,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "PB2610",
-            "name": "铅连续",
-            "latest_hold": 65193.0,
-            "share_pct": 43.76361371496969,
-            "week_change_pct": 2.930356663561584,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "PB2612",
-            "name": "铅2612",
-            "latest_hold": 11895.0,
-            "share_pct": 8.308454595433448,
-            "week_change_pct": 66.17770326906958,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "PB2609",
-            "name": "铅2609",
-            "latest_hold": 4040.0,
-            "share_pct": 2.811471359875293,
-            "week_change_pct": -2.0606060606060628,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "PB2701",
-            "name": "铅2701",
-            "latest_hold": 621.0,
-            "share_pct": 0.4286797915057377,
-            "week_change_pct": 8.756567425569184,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "PB2706",
-            "name": "铅2706",
-            "latest_hold": 130.0,
-            "share_pct": 0.09046813781776933,
-            "week_change_pct": 0.0,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "PB2704",
-            "name": "铅2704",
-            "latest_hold": 51.0,
-            "share_pct": 0.035491346374663356,
-            "week_change_pct": -7.272727272727275,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "PB2707",
-            "name": "铅2707",
-            "latest_hold": 35.0,
-            "share_pct": 0.02435680633555328,
-            "week_change_pct": 12.903225806451623,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "PB2703",
-            "name": "铅2703",
-            "latest_hold": 24.0,
-            "share_pct": 0.01670181005866511,
-            "week_change_pct": -4.0000000000000036,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "PB2708",
-            "name": "铅2708",
-            "latest_hold": 7.0,
-            "share_pct": 0.004871361267110656,
-            "week_change_pct": 600.0,
-            "as_of": "2026-09-15"
-          }
-        ],
+        "constituents": [],
         "as_of": "2026-09-15",
-        "method": "将当前挂牌且取得历史数据的全部分月合约持仓量逐日求和，再计算品种总持仓的1/5/20日变化；连续合约本身不重复计入",
-        "failures": [],
-        "weighted_contract_error": "Remote end closed connection without response",
+        "method": "优先直接读取东方财富品种加权合约的持仓量字段；该字段为品种各分月合约汇总持仓，连续合约不重复计入",
+        "source": "东方财富期货加权合约日线",
         "continuous_proxy": {
           "day": 1.8847578414365351,
           "week": 2.930356663561584,
           "month": -18.689665494275243
         }
       },
-      "capital_bucket": "accumulate",
+      "capital_bucket": "trend_short",
       "technical_methods": {
         "trend": [
           {
@@ -5428,9 +3953,9 @@
           },
           {
             "name": "OI 5日变化",
-            "value": "+15.00%",
+            "value": "+14.97%",
             "signal": "long",
-            "note": "全合约汇总 · 10合约 · 覆盖率100.0%"
+            "note": "加权合约 · None合约 · 覆盖率100.0%"
           }
         ]
       },
@@ -5552,18 +4077,18 @@
           "name": "5分钟动量",
           "status": "ok",
           "frequency": "5m",
-          "trades": 63,
-          "win_rate_pct": 15.873015873015872,
-          "net_return_pct": -4.83414195483336,
-          "annual_return_pct": -71.00318025298954,
-          "max_drawdown_pct": -4.836527972417204,
-          "sharpe": -23.392382381241845,
-          "profit_factor": 0.1983875287683509,
-          "avg_trade_pct": -0.07855362480252064,
+          "trades": 62,
+          "win_rate_pct": 16.129032258064516,
+          "net_return_pct": -4.693884785142077,
+          "annual_return_pct": -69.91632975218809,
+          "max_drawdown_pct": -4.69627431928199,
+          "sharpe": -22.811230679362062,
+          "profit_factor": 0.20323295520246235,
+          "avg_trade_pct": -0.07744657621043961,
           "positive_trades": 10,
           "latest_target": 0,
-          "sample_start": "2026-09-01 23:50:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "sample_start": "2026-09-02 00:25:00",
+          "sample_end": "2026-09-16 01:00:00",
           "observations": 938
         }
       ],
@@ -5583,14 +4108,14 @@
         "hour": {
           "signal": "strong_short",
           "vote": -3,
-          "momentum_pct": -0.15812776723592714,
-          "ema8": 15806.051866355652,
-          "ema21": 15884.344037645003,
-          "rsi": 35.71428571428571
+          "momentum_pct": -0.189753320683117,
+          "ema8": 15800.262562721062,
+          "ema21": 15874.858216040911,
+          "rsi": 36.76470588235295
         },
         "five": {
           "signal": "neutral",
-          "score": -17
+          "score": -29
         }
       },
       "sparkline": [
@@ -5844,15 +4369,15 @@
         },
         "hourly": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 1
+          "incomplete_bars_excluded": 0
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 1
+          "incomplete_bars_excluded": 0
         },
         "cache_errors": {},
         "cache_retrieved_at": {},
-        "last_actual_observation": "2026-09-16 00:25:00",
+        "last_actual_observation": "2026-09-16 01:00:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -5900,19 +4425,19 @@
       "short_count": 3,
       "daily_score": -75,
       "daily_signal": "short",
-      "status": "ok",
-      "status_text": "实时",
-      "price": 26195.0,
-      "bar_time": "2026-09-16 00:25:00",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 26170.0,
+      "bar_time": "2026-09-16 01:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 3.8,
+      "age_minutes": 420.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.19124115509656647,
+      "change_pct": 0.09562057754828324,
       "returns": {
         "day": -0.721473324473132,
         "week": -4.944555535357209,
@@ -5920,120 +4445,24 @@
       },
       "position_changes": {
         "day": -5.748599687137301,
-        "week": -19.467942913810198,
+        "week": -19.48715148658823,
         "month": -0.020697653671153393,
-        "mode": "aggregate_all_contracts",
-        "contract_count": 12,
+        "mode": "weighted_contract",
+        "series_name": "沪锌加权",
+        "series_code": "znfi",
+        "contract_count": null,
         "coverage_pct": 100.0,
-        "constituents": [
-          {
-            "symbol": "ZN2611",
-            "name": "沪锌2611",
-            "latest_hold": 122991.0,
-            "share_pct": 44.85793839591865,
-            "week_change_pct": 0.1612469766191893,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "ZN2610",
-            "name": "沪锌连续",
-            "latest_hold": 94907.0,
-            "share_pct": 32.55957100907732,
-            "week_change_pct": -40.76124610669679,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "ZN2612",
-            "name": "沪锌2612",
-            "latest_hold": 41584.0,
-            "share_pct": 15.080580629510143,
-            "week_change_pct": -2.072343632253204,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "ZN2701",
-            "name": "沪锌2701",
-            "latest_hold": 10230.0,
-            "share_pct": 3.7279629810669013,
-            "week_change_pct": 7.14285714285714,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "ZN2609",
-            "name": "沪锌2609",
-            "latest_hold": 5310.0,
-            "share_pct": 1.9226382507250628,
-            "week_change_pct": -30.63357282821685,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "ZN2702",
-            "name": "沪锌2702",
-            "latest_hold": 2333.0,
-            "share_pct": 0.8490747077119156,
-            "week_change_pct": 3.966131907308368,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "ZN2703",
-            "name": "沪锌2703",
-            "latest_hold": 1577.0,
-            "share_pct": 0.5623083245529232,
-            "week_change_pct": -5.398920215956804,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "ZN2704",
-            "name": "沪锌2704",
-            "latest_hold": 667.0,
-            "share_pct": 0.24078237979890146,
-            "week_change_pct": -7.9999999999999964,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "ZN2705",
-            "name": "沪锌2705",
-            "latest_hold": 255.0,
-            "share_pct": 0.09015761288710746,
-            "week_change_pct": -11.149825783972123,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "ZN2706",
-            "name": "沪锌2706",
-            "latest_hold": 107.0,
-            "share_pct": 0.03801827049456339,
-            "week_change_pct": 3.8834951456310662,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "ZN2707",
-            "name": "沪锌2707",
-            "latest_hold": 111.0,
-            "share_pct": 0.03801827049456339,
-            "week_change_pct": 1.83486238532109,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "ZN2708",
-            "name": "沪锌2708",
-            "latest_hold": 95.0,
-            "share_pct": 0.03294916776195493,
-            "week_change_pct": 6.741573033707859,
-            "as_of": "2026-09-15"
-          }
-        ],
+        "constituents": [],
         "as_of": "2026-09-15",
-        "method": "将当前挂牌且取得历史数据的全部分月合约持仓量逐日求和，再计算品种总持仓的1/5/20日变化；连续合约本身不重复计入",
-        "failures": [],
-        "weighted_contract_error": "Remote end closed connection without response",
+        "method": "优先直接读取东方财富品种加权合约的持仓量字段；该字段为品种各分月合约汇总持仓，连续合约不重复计入",
+        "source": "东方财富期货加权合约日线",
         "continuous_proxy": {
           "day": -3.8727275569380826,
           "week": -23.231862980694206,
           "month": -19.26757863781967
         }
       },
-      "capital_bucket": "avoid",
+      "capital_bucket": "warn_long",
       "technical_methods": {
         "trend": [
           {
@@ -6116,9 +4545,9 @@
           },
           {
             "name": "OI 5日变化",
-            "value": "-19.47%",
+            "value": "-19.49%",
             "signal": "short",
-            "note": "全合约汇总 · 12合约 · 覆盖率100.0%"
+            "note": "加权合约 · None合约 · 覆盖率100.0%"
           }
         ]
       },
@@ -6254,8 +4683,8 @@
           "avg_trade_pct": -0.05494440899788737,
           "positive_trades": 19,
           "latest_target": 0,
-          "sample_start": "2026-09-01 23:40:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "sample_start": "2026-09-02 00:15:00",
+          "sample_end": "2026-09-16 01:00:00",
           "observations": 938
         }
       ],
@@ -6275,14 +4704,14 @@
         "hour": {
           "signal": "neutral",
           "vote": 0,
-          "momentum_pct": 0.40214477211795163,
-          "ema8": 26164.14541952538,
-          "ema21": 26369.16427301779,
-          "rsi": 36.87150837988827
+          "momentum_pct": 0.17224880382775698,
+          "ema8": 26165.446437408627,
+          "ema21": 26351.058430016168,
+          "rsi": 33.33333333333333
         },
         "five": {
           "signal": "neutral",
-          "score": 23
+          "score": -15
         }
       },
       "sparkline": [
@@ -6536,15 +4965,15 @@
         },
         "hourly": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 1
+          "incomplete_bars_excluded": 0
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 1
+          "incomplete_bars_excluded": 0
         },
         "cache_errors": {},
         "cache_retrieved_at": {},
-        "last_actual_observation": "2026-09-16 00:25:00",
+        "last_actual_observation": "2026-09-16 01:00:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -6592,140 +5021,44 @@
       "short_count": 2,
       "daily_score": -50,
       "daily_signal": "watch_short",
-      "status": "ok",
-      "status_text": "实时",
-      "price": 121070.0,
-      "bar_time": "2026-09-16 00:25:00",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 121050.0,
+      "bar_time": "2026-09-16 01:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 3.8,
+      "age_minutes": 420.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": -2.323517547398146,
+      "change_pct": -2.3396530859217446,
       "returns": {
         "day": -0.3777527728661023,
         "week": -2.708006279434849,
         "month": -3.7206773341618815
       },
       "position_changes": {
-        "day": 0.977946805620733,
-        "week": 9.127545437561713,
-        "month": 10.355284272409616,
-        "mode": "aggregate_all_contracts",
-        "contract_count": 12,
+        "day": 0.9782212014696645,
+        "week": 9.12784197899894,
+        "month": 10.380179666761657,
+        "mode": "weighted_contract",
+        "series_name": "沪镍加权",
+        "series_code": "nifi",
+        "contract_count": null,
         "coverage_pct": 100.0,
-        "constituents": [
-          {
-            "symbol": "NI2610",
-            "name": "镍连续",
-            "latest_hold": 126939.0,
-            "share_pct": 34.48082916050348,
-            "week_change_pct": -1.016047784657137,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "NI2611",
-            "name": "镍2611",
-            "latest_hold": 123575.0,
-            "share_pct": 33.76689316087651,
-            "week_change_pct": 18.061526702971253,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "NI2612",
-            "name": "镍2612",
-            "latest_hold": 62893.0,
-            "share_pct": 17.033176263959444,
-            "week_change_pct": 15.837845802482775,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "NI2701",
-            "name": "镍2701",
-            "latest_hold": 26274.0,
-            "share_pct": 7.19816386851765,
-            "week_change_pct": 13.764884174063653,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "NI2609",
-            "name": "镍2609",
-            "latest_hold": 13056.0,
-            "share_pct": 3.3821293218903246,
-            "week_change_pct": -5.226480836236935,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "NI2705",
-            "name": "镍2705",
-            "latest_hold": 5037.0,
-            "share_pct": 1.3895329107398668,
-            "week_change_pct": 22.61441090555014,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "NI2702",
-            "name": "镍2702",
-            "latest_hold": 4580.0,
-            "share_pct": 1.2333270298345462,
-            "week_change_pct": 16.53944020356235,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "NI2703",
-            "name": "镍2703",
-            "latest_hold": 3353.0,
-            "share_pct": 0.8898295205800602,
-            "week_change_pct": 6.208425720620836,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "NI2704",
-            "name": "镍2704",
-            "latest_hold": 1132.0,
-            "share_pct": 0.29920031914700707,
-            "week_change_pct": 10.009718172983483,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "NI2707",
-            "name": "镍2707",
-            "latest_hold": 615.0,
-            "share_pct": 0.17330304199943528,
-            "week_change_pct": 19.41747572815533,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "NI2706",
-            "name": "镍2706",
-            "latest_hold": 465.0,
-            "share_pct": 0.12434298977537957,
-            "week_change_pct": 27.747252747252737,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "NI2708",
-            "name": "镍2708",
-            "latest_hold": 82.0,
-            "share_pct": 0.029272412176287274,
-            "week_change_pct": 100.0,
-            "as_of": "2026-09-15"
-          }
-        ],
+        "constituents": [],
         "as_of": "2026-09-15",
-        "method": "将当前挂牌且取得历史数据的全部分月合约持仓量逐日求和，再计算品种总持仓的1/5/20日变化；连续合约本身不重复计入",
-        "failures": [],
-        "weighted_contract_error": "东方财富接口短暂熔断，转用全合约加总",
+        "method": "优先直接读取东方财富品种加权合约的持仓量字段；该字段为品种各分月合约汇总持仓，连续合约不重复计入",
+        "source": "东方财富期货加权合约日线",
         "continuous_proxy": {
           "day": -2.1966253178210993,
           "week": -1.016047784657137,
           "month": 2.738861235886847
         }
       },
-      "capital_bucket": "accumulate",
+      "capital_bucket": "trend_short",
       "technical_methods": {
         "trend": [
           {
@@ -6810,7 +5143,7 @@
             "name": "OI 5日变化",
             "value": "+9.13%",
             "signal": "long",
-            "note": "全合约汇总 · 12合约 · 覆盖率100.0%"
+            "note": "加权合约 · None合约 · 覆盖率100.0%"
           }
         ]
       },
@@ -6942,8 +5275,8 @@
           "avg_trade_pct": -0.058772658422447,
           "positive_trades": 18,
           "latest_target": 0,
-          "sample_start": "2026-09-01 23:40:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "sample_start": "2026-09-02 00:15:00",
+          "sample_end": "2026-09-16 01:00:00",
           "observations": 938
         }
       ],
@@ -6963,14 +5296,14 @@
         "hour": {
           "signal": "strong_short",
           "vote": -3,
-          "momentum_pct": -2.2637557399500574,
-          "ema8": 122929.06008309568,
-          "ema21": 124233.4241367377,
-          "rsi": 23.040752351097183
+          "momentum_pct": -2.3790322580645173,
+          "ema8": 122511.49117574109,
+          "ema21": 123944.0219424888,
+          "rsi": 13.810316139767053
         },
         "five": {
-          "signal": "watch_short",
-          "score": -59
+          "signal": "neutral",
+          "score": -23
         }
       },
       "sparkline": [
@@ -7224,15 +5557,15 @@
         },
         "hourly": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 1
+          "incomplete_bars_excluded": 0
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 1
+          "incomplete_bars_excluded": 0
         },
         "cache_errors": {},
         "cache_retrieved_at": {},
-        "last_actual_observation": "2026-09-16 00:25:00",
+        "last_actual_observation": "2026-09-16 01:00:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -7280,12 +5613,12 @@
       "short_count": 2,
       "daily_score": -50,
       "daily_signal": "watch_short",
-      "status": "stale",
-      "status_text": "行情陈旧",
+      "status": "closed",
+      "status_text": "休市快照",
       "price": 129120.0,
       "bar_time": "2026-09-15 15:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 568.8,
+      "age_minutes": 1020.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
@@ -7299,97 +5632,25 @@
         "month": -16.911196911196914
       },
       "position_changes": {
-        "day": 0.8641707792030662,
-        "week": 1.6749699115863548,
-        "month": 33.38982375368404,
-        "mode": "aggregate_all_contracts",
-        "contract_count": 9,
+        "day": 0.863507832082,
+        "week": 1.290083821608734,
+        "month": 5.543901977907217,
+        "mode": "weighted_contract",
+        "series_name": "碳酸锂加权",
+        "series_code": "lcfi",
+        "contract_count": null,
         "coverage_pct": 100.0,
-        "constituents": [
-          {
-            "symbol": "LC2701",
-            "name": "碳酸锂2701",
-            "latest_hold": 418700.0,
-            "share_pct": 59.56962475546861,
-            "week_change_pct": 5.048974348681301,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "LC2611",
-            "name": "碳酸锂2611",
-            "latest_hold": 125435.0,
-            "share_pct": 17.84598968522141,
-            "week_change_pct": -9.570978509274674,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "LC2705",
-            "name": "碳酸锂2705",
-            "latest_hold": 80346.0,
-            "share_pct": 11.431051040369908,
-            "week_change_pct": 12.139906208128636,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "LC2612",
-            "name": "碳酸锂2612",
-            "latest_hold": 32800.0,
-            "share_pct": 4.666548105993242,
-            "week_change_pct": -1.3830426939266394,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "LC2610",
-            "name": "碳酸锂连续",
-            "latest_hold": 22328.0,
-            "share_pct": 3.176667259470034,
-            "week_change_pct": -24.91256389561475,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "LC2704",
-            "name": "碳酸锂2704",
-            "latest_hold": 10917.0,
-            "share_pct": 1.553192246131958,
-            "week_change_pct": 9.685521953179954,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "LC2703",
-            "name": "碳酸锂2703",
-            "latest_hold": 5598.0,
-            "share_pct": 0.7964431797972613,
-            "week_change_pct": 55.37052456286429,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "LC2706",
-            "name": "碳酸锂2706",
-            "latest_hold": 4230.0,
-            "share_pct": 0.6018139783033968,
-            "week_change_pct": 22.67981438515081,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "LC2702",
-            "name": "碳酸锂2702",
-            "latest_hold": 2521.0,
-            "share_pct": 0.35866974924417566,
-            "week_change_pct": 6.7767894959762875,
-            "as_of": "2026-09-15"
-          }
-        ],
+        "constituents": [],
         "as_of": "2026-09-15",
-        "method": "将当前挂牌且取得历史数据的全部分月合约持仓量逐日求和，再计算品种总持仓的1/5/20日变化；连续合约本身不重复计入",
-        "failures": [],
-        "weighted_contract_error": "东方财富接口短暂熔断，转用全合约加总",
+        "method": "优先直接读取东方财富品种加权合约的持仓量字段；该字段为品种各分月合约汇总持仓，连续合约不重复计入",
+        "source": "东方财富期货加权合约日线",
         "continuous_proxy": {
           "day": 1.730660362459524,
           "week": 5.048974348681301,
           "month": 34.51690215959546
         }
       },
-      "capital_bucket": "accumulate",
+      "capital_bucket": "trend_short",
       "technical_methods": {
         "trend": [
           {
@@ -7472,9 +5733,9 @@
           },
           {
             "name": "OI 5日变化",
-            "value": "+1.67%",
+            "value": "+1.29%",
             "signal": "long",
-            "note": "全合约汇总 · 9合约 · 覆盖率100.0%"
+            "note": "加权合约 · None合约 · 覆盖率100.0%"
           }
         ]
       },
@@ -7920,7 +6181,7 @@
       "decimals": 0,
       "unit": "元/吨",
       "bar_timezone": "Asia/Shanghai",
-      "score": -58,
+      "score": -65,
       "signal": "short",
       "momentum_pct": -6.220312686478103,
       "threshold_pct": 3.0,
@@ -7944,19 +6205,19 @@
       "short_count": 3,
       "daily_score": -75,
       "daily_signal": "short",
-      "status": "ok",
-      "status_text": "实时",
-      "price": 394780.0,
-      "bar_time": "2026-09-16 00:25:00",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 394430.0,
+      "bar_time": "2026-09-16 01:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 3.8,
+      "age_minutes": 420.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.48105067576167393,
+      "change_pct": 0.39196721728729234,
       "returns": {
         "day": -1.2963195578444942,
         "week": -6.220312686478103,
@@ -7964,120 +6225,24 @@
       },
       "position_changes": {
         "day": 2.4575562093443803,
-        "week": 13.394870875715071,
-        "month": -13.51970460191918,
-        "mode": "aggregate_all_contracts",
-        "contract_count": 12,
+        "week": 13.396564600448091,
+        "month": -13.480649131604139,
+        "mode": "weighted_contract",
+        "series_name": "沪锡加权",
+        "series_code": "snfi",
+        "contract_count": null,
         "coverage_pct": 100.0,
-        "constituents": [
-          {
-            "symbol": "SN2610",
-            "name": "锡连续",
-            "latest_hold": 35194.0,
-            "share_pct": 46.05943236983631,
-            "week_change_pct": -1.3731644434480494,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "SN2611",
-            "name": "锡2611",
-            "latest_hold": 23280.0,
-            "share_pct": 30.633448045745393,
-            "week_change_pct": 31.786017548825352,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "SN2612",
-            "name": "锡2612",
-            "latest_hold": 9700.0,
-            "share_pct": 12.971225939834866,
-            "week_change_pct": 21.492985971943888,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "SN2701",
-            "name": "锡2701",
-            "latest_hold": 4045.0,
-            "share_pct": 5.406749277050102,
-            "week_change_pct": 77.72407732864674,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "SN2609",
-            "name": "锡2609",
-            "latest_hold": 2334.0,
-            "share_pct": 3.054054407704487,
-            "week_change_pct": -1.850294365012617,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "SN2702",
-            "name": "锡2702",
-            "latest_hold": 620.0,
-            "share_pct": 0.862305850333015,
-            "week_change_pct": 67.56756756756756,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "SN2705",
-            "name": "锡2705",
-            "latest_hold": 321.0,
-            "share_pct": 0.42133912565588894,
-            "week_change_pct": 24.90272373540856,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "SN2703",
-            "name": "锡2703",
-            "latest_hold": 222.0,
-            "share_pct": 0.32581814375253526,
-            "week_change_pct": 37.037037037037045,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "SN2706",
-            "name": "锡2706",
-            "latest_hold": 74.0,
-            "share_pct": 0.09682948850476951,
-            "week_change_pct": 5.714285714285716,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "SN2704",
-            "name": "锡2704",
-            "latest_hold": 52.0,
-            "share_pct": 0.06935084987503762,
-            "week_change_pct": 15.555555555555545,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "SN2707",
-            "name": "锡2707",
-            "latest_hold": 41.0,
-            "share_pct": 0.05364877065804797,
-            "week_change_pct": 32.258064516129025,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "SN2708",
-            "name": "锡2708",
-            "latest_hold": 36.0,
-            "share_pct": 0.04579773104955315,
-            "week_change_pct": 24.13793103448276,
-            "as_of": "2026-09-15"
-          }
-        ],
+        "constituents": [],
         "as_of": "2026-09-15",
-        "method": "将当前挂牌且取得历史数据的全部分月合约持仓量逐日求和，再计算品种总持仓的1/5/20日变化；连续合约本身不重复计入",
-        "failures": [],
-        "weighted_contract_error": "东方财富接口短暂熔断，转用全合约加总",
+        "method": "优先直接读取东方财富品种加权合约的持仓量字段；该字段为品种各分月合约汇总持仓，连续合约不重复计入",
+        "source": "东方财富期货加权合约日线",
         "continuous_proxy": {
           "day": -2.3826033894544185,
           "week": -1.3731644434480494,
           "month": -11.92031433791325
         }
       },
-      "capital_bucket": "accumulate",
+      "capital_bucket": "trend_short",
       "technical_methods": {
         "trend": [
           {
@@ -8160,9 +6325,9 @@
           },
           {
             "name": "OI 5日变化",
-            "value": "+13.39%",
+            "value": "+13.40%",
             "signal": "long",
-            "note": "全合约汇总 · 12合约 · 覆盖率100.0%"
+            "note": "加权合约 · None合约 · 覆盖率100.0%"
           }
         ]
       },
@@ -8294,8 +6459,8 @@
           "avg_trade_pct": -0.06096756137354312,
           "positive_trades": 17,
           "latest_target": 0,
-          "sample_start": "2026-09-01 23:40:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "sample_start": "2026-09-02 00:15:00",
+          "sample_end": "2026-09-16 01:00:00",
           "observations": 938
         }
       ],
@@ -8313,16 +6478,16 @@
           "vote": -3
         },
         "hour": {
-          "signal": "neutral",
-          "vote": 0,
-          "momentum_pct": 0.1545947589842278,
-          "ema8": 394795.2201189842,
-          "ema21": 399358.2363843158,
-          "rsi": 34.81195756991322
+          "signal": "short",
+          "vote": -1,
+          "momentum_pct": 0.12438442402396,
+          "ema8": 394714.06009254325,
+          "ema21": 398910.2148948325,
+          "rsi": 34.04054691183404
         },
         "five": {
           "signal": "neutral",
-          "score": 25
+          "score": 11
         }
       },
       "sparkline": [
@@ -8576,15 +6741,15 @@
         },
         "hourly": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 1
+          "incomplete_bars_excluded": 0
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 1
+          "incomplete_bars_excluded": 0
         },
         "cache_errors": {},
         "cache_retrieved_at": {},
-        "last_actual_observation": "2026-09-16 00:25:00",
+        "last_actual_observation": "2026-09-16 01:00:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -8608,8 +6773,8 @@
       "decimals": 2,
       "unit": "元/克",
       "bar_timezone": "Asia/Shanghai",
-      "score": -48,
-      "signal": "watch_short",
+      "score": -15,
+      "signal": "neutral",
       "momentum_pct": -2.184404901796211,
       "threshold_pct": 3.0,
       "ma20": 966.356,
@@ -8632,19 +6797,19 @@
       "short_count": 1,
       "daily_score": -25,
       "daily_signal": "neutral",
-      "status": "ok",
-      "status_text": "实时",
-      "price": 932.82,
-      "bar_time": "2026-09-16 00:25:00",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 934.54,
+      "bar_time": "2026-09-16 02:30:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 3.8,
+      "age_minutes": 330.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.05577603775610562,
+      "change_pct": 0.24026600879545335,
       "returns": {
         "day": -0.5652730375426684,
         "week": -2.184404901796211,
@@ -8662,7 +6827,7 @@
             "symbol": "AU2612",
             "name": "黄金2612",
             "latest_hold": 169177.0,
-            "share_pct": 40.78326390181285,
+            "share_pct": 40.86181918319943,
             "week_change_pct": 18.982044772025564,
             "as_of": "2026-09-15"
           },
@@ -8670,7 +6835,7 @@
             "symbol": "AU2610",
             "name": "黄金连续",
             "latest_hold": 128421.0,
-            "share_pct": 30.030444886642904,
+            "share_pct": 29.831539373331257,
             "week_change_pct": -14.979443484478338,
             "as_of": "2026-09-15"
           },
@@ -8678,7 +6843,7 @@
             "symbol": "AU2702",
             "name": "黄金2702",
             "latest_hold": 75926.0,
-            "share_pct": 18.330160002672276,
+            "share_pct": 18.402557440643672,
             "week_change_pct": 20.465832103701587,
             "as_of": "2026-09-15"
           },
@@ -8686,7 +6851,7 @@
             "symbol": "AU2704",
             "name": "黄金2704",
             "latest_hold": 23338.0,
-            "share_pct": 5.593412833617263,
+            "share_pct": 5.622538044324181,
             "week_change_pct": 26.390468453831573,
             "as_of": "2026-09-15"
           },
@@ -8694,7 +6859,7 @@
             "symbol": "AU2706",
             "name": "黄金2706",
             "latest_hold": 9598.0,
-            "share_pct": 2.2962506978941493,
+            "share_pct": 2.303851725913243,
             "week_change_pct": 4.65598080907208,
             "as_of": "2026-09-15"
           },
@@ -8702,7 +6867,7 @@
             "symbol": "AU2708",
             "name": "黄金2708",
             "latest_hold": 8282.0,
-            "share_pct": 1.9784404392080512,
+            "share_pct": 1.9839321847200104,
             "week_change_pct": 87.88566243194191,
             "as_of": "2026-09-15"
           },
@@ -8710,7 +6875,7 @@
             "symbol": "AU2611",
             "name": "黄金2611",
             "latest_hold": 4113.0,
-            "share_pct": 0.9880272381525012,
+            "share_pct": 0.9937620478682009,
             "week_change_pct": 181.90541466758052,
             "as_of": "2026-09-15"
           }
@@ -8718,14 +6883,14 @@
         "as_of": "2026-09-15",
         "method": "将当前挂牌且取得历史数据的全部分月合约持仓量逐日求和，再计算品种总持仓的1/5/20日变化；连续合约本身不重复计入",
         "failures": [],
-        "weighted_contract_error": "东方财富接口短暂熔断，转用全合约加总",
+        "weighted_contract_error": "Remote end closed connection without response",
         "continuous_proxy": {
           "day": 2.474998637115289,
           "week": 12.002886518765688,
           "month": -15.422495075640164
         }
       },
-      "capital_bucket": "accumulate",
+      "capital_bucket": "trend_short",
       "technical_methods": {
         "trend": [
           {
@@ -8938,16 +7103,16 @@
           "frequency": "5m",
           "trades": 70,
           "win_rate_pct": 34.285714285714285,
-          "net_return_pct": -1.2276539526809849,
-          "annual_return_pct": -30.121167552076365,
-          "max_drawdown_pct": -2.63771197723901,
-          "sharpe": -3.4229676205390214,
-          "profit_factor": 0.7779995828170826,
-          "avg_trade_pct": -0.017367674019422488,
+          "net_return_pct": -1.2226668832896137,
+          "annual_return_pct": -27.18747452897965,
+          "max_drawdown_pct": -2.637711977239021,
+          "sharpe": -3.2146102034878696,
+          "profit_factor": 0.7719489772173707,
+          "avg_trade_pct": -0.017803670344824555,
           "positive_trades": 24,
-          "latest_target": 0,
-          "sample_start": "2026-09-03 14:15:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "latest_target": 1,
+          "sample_start": "2026-09-03 22:20:00",
+          "sample_end": "2026-09-16 02:30:00",
           "observations": 938
         }
       ],
@@ -8965,16 +7130,16 @@
           "vote": -1
         },
         "hour": {
-          "signal": "strong_short",
-          "vote": -3,
-          "momentum_pct": -0.16291881926728813,
-          "ema8": 932.3375209761263,
-          "ema21": 936.031678224954,
-          "rsi": 39.623685666851166
+          "signal": "strong_long",
+          "vote": 2,
+          "momentum_pct": 0.04504987664915028,
+          "ema8": 932.4575126892616,
+          "ema21": 935.4420481197966,
+          "rsi": 58.792452830188836
         },
         "five": {
-          "signal": "watch_long",
-          "score": 51
+          "signal": "long",
+          "score": 76
         }
       },
       "sparkline": [
@@ -9232,11 +7397,11 @@
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 1
+          "incomplete_bars_excluded": 0
         },
         "cache_errors": {},
         "cache_retrieved_at": {},
-        "last_actual_observation": "2026-09-16 00:25:00",
+        "last_actual_observation": "2026-09-16 02:30:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -9260,7 +7425,7 @@
       "decimals": 0,
       "unit": "元/千克",
       "bar_timezone": "Asia/Shanghai",
-      "score": -58,
+      "score": -45,
       "signal": "short",
       "momentum_pct": -4.173643410852712,
       "threshold_pct": 3.0,
@@ -9284,19 +7449,19 @@
       "short_count": 3,
       "daily_score": -75,
       "daily_signal": "short",
-      "status": "ok",
-      "status_text": "实时",
-      "price": 15529.0,
-      "bar_time": "2026-09-16 00:25:00",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 15637.0,
+      "bar_time": "2026-09-16 02:30:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 3.8,
+      "age_minutes": 330.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": 0.49831736991974296,
+      "change_pct": 1.1972560186383596,
       "returns": {
         "day": -0.489438433797007,
         "week": -4.173643410852712,
@@ -9314,7 +7479,7 @@
             "symbol": "AG2612",
             "name": "白银2612",
             "latest_hold": 202725.0,
-            "share_pct": 35.68357953253584,
+            "share_pct": 35.96797989667145,
             "week_change_pct": 12.001524845029344,
             "as_of": "2026-09-15"
           },
@@ -9322,7 +7487,7 @@
             "symbol": "AG2610",
             "name": "白银连续",
             "latest_hold": 161623.0,
-            "share_pct": 29.011260947653955,
+            "share_pct": 28.61111556032511,
             "week_change_pct": -18.916464739200013,
             "as_of": "2026-09-15"
           },
@@ -9330,7 +7495,7 @@
             "symbol": "AG2702",
             "name": "白银2702",
             "latest_hold": 106423.0,
-            "share_pct": 19.05125326292524,
+            "share_pct": 19.083034791073807,
             "week_change_pct": 15.577927649083945,
             "as_of": "2026-09-15"
           },
@@ -9338,7 +7503,7 @@
             "symbol": "AG2704",
             "name": "白银2704",
             "latest_hold": 26857.0,
-            "share_pct": 4.753427723892632,
+            "share_pct": 4.796608631119226,
             "week_change_pct": 39.299792531120325,
             "as_of": "2026-09-15"
           },
@@ -9346,7 +7511,7 @@
             "symbol": "AG2611",
             "name": "白银2611",
             "latest_hold": 18304.0,
-            "share_pct": 3.2332262288956373,
+            "share_pct": 3.2214089059026834,
             "week_change_pct": -1.1182540111285166,
             "as_of": "2026-09-15"
           },
@@ -9354,7 +7519,7 @@
             "symbol": "AG2701",
             "name": "白银2701",
             "latest_hold": 13273.0,
-            "share_pct": 2.3339719648406034,
+            "share_pct": 2.343134061936618,
             "week_change_pct": 50.35115541458994,
             "as_of": "2026-09-15"
           },
@@ -9362,7 +7527,7 @@
             "symbol": "AG2705",
             "name": "白银2705",
             "latest_hold": 7633.0,
-            "share_pct": 1.3643918577126652,
+            "share_pct": 1.3781885292144291,
             "week_change_pct": 22.736774401029102,
             "as_of": "2026-09-15"
           },
@@ -9370,7 +7535,7 @@
             "symbol": "AG2706",
             "name": "白银2706",
             "latest_hold": 7231.0,
-            "share_pct": 1.2739729166189309,
+            "share_pct": 1.2843990980553377,
             "week_change_pct": 21.898179366149705,
             "as_of": "2026-09-15"
           },
@@ -9378,7 +7543,7 @@
             "symbol": "AG2707",
             "name": "白银2707",
             "latest_hold": 5969.0,
-            "share_pct": 1.0506575201944448,
+            "share_pct": 1.0631841778831352,
             "week_change_pct": 4.774442689134628,
             "as_of": "2026-09-15"
           },
@@ -9386,7 +7551,7 @@
             "symbol": "AG2708",
             "name": "白银2708",
             "latest_hold": 5468.0,
-            "share_pct": 0.947019435665954,
+            "share_pct": 0.9428774312729913,
             "week_change_pct": 58.90729439116535,
             "as_of": "2026-09-15"
           },
@@ -9394,7 +7559,7 @@
             "symbol": "AG2703",
             "name": "白银2703",
             "latest_hold": 4265.0,
-            "share_pct": 0.7554299834848834,
+            "share_pct": 0.7609935628771821,
             "week_change_pct": 41.93011647254576,
             "as_of": "2026-09-15"
           },
@@ -9402,7 +7567,7 @@
             "symbol": "AG2609",
             "name": "白银2609",
             "latest_hold": 3074.0,
-            "share_pct": 0.5418086255792187,
+            "share_pct": 0.547075353668021,
             "week_change_pct": -1.1575562700964603,
             "as_of": "2026-09-15"
           }
@@ -9410,14 +7575,14 @@
         "as_of": "2026-09-15",
         "method": "将当前挂牌且取得历史数据的全部分月合约持仓量逐日求和，再计算品种总持仓的1/5/20日变化；连续合约本身不重复计入",
         "failures": [],
-        "weighted_contract_error": "东方财富接口短暂熔断，转用全合约加总",
+        "weighted_contract_error": "Remote end closed connection without response",
         "continuous_proxy": {
           "day": 1.5107056302201105,
           "week": 1.703715967069508,
           "month": -34.38173661416558
         }
       },
-      "capital_bucket": "accumulate",
+      "capital_bucket": "trend_short",
       "technical_methods": {
         "trend": [
           {
@@ -9629,17 +7794,17 @@
           "status": "ok",
           "frequency": "5m",
           "trades": 67,
-          "win_rate_pct": 29.850746268656714,
-          "net_return_pct": -5.03304006803379,
-          "annual_return_pct": -77.65044935279897,
-          "max_drawdown_pct": -5.156851927558204,
-          "sharpe": -11.276694407112444,
-          "profit_factor": 0.47860293391401804,
-          "avg_trade_pct": -0.07663708267214817,
-          "positive_trades": 20,
-          "latest_target": 0,
-          "sample_start": "2026-09-03 14:10:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "win_rate_pct": 31.343283582089555,
+          "net_return_pct": -3.857406087503046,
+          "annual_return_pct": -63.74386215387939,
+          "max_drawdown_pct": -5.089485826436024,
+          "sharpe": -8.102887495163474,
+          "profit_factor": 0.5741340385189279,
+          "avg_trade_pct": -0.05853907156163274,
+          "positive_trades": 21,
+          "latest_target": 1,
+          "sample_start": "2026-09-03 22:15:00",
+          "sample_end": "2026-09-16 02:30:00",
           "observations": 938
         }
       ],
@@ -9657,16 +7822,16 @@
           "vote": -3
         },
         "hour": {
-          "signal": "neutral",
-          "vote": 0,
-          "momentum_pct": 0.09683041766186395,
-          "ema8": 15514.323057301195,
-          "ema21": 15577.31941258551,
-          "rsi": 45.72649572649573
+          "signal": "strong_long",
+          "vote": 2,
+          "momentum_pct": 0.4853740616101554,
+          "ema8": 15518.294195157512,
+          "ema21": 15568.090423624388,
+          "rsi": 59.39153439153439
         },
         "five": {
-          "signal": "neutral",
-          "score": 30
+          "signal": "watch_long",
+          "score": 98
         }
       },
       "sparkline": [
@@ -9924,11 +8089,11 @@
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 1
+          "incomplete_bars_excluded": 0
         },
         "cache_errors": {},
         "cache_retrieved_at": {},
-        "last_actual_observation": "2026-09-16 00:25:00",
+        "last_actual_observation": "2026-09-16 02:30:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -9976,12 +8141,12 @@
       "short_count": 1,
       "daily_score": 0,
       "daily_signal": "neutral",
-      "status": "stale",
-      "status_text": "行情陈旧",
+      "status": "closed",
+      "status_text": "休市快照",
       "price": 3121.0,
       "bar_time": "2026-09-15 23:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 88.8,
+      "age_minutes": 540.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
@@ -10102,14 +8267,14 @@
         "as_of": "2026-09-15",
         "method": "将当前挂牌且取得历史数据的全部分月合约持仓量逐日求和，再计算品种总持仓的1/5/20日变化；连续合约本身不重复计入",
         "failures": [],
-        "weighted_contract_error": "东方财富接口短暂熔断，转用全合约加总",
+        "weighted_contract_error": "Remote end closed connection without response",
         "continuous_proxy": {
           "day": -0.8131249871665913,
           "week": 5.307228247082696,
           "month": -20.071471442260012
         }
       },
-      "capital_bucket": "avoid",
+      "capital_bucket": "warn_long",
       "technical_methods": {
         "trend": [
           {
@@ -10668,12 +8833,12 @@
       "short_count": 2,
       "daily_score": -50,
       "daily_signal": "watch_short",
-      "status": "stale",
-      "status_text": "行情陈旧",
+      "status": "closed",
+      "status_text": "休市快照",
       "price": 3316.0,
       "bar_time": "2026-09-15 23:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 88.8,
+      "age_minutes": 540.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
@@ -10687,105 +8852,18 @@
         "month": 0.8533983541603174
       },
       "position_changes": {
-        "day": -0.42697283564196997,
-        "week": -8.717984940348945,
-        "month": -0.8540689831079251,
-        "mode": "aggregate_all_contracts",
-        "contract_count": 10,
-        "coverage_pct": 100.0,
-        "constituents": [
-          {
-            "symbol": "HC2701",
-            "name": "热轧卷板2701",
-            "latest_hold": 1319363.0,
-            "share_pct": 66.49053532353821,
-            "week_change_pct": -3.4706613988879087,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "HC2611",
-            "name": "热轧卷板2611",
-            "latest_hold": 321592.0,
-            "share_pct": 16.14028889319698,
-            "week_change_pct": -10.334136331192001,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "HC2610",
-            "name": "热轧卷板连续",
-            "latest_hold": 207508.0,
-            "share_pct": 10.142695239796943,
-            "week_change_pct": -40.49199038731768,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "HC2703",
-            "name": "热轧卷板2703",
-            "latest_hold": 117910.0,
-            "share_pct": 6.017789957425786,
-            "week_change_pct": 37.467501428188356,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "HC2705",
-            "name": "热轧卷板2705",
-            "latest_hold": 18266.0,
-            "share_pct": 0.928776898667702,
-            "week_change_pct": 19.847779017124868,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "HC2609",
-            "name": "热轧卷板2609",
-            "latest_hold": 3660.0,
-            "share_pct": 0.1852593301609782,
-            "week_change_pct": 0.0,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "HC2612",
-            "name": "热轧卷板2612",
-            "latest_hold": 1490.0,
-            "share_pct": 0.07445805318764999,
-            "week_change_pct": 33.51254480286738,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "HC2704",
-            "name": "热轧卷板2704",
-            "latest_hold": 211.0,
-            "share_pct": 0.010579016394438373,
-            "week_change_pct": 46.52777777777777,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "HC2702",
-            "name": "热轧卷板2702",
-            "latest_hold": 153.0,
-            "share_pct": 0.007795064711691433,
-            "week_change_pct": 10.07194244604317,
-            "as_of": "2026-09-15"
-          },
-          {
-            "symbol": "HC2707",
-            "name": "热轧卷板2707",
-            "latest_hold": 35.0,
-            "share_pct": 0.001822222919616179,
-            "week_change_pct": 25.0,
-            "as_of": "2026-09-15"
-          }
-        ],
+        "day": 1.3869047847754112,
+        "week": -3.4706613988879087,
+        "month": 6.0357866751536315,
+        "mode": "continuous_fallback",
+        "contract_count": 1,
+        "coverage_pct": null,
+        "constituents": [],
         "as_of": "2026-09-15",
-        "method": "将当前挂牌且取得历史数据的全部分月合约持仓量逐日求和，再计算品种总持仓的1/5/20日变化；连续合约本身不重复计入",
-        "failures": [],
-        "weighted_contract_error": "东方财富接口短暂熔断，转用全合约加总",
-        "continuous_proxy": {
-          "day": 1.3869047847754112,
-          "week": -3.4706613988879087,
-          "month": 6.0357866751536315
-        }
+        "method": "加权合约与全合约加总均不可用，明确降级为主力连续持仓变化",
+        "error": "加权合约: Remote end closed connection without response; 全合约加总: 分月合约历史不足，无法形成全合约汇总口径"
       },
-      "capital_bucket": "avoid",
+      "capital_bucket": "warn_long",
       "technical_methods": {
         "trend": [
           {
@@ -10868,9 +8946,9 @@
           },
           {
             "name": "OI 5日变化",
-            "value": "-8.72%",
+            "value": "-3.47%",
             "signal": "short",
-            "note": "全合约汇总 · 10合约 · 覆盖率100.0%"
+            "note": "主连降级 · 1合约 · 覆盖率—"
           }
         ]
       },
@@ -11344,19 +9422,19 @@
       "short_count": 1,
       "daily_score": -25,
       "daily_signal": "neutral",
-      "status": "ok",
-      "status_text": "实时",
-      "price": 13370.0,
-      "bar_time": "2026-09-16 00:25:00",
+      "status": "closed",
+      "status_text": "休市快照",
+      "price": 13355.0,
+      "bar_time": "2026-09-16 01:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 3.8,
+      "age_minutes": 420.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
         "five": 1000,
         "weekly": 129
       },
-      "change_pct": -1.437523037228161,
+      "change_pct": -1.5481017323995538,
       "returns": {
         "day": 0.22164758034723953,
         "week": -1.9161243673174289,
@@ -11374,7 +9452,7 @@
             "symbol": "SS2611",
             "name": "不锈钢2611",
             "latest_hold": 118813.0,
-            "share_pct": 61.10284511540136,
+            "share_pct": 61.17990797755417,
             "week_change_pct": 62.50153867195514,
             "as_of": "2026-09-15"
           },
@@ -11382,7 +9460,7 @@
             "symbol": "SS2610",
             "name": "不锈钢连续",
             "latest_hold": 65191.0,
-            "share_pct": 27.453186238931632,
+            "share_pct": 27.33139458150722,
             "week_change_pct": -32.5521964947131,
             "as_of": "2026-09-15"
           },
@@ -11390,7 +9468,7 @@
             "symbol": "SS2612",
             "name": "不锈钢2612",
             "latest_hold": 12886.0,
-            "share_pct": 6.9122877050370155,
+            "share_pct": 6.9444634071970475,
             "week_change_pct": 64.59317920551794,
             "as_of": "2026-09-15"
           },
@@ -11398,7 +9476,7 @@
             "symbol": "SS2609",
             "name": "不锈钢2609",
             "latest_hold": 4512.0,
-            "share_pct": 2.046741181593845,
+            "share_pct": 2.053438553854976,
             "week_change_pct": -4.325699745547073,
             "as_of": "2026-09-15"
           },
@@ -11406,7 +9484,7 @@
             "symbol": "SS2701",
             "name": "不锈钢2701",
             "latest_hold": 4214.0,
-            "share_pct": 1.9365111046596022,
+            "share_pct": 1.9405722503629472,
             "week_change_pct": 29.90135635018496,
             "as_of": "2026-09-15"
           },
@@ -11414,7 +9492,7 @@
             "symbol": "SS2705",
             "name": "不锈钢2705",
             "latest_hold": 430.0,
-            "share_pct": 0.1982326897953259,
+            "share_pct": 0.19751603111105043,
             "week_change_pct": 24.63768115942029,
             "as_of": "2026-09-15"
           },
@@ -11422,7 +9500,7 @@
             "symbol": "SS2702",
             "name": "不锈钢2702",
             "latest_hold": 272.0,
-            "share_pct": 0.159221222238351,
+            "share_pct": 0.1597422279262182,
             "week_change_pct": 20.353982300884965,
             "as_of": "2026-09-15"
           },
@@ -11430,7 +9508,7 @@
             "symbol": "SS2703",
             "name": "不锈钢2703",
             "latest_hold": 253.0,
-            "share_pct": 0.1206633763971549,
+            "share_pct": 0.12105821261645026,
             "week_change_pct": 21.052631578947366,
             "as_of": "2026-09-15"
           },
@@ -11438,7 +9516,7 @@
             "symbol": "SS2707",
             "name": "不锈钢2707",
             "latest_hold": 82.0,
-            "share_pct": 0.036743358978080995,
+            "share_pct": 0.036863591059896506,
             "week_change_pct": 60.7843137254902,
             "as_of": "2026-09-15"
           },
@@ -11446,7 +9524,7 @@
             "symbol": "SS2706",
             "name": "不锈钢2706",
             "latest_hold": 49.0,
-            "share_pct": 0.018598490346929886,
+            "share_pct": 0.02002466674858576,
             "week_change_pct": 32.432432432432435,
             "as_of": "2026-09-15"
           },
@@ -11454,7 +9532,7 @@
             "symbol": "SS2708",
             "name": "不锈钢2708",
             "latest_hold": 33.0,
-            "share_pct": 0.014969516620699666,
+            "share_pct": 0.01501850006143932,
             "week_change_pct": 57.14285714285714,
             "as_of": "2026-09-15"
           }
@@ -11469,7 +9547,7 @@
           "month": -1.3983634583146554
         }
       },
-      "capital_bucket": "accumulate",
+      "capital_bucket": "trend_short",
       "technical_methods": {
         "trend": [
           {
@@ -11690,8 +9768,8 @@
           "avg_trade_pct": -0.12030087219270509,
           "positive_trades": 11,
           "latest_target": 0,
-          "sample_start": "2026-09-01 23:40:00",
-          "sample_end": "2026-09-16 00:25:00",
+          "sample_start": "2026-09-02 00:15:00",
+          "sample_end": "2026-09-16 01:00:00",
           "observations": 938
         }
       ],
@@ -11711,14 +9789,14 @@
         "hour": {
           "signal": "strong_short",
           "vote": -3,
-          "momentum_pct": -0.9618941916389234,
-          "ema8": 13478.657682095101,
-          "ema21": 13544.42251786684,
-          "rsi": 30.487804878048777
+          "momentum_pct": -1.2569316081330828,
+          "ema8": 13451.178197185078,
+          "ema21": 13527.202288969855,
+          "rsi": 24.096385542168676
         },
         "five": {
           "signal": "watch_short",
-          "score": -42
+          "score": -55
         }
       },
       "sparkline": [
@@ -11972,15 +10050,15 @@
         },
         "hourly": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 1
+          "incomplete_bars_excluded": 0
         },
         "five": {
           "duplicate_bars_removed": 0,
-          "incomplete_bars_excluded": 1
+          "incomplete_bars_excluded": 0
         },
         "cache_errors": {},
         "cache_retrieved_at": {},
-        "last_actual_observation": "2026-09-16 00:25:00",
+        "last_actual_observation": "2026-09-16 01:00:00",
         "last_daily_close": "2026-09-15",
         "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留"
       },
@@ -12028,12 +10106,12 @@
       "short_count": 3,
       "daily_score": -75,
       "daily_signal": "short",
-      "status": "stale",
-      "status_text": "行情陈旧",
+      "status": "closed",
+      "status_text": "休市快照",
       "price": 708.0,
       "bar_time": "2026-09-15 23:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 88.8,
+      "age_minutes": 540.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
@@ -12155,7 +10233,7 @@
           "month": 16.407449104602367
         }
       },
-      "capital_bucket": "accumulate",
+      "capital_bucket": "trend_short",
       "technical_methods": {
         "trend": [
           {
@@ -12714,12 +10792,12 @@
       "short_count": 3,
       "daily_score": -75,
       "daily_signal": "short",
-      "status": "stale",
-      "status_text": "行情陈旧",
+      "status": "closed",
+      "status_text": "休市快照",
       "price": 2048.0,
       "bar_time": "2026-09-15 23:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 88.8,
+      "age_minutes": 540.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
@@ -12815,7 +10893,7 @@
           "month": 52.58708331103858
         }
       },
-      "capital_bucket": "avoid",
+      "capital_bucket": "warn_long",
       "technical_methods": {
         "trend": [
           {
@@ -13374,12 +11452,12 @@
       "short_count": 2,
       "daily_score": -25,
       "daily_signal": "watch_short",
-      "status": "stale",
-      "status_text": "行情陈旧",
+      "status": "closed",
+      "status_text": "休市快照",
       "price": 1594.0,
       "bar_time": "2026-09-15 23:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 88.8,
+      "age_minutes": 540.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
@@ -13393,18 +11471,18 @@
         "month": 2.6834788231490547
       },
       "position_changes": {
-        "day": -0.40943826876786993,
-        "week": -12.231105838609269,
-        "month": 10.962654103465862,
+        "day": -2.1806551657297946,
+        "week": -14.18154382316822,
+        "month": 13.237963228590012,
         "mode": "aggregate_all_contracts",
-        "contract_count": 3,
-        "coverage_pct": 80.2858514836212,
+        "contract_count": 11,
+        "coverage_pct": 99.99253586516787,
         "constituents": [
           {
             "symbol": "JM2701",
             "name": "焦煤2701",
             "latest_hold": 481921.0,
-            "share_pct": 75.47898657055687,
+            "share_pct": 60.60347058413703,
             "week_change_pct": -13.979851564145495,
             "as_of": "2026-09-15"
           },
@@ -13412,7 +11490,7 @@
             "symbol": "JM2611",
             "name": "焦煤2611",
             "latest_hold": 84731.0,
-            "share_pct": 13.206936143904377,
+            "share_pct": 10.604092641804266,
             "week_change_pct": -10.982822923780011,
             "as_of": "2026-09-15"
           },
@@ -13420,23 +11498,79 @@
             "symbol": "JM2612",
             "name": "焦煤2612",
             "latest_hold": 72575.0,
-            "share_pct": 11.314077285538751,
+            "share_pct": 9.084281349218198,
             "week_change_pct": -0.4184961580680602,
+            "as_of": "2026-09-15"
+          },
+          {
+            "symbol": "JM2610",
+            "name": "焦煤连续",
+            "latest_hold": 66622.0,
+            "share_pct": 8.259059647865595,
+            "week_change_pct": -39.58229420780093,
+            "as_of": "2026-09-15"
+          },
+          {
+            "symbol": "JM2705",
+            "name": "焦煤2705",
+            "latest_hold": 48340.0,
+            "share_pct": 6.054736098255253,
+            "week_change_pct": -0.5145091582630212,
+            "as_of": "2026-09-15"
+          },
+          {
+            "symbol": "JM2702",
+            "name": "焦煤2702",
+            "latest_hold": 29421.0,
+            "share_pct": 3.6695181790132674,
+            "week_change_pct": 0.2726560103609277,
+            "as_of": "2026-09-15"
+          },
+          {
+            "symbol": "JM2703",
+            "name": "焦煤2703",
+            "latest_hold": 12389.0,
+            "share_pct": 1.5500432952136396,
+            "week_change_pct": 8.532632501095062,
+            "as_of": "2026-09-15"
+          },
+          {
+            "symbol": "JM2704",
+            "name": "焦煤2704",
+            "latest_hold": 875.0,
+            "share_pct": 0.11607596070586128,
+            "week_change_pct": 20.027434842249647,
+            "as_of": "2026-09-15"
+          },
+          {
+            "symbol": "JM2706",
+            "name": "焦煤2706",
+            "latest_hold": 243.0,
+            "share_pct": 0.030854060294805568,
+            "week_change_pct": 9.459459459459453,
+            "as_of": "2026-09-15"
+          },
+          {
+            "symbol": "JM2707",
+            "name": "焦煤2707",
+            "latest_hold": 129.0,
+            "share_pct": 0.01592467628118997,
+            "week_change_pct": -1.526717557251911,
+            "as_of": "2026-09-15"
+          },
+          {
+            "symbol": "JM2708",
+            "name": "焦煤2708",
+            "latest_hold": 101.0,
+            "share_pct": 0.011943507210892478,
+            "week_change_pct": -3.809523809523807,
             "as_of": "2026-09-15"
           }
         ],
         "as_of": "2026-09-15",
         "method": "将当前挂牌且取得历史数据的全部分月合约持仓量逐日求和，再计算品种总持仓的1/5/20日变化；连续合约本身不重复计入",
         "failures": [
-          "JM2610: HTTP Error 456: ",
-          "JM2705: HTTP Error 456: ",
-          "JM2702: HTTP Error 456: ",
-          "JM2703: HTTP Error 456: ",
-          "JM2704: HTTP Error 456: ",
-          "JM2706: HTTP Error 456: ",
-          "JM2707: HTTP Error 456: ",
-          "JM2708: HTTP Error 456: ",
-          "JM2709: HTTP Error 456: "
+          "JM2709: 有效日K线不足: 1"
         ],
         "weighted_contract_error": "东方财富接口短暂熔断，转用全合约加总",
         "continuous_proxy": {
@@ -13445,7 +11579,7 @@
           "month": 8.851384468743007
         }
       },
-      "capital_bucket": "avoid",
+      "capital_bucket": "warn_long",
       "technical_methods": {
         "trend": [
           {
@@ -13528,9 +11662,9 @@
           },
           {
             "name": "OI 5日变化",
-            "value": "-12.23%",
+            "value": "-14.18%",
             "signal": "short",
-            "note": "全合约汇总 · 3合约 · 覆盖率80.3%"
+            "note": "全合约汇总 · 11合约 · 覆盖率100.0%"
           }
         ]
       },
@@ -14004,12 +12138,12 @@
       "short_count": 2,
       "daily_score": -25,
       "daily_signal": "watch_short",
-      "status": "stale",
-      "status_text": "行情陈旧",
+      "status": "closed",
+      "status_text": "休市快照",
       "price": 6020.0,
       "bar_time": "2026-09-15 15:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 568.8,
+      "age_minutes": 1020.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
@@ -14023,18 +12157,58 @@
         "month": 0.7700033478406532
       },
       "position_changes": {
-        "day": -2.963762575151052,
-        "week": -17.160249534746207,
-        "month": -25.432504424126236,
-        "mode": "continuous_fallback",
-        "contract_count": 1,
-        "coverage_pct": null,
-        "constituents": [],
+        "day": -2.7726628478097815,
+        "week": -12.869284046788444,
+        "month": -5.809526345216853,
+        "mode": "aggregate_all_contracts",
+        "contract_count": 3,
+        "coverage_pct": 90.69132085974724,
+        "constituents": [
+          {
+            "symbol": "SF2611",
+            "name": "硅铁2611",
+            "latest_hold": 323611.0,
+            "share_pct": 65.33926400930386,
+            "week_change_pct": -17.160249534746207,
+            "as_of": "2026-09-15"
+          },
+          {
+            "symbol": "SF2701",
+            "name": "硅铁2701",
+            "latest_hold": 111690.0,
+            "share_pct": 22.550971373652775,
+            "week_change_pct": 1.2088151074703735,
+            "as_of": "2026-09-15"
+          },
+          {
+            "symbol": "SF2612",
+            "name": "硅铁2612",
+            "latest_hold": 59977.0,
+            "share_pct": 12.109764617043357,
+            "week_change_pct": -11.050305511063652,
+            "as_of": "2026-09-15"
+          }
+        ],
         "as_of": "2026-09-15",
-        "method": "加权合约与全合约加总均不可用，明确降级为主力连续持仓变化",
-        "error": "加权合约: 东方财富接口短暂熔断，转用全合约加总; 全合约加总: 分月合约历史不足，无法形成全合约汇总口径"
+        "method": "将当前挂牌且取得历史数据的全部分月合约持仓量逐日求和，再计算品种总持仓的1/5/20日变化；连续合约本身不重复计入",
+        "failures": [
+          "SF2702: HTTP Error 456: ",
+          "SF2610: HTTP Error 456: ",
+          "SF2705: HTTP Error 456: ",
+          "SF2703: HTTP Error 456: ",
+          "SF2706: HTTP Error 456: ",
+          "SF2704: HTTP Error 456: ",
+          "SF2707: HTTP Error 456: ",
+          "SF2708: HTTP Error 456: "
+        ],
+        "weighted_contract_error": "东方财富接口短暂熔断，转用全合约加总",
+        "continuous_proxy": {
+          "day": -2.963762575151052,
+          "week": -17.160249534746207,
+          "month": -25.432504424126236
+        }
       },
-      "capital_bucket": "avoid",
+      "capital_bucket": "warn_long",
       "technical_methods": {
         "trend": [
           {
@@ -14117,9 +12291,9 @@
           },
           {
             "name": "OI 5日变化",
-            "value": "-17.16%",
+            "value": "-12.87%",
             "signal": "short",
-            "note": "主连降级 · 1合约 · 覆盖率—"
+            "note": "全合约汇总 · 3合约 · 覆盖率90.7%"
           }
         ]
       },
@@ -14593,12 +12767,12 @@
       "short_count": 2,
       "daily_score": -50,
       "daily_signal": "watch_short",
-      "status": "stale",
-      "status_text": "行情陈旧",
+      "status": "closed",
+      "status_text": "休市快照",
       "price": 5784.0,
       "bar_time": "2026-09-15 15:00:00",
       "daily_date": "2026-09-15",
-      "age_minutes": 568.8,
+      "age_minutes": 1020.8,
       "bars": {
         "daily": 600,
         "hourly": 600,
@@ -14623,7 +12797,7 @@
         "method": "加权合约与全合约加总均不可用，明确降级为主力连续持仓变化",
         "error": "加权合约: 东方财富接口短暂熔断，转用全合约加总; 全合约加总: 分月合约历史不足，无法形成全合约汇总口径"
       },
-      "capital_bucket": "weak",
+      "capital_bucket": "warn_short",
       "technical_methods": {
         "trend": [
           {
@@ -15133,12 +13307,10 @@
           "incomplete_bars_excluded": 0
         },
         "cache_errors": {
-          "daily": "HTTP Error 456: ",
           "60m": "HTTP Error 456: ",
           "5m": "HTTP Error 456: "
         },
         "cache_retrieved_at": {
-          "daily": "2026-09-16T00:16:11+08:00",
           "60m": "2026-09-16T00:16:11+08:00",
           "5m": "2026-09-16T00:16:11+08:00"
         },
@@ -15161,7 +13333,7 @@
     "factors": "mom5超过±3% / 突破20日高低 / 收盘相对MA20 / 日线RSI14区间",
     "decision": "日线四因子至少3项同向触发，再结合周线与小时线给出综合结论",
     "execution": "核心模型在交易日15:20后刷新；全市场行情在交易时段每15分钟刷新；5分钟策略不进入定时交易信号",
-    "allocation": "七板块按板块内全部主力连续等权汇总当日涨跌广度与平均涨幅；页面同时展开每个品种的方向和贡献",
+    "capital_structure": "价格上涨且总持仓增加归为多头增仓；价格下跌且总持仓增加归为空头增仓；上涨缩仓提示警惕追多，下跌缩仓提示警惕追空。该分类只描述价格与总持仓组合，不判定多空持仓归属",
     "open_interest": "优先读取行情商的品种加权合约持仓字段；若无该序列，将全部挂牌分月合约持仓逐日求和；两者均失败才明确标记主连降级",
     "technical": "主流指标层覆盖均线、MACD、ADX、ROC、RSI、KDJ、CCI、ATR、布林带、唐奇安、量比与OBV，仅作交叉验证",
     "risk": "支撑压力综合20日高低、MA20、布林带与ATR；方向信号与仓位分离，ATR波动率升至历史高分位时分档降至75%/50%/25%，不自动下单",
@@ -15170,7 +13342,6 @@
   "warnings": [
     "主连换月可能产生跳空，生产使用前应接入后复权连续合约或固定主力合约。",
     "品种加权合约或全分月合约汇总持仓可降低主力换月扰动，但仍不可直接解释为资金净流入或流出；页面展示数据口径与降级状态。",
-    "七板块配置是当日截面相对强弱，不等同于全部板块已经完成日线策略回测。",
     "黑色板块覆盖螺纹钢、热卷、不锈钢、铁矿石、焦炭、焦煤、硅铁与锰硅主力连续；已按要求删除线材。",
     "公开接口可能限流或中断；实盘研究建议切换至iFinD、Wind、CTP或交易所授权源。"
   ]
