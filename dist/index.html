@@ -16,10 +16,10 @@
       <button class="nav-item" data-scroll="capital"><span>02</span> 资金结构</button>
       <button class="nav-item" data-scroll="changes"><span>03</span> 信号变化</button>
       <button class="nav-item" data-scroll="matrix"><span>04</span> 信号矩阵</button>
-      <button class="nav-item" data-scroll="performance"><span>05</span> 策略回测</button>
-      <button class="nav-item" data-scroll="paper"><span>06</span> 模拟盘持仓</button>
-      <button class="nav-item" data-scroll="market"><span>07</span> 全市场</button>
-      <button class="nav-item" data-scroll="technical"><span>08</span> 技术全景</button>
+      <button class="nav-item" data-scroll="technical"><span>05</span> 技术全景</button>
+      <button class="nav-item" data-scroll="performance"><span>06</span> 策略回测</button>
+      <button class="nav-item" data-scroll="paper"><span>07</span> 模拟盘持仓</button>
+      <button class="nav-item" data-scroll="market"><span>08</span> 全市场</button>
       <button class="nav-item" data-scroll="method"><span>09</span> 模型口径</button>
     </nav>
     <div class="rail-foot"><i></i><span>日线主模型</span><small>周 / 60分确认 · 5分仅对照</small></div>
@@ -60,6 +60,12 @@
       <article class="panel ranking-panel"><div class="section-head compact"><div><p class="eyebrow">CROSS-SECTION</p><h2>动量强弱排名</h2></div></div><div id="ranking" class="ranking"></div></article>
     </section>
 
+    <section class="panel technical-panel" id="technical">
+      <div class="section-head"><div><p class="eyebrow">TECHNICAL TOOLKIT</p><h2 id="technicalTitle">主流技术指标全景</h2></div><span class="scope-note">交叉验证层 · 不替代日线四因子</span></div>
+      <div id="technicalGrid" class="technical-grid"></div>
+      <div id="riskPanel" class="risk-panel"></div>
+    </section>
+
     <section class="panel performance-panel" id="performance">
       <div class="section-head"><div><p class="eyebrow">WALK-FORWARD BACKTEST</p><h2>策略绩效对比</h2></div><a class="report-link" href="performance-report.json" download>下载完整绩效报表</a></div>
       <div id="frequencyVerdict" class="frequency-verdict"></div>
@@ -85,12 +91,6 @@
       <div id="categoryBreadth" class="category-breadth"></div>
       <details class="metal-details"><summary>贵金属 / 有色 / 黑色明细</summary><div class="table-scroll"><table><thead><tr><th>类别</th><th>品种</th><th>交易所</th><th>最新价</th><th>涨跌幅</th><th>成交量</th><th>持仓量</th></tr></thead><tbody id="metalDetailRows"></tbody></table></div></details>
       <p id="marketFoot" class="panel-note"></p>
-    </section>
-
-    <section class="panel technical-panel" id="technical">
-      <div class="section-head"><div><p class="eyebrow">TECHNICAL TOOLKIT</p><h2 id="technicalTitle">主流技术指标全景</h2></div><span class="scope-note">交叉验证层 · 不替代日线四因子</span></div>
-      <div id="technicalGrid" class="technical-grid"></div>
-      <div id="riskPanel" class="risk-panel"></div>
     </section>
 
     <section class="panel method-panel" id="method"><div><p class="eyebrow">MODEL SPECIFICATION</p><h2>模型口径</h2></div><div id="methodList" class="method-list"></div><div id="warnings" class="warnings"></div></section>
