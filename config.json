@@ -21,6 +21,7 @@
   "backtest_calendar_days": 365,
   "top_strategy_count": 4,
   "minimum_ranked_strategy_trades": 20,
+  "minimum_asset_strategy_trades": 8,
   "paper_max_weight_per_asset": 0.20,
   "paper_gross_target": 1.0,
   "paper_max_net_exposure": 0.40,

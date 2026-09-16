@@ -13,15 +13,16 @@
     <div class="brand"><span class="brand-mark">M</span><div><b>商品动量模型</b><small>COMMODITY MOMENTUM MODEL</small></div></div>
     <nav aria-label="主导航">
       <button class="nav-item active" data-scroll="overview"><span>01</span> 总览</button>
-      <button class="nav-item" data-scroll="capital"><span>02</span> 资金结构</button>
-      <button class="nav-item" data-scroll="changes"><span>03</span> 信号变化</button>
-      <button class="nav-item" data-scroll="matrix"><span>04</span> 信号矩阵</button>
-      <button class="nav-item" data-scroll="technical"><span>05</span> 技术全景</button>
-      <button class="nav-item" data-scroll="trendQuality"><span>06</span> 趋势质量</button>
-      <button class="nav-item" data-scroll="performance"><span>07</span> 策略回测</button>
-      <button class="nav-item" data-scroll="paper"><span>08</span> 模拟盘持仓</button>
-      <button class="nav-item" data-scroll="market"><span>09</span> 全市场</button>
-      <button class="nav-item" data-scroll="method"><span>10</span> 模型口径</button>
+      <button class="nav-item" data-scroll="operation"><span>02</span> 操作总结</button>
+      <button class="nav-item" data-scroll="capital"><span>03</span> 资金流向</button>
+      <button class="nav-item" data-scroll="changes"><span>04</span> 信号变化</button>
+      <button class="nav-item" data-scroll="matrix"><span>05</span> 信号矩阵</button>
+      <button class="nav-item" data-scroll="technical"><span>06</span> 技术全景</button>
+      <button class="nav-item" data-scroll="trendQuality"><span>07</span> 趋势质量</button>
+      <button class="nav-item" data-scroll="performance"><span>08</span> 策略回测</button>
+      <button class="nav-item" data-scroll="paper"><span>09</span> 模拟盘持仓</button>
+      <button class="nav-item" data-scroll="market"><span>10</span> 全市场</button>
+      <button class="nav-item" data-scroll="method"><span>11</span> 模型口径</button>
     </nav>
     <div class="rail-foot"><i></i><span>日线主模型</span><small>周 / 60分确认 · 5分仅对照</small></div>
   </aside>
@@ -39,8 +40,14 @@
 
     <section id="majorAlert" class="major-alert" hidden aria-live="assertive"></section>
 
+    <section class="panel operation-panel" id="operation">
+      <div class="section-head"><div><p class="eyebrow">TECHNICAL × SELECTED METHOD × OI CONTEXT</p><h2>操作总结 · 技术指标为主</h2></div><span class="scope-note">资金持仓只作交叉验证</span></div>
+      <div id="operationRows" class="operation-rows"></div>
+      <p class="panel-note">方向由综合技术信号与该品种回测选优方法共同决定；价格与品种总持仓仅用于确认或提示背离，不能单独生成买卖信号。波动率只调整仓位上限，不自动改变方向。</p>
+    </section>
+
     <section class="panel capital-panel" id="capital">
-      <div class="section-head"><div><p class="eyebrow">PRICE × OPEN INTEREST</p><h2>操作总结 · 价格与品种总持仓</h2></div><span class="scope-note">月价格 × 5日全合约持仓变化</span></div>
+      <div class="section-head"><div><p class="eyebrow">PRICE × OPEN INTEREST REFERENCE</p><h2>资金流向参考 · 价格与品种总持仓</h2></div><span class="scope-note">月价格 × 5日全合约持仓变化</span></div>
       <div id="capitalGroups" class="capital-groups"></div>
       <p class="panel-note">四象限方向：涨价增仓＝多头增仓；跌价增仓＝空头增仓；涨价减仓＝警惕继续追多；跌价减仓＝警惕继续追空。增减仓无法识别多空双方身份，因此只作结构提示，不直接构成开仓信号。优先读取品种加权合约；没有时加总全部挂牌分月合约。</p>
     </section>
@@ -57,7 +64,7 @@
     </section>
 
     <section class="detail-grid" id="detail">
-      <article class="panel detail-panel"><div class="section-head compact"><div><p class="eyebrow">DAILY FOUR FACTORS</p><h2 id="detailTitle">选择品种查看因子</h2></div><div class="detail-tools"><label for="detailAssetSelect">切换品种</label><select id="detailAssetSelect" aria-label="选择品种"></select><span id="detailBadge" class="detail-badge">—</span></div></div><div id="detailContent" class="empty-detail">点击品种卡片或使用右上角选项，查看四因子、多周期结论与真实日期曲线。</div></article>
+      <article class="panel detail-panel"><div class="section-head compact"><div><p class="eyebrow">DAILY FOUR FACTORS</p><h2 id="detailTitle">选择品种查看因子</h2></div><div class="detail-tools"><label for="detailAssetSelect">切换品种</label><select id="detailAssetSelect" aria-label="选择品种"></select><a id="assetPageLink" class="asset-page-link" href="asset.html">独立研究页</a><span id="detailBadge" class="detail-badge">—</span></div></div><div id="detailContent" class="empty-detail">点击品种卡片或使用右上角选项，查看四因子、多周期结论与真实日期曲线。</div></article>
       <article class="panel ranking-panel"><div class="section-head compact"><div><p class="eyebrow">CROSS-SECTION</p><h2>动量强弱排名</h2></div></div><div id="ranking" class="ranking"></div></article>
     </section>
 

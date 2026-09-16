@@ -978,6 +978,92 @@ def aggregate_strategy_performance(results: list[dict[str, Any]], generated_at: 
     }
 
 
+def select_asset_strategy(strategy_rows: list[dict[str, Any]], config: dict[str, Any]) -> dict[str, Any]:
+    """Select a per-asset research method with a trade-count reliability haircut."""
+    minimum_trades = int(config.get("minimum_asset_strategy_trades", 8))
+    candidates: list[dict[str, Any]] = []
+    for row in strategy_rows:
+        if row.get("status") != "ok" or row.get("frequency") != "daily" or not row.get("ranking_eligible", True):
+            continue
+        trades = int(row.get("trades") or 0)
+        sharpe = float(row.get("sharpe") or 0)
+        net_return = float(row.get("net_return_pct") or 0)
+        drawdown = abs(float(row.get("max_drawdown_pct") or 0))
+        reliability = min(1.0, math.sqrt(trades / 20)) if trades > 0 else 0.0
+        return_component = 0.15 * clamp(net_return / 20, -1, 1)
+        drawdown_penalty = 0.15 * max(0.0, drawdown / 25 - 1)
+        selection_score = sharpe * reliability + return_component - drawdown_penalty
+        passed = trades >= minimum_trades and sharpe > 0 and net_return > 0
+        candidates.append({
+            "key": row["key"], "name": row["name"], "trades": trades,
+            "win_rate_pct": row.get("win_rate_pct"), "net_return_pct": net_return,
+            "sharpe": sharpe, "max_drawdown_pct": row.get("max_drawdown_pct"),
+            "profit_factor": row.get("profit_factor"), "latest_target": int(row.get("latest_target") or 0),
+            "sample_start": row.get("sample_start"), "sample_end": row.get("sample_end"),
+            "reliability": reliability, "selection_score": selection_score, "passed": passed,
+        })
+    candidates.sort(key=lambda item: (item["passed"], item["selection_score"], item["trades"]), reverse=True)
+    selected = next((item for item in candidates if item["passed"]), None)
+    if selected:
+        confidence = "较高" if selected["trades"] >= 15 and selected["sharpe"] >= 0.75 and abs(float(selected["max_drawdown_pct"] or 0)) <= 20 else "观察"
+        verdict = f"沿用{selected['name']}作为该品种研究方法；仍需前向模拟验证"
+    else:
+        confidence = "不足"
+        verdict = "最近一年没有方法同时通过交易数、正收益和正Sharpe门槛，暂不固定沿用"
+    return {
+        "selected": selected, "confidence": confidence, "minimum_trades": minimum_trades,
+        "method": "仅比较日线方法；交易数至少达标且收益、Sharpe均为正，再按Sharpe可靠性折扣、收益奖励和回撤惩罚排序。",
+        "warning": "同一最近一年窗口内选优，存在选择偏差；选择结果只用于研究和前向模拟，不代表样本外有效。",
+        "verdict": verdict, "candidates": candidates,
+    }
+
+
+def build_operation_research_view(asset: dict[str, Any]) -> dict[str, Any]:
+    """Combine technical evidence first, then use OI structure only as context."""
+    signal = asset.get("signal", "neutral")
+    technical_side = 1 if signal in ("long", "watch_long") else -1 if signal in ("short", "watch_short") else 0
+    hard_signal = signal in ("long", "short")
+    selected = asset.get("strategy_selection", {}).get("selected")
+    method_side = int(selected.get("latest_target") or 0) if selected else 0
+    risk_adjusted = float(asset.get("trend_quality", {}).get("risk_adjusted_trend") or 0)
+    trend_side = 1 if risk_adjusted >= 0.25 else -1 if risk_adjusted <= -0.25 else 0
+    capital = asset.get("capital_bucket", "divergence")
+    capital_labels = {
+        "trend_long": "涨价增仓 · 多头结构参考", "trend_short": "跌价增仓 · 空头结构参考",
+        "warn_long": "涨价减仓 · 警惕继续追多", "warn_short": "跌价减仓 · 警惕继续追空",
+        "divergence": "价格或总持仓变化不显著",
+    }
+    if technical_side and selected and method_side == technical_side and trend_side == technical_side:
+        action = "顺势做多" if technical_side > 0 and hard_signal else "顺势做空" if technical_side < 0 and hard_signal else "观察偏多" if technical_side > 0 else "观察偏空"
+        reason = "综合技术、品种选优方法与风险调整趋势三者一致"
+    elif technical_side and selected and method_side == technical_side:
+        action, reason = "等待趋势确认", "技术方向与品种选优方法一致，但20日风险调整趋势未确认"
+    elif technical_side and selected and method_side == -technical_side:
+        action, reason = "暂缓开仓", "综合技术方向与品种选优方法冲突"
+    elif technical_side and selected and method_side == 0:
+        action, reason = "等待方法确认", "技术方向已形成，但品种选优方法当前为空仓"
+    elif technical_side and not selected:
+        action, reason = "仅观察技术方向", "该品种尚无通过可靠性门槛的固定方法"
+    else:
+        action, reason = "观望", "综合技术方向尚未形成"
+    if technical_side > 0:
+        flow_alignment = "确认" if capital == "trend_long" else "背离" if capital in ("trend_short", "warn_long") else "中性"
+    elif technical_side < 0:
+        flow_alignment = "确认" if capital == "trend_short" else "背离" if capital in ("trend_long", "warn_short") else "中性"
+    else:
+        flow_alignment = "仅供参考"
+    multiplier = float(asset.get("volatility_control", {}).get("position_multiplier") or 0)
+    if technical_side and multiplier <= 0.5:
+        reason += f"；波动率偏高，仓位上限缩放至{multiplier * 100:.0f}%"
+    return {
+        "action": action, "reason": reason, "technical_signal": signal, "technical_side": technical_side,
+        "risk_adjusted_trend": risk_adjusted, "trend_side": trend_side,
+        "selected_method": selected, "capital_reference": capital_labels.get(capital, capital_labels["divergence"]),
+        "capital_alignment": flow_alignment, "position_multiplier": multiplier,
+        "priority": "技术指标与品种选优方法决定方向；价格×总持仓只作资金结构交叉验证，不单独产生买卖信号。",
+    }
+
+
 def update_paper_portfolio(results: list[dict[str, Any]], generated_at: datetime, config: dict[str, Any]) -> dict[str, Any]:
     """Forward-only paper ledger, persisted locally or through Actions cache."""
     all_valid = [item for item in results if item.get("price") and item.get("strategy_comparison")]
@@ -1176,19 +1262,22 @@ def build_allocation_targets(
     """Construct a transparent time-series allocation; cross-sectional rank never sets direction."""
     paper_ids = set(config.get("paper_asset_ids", []))
     assets = [item for item in results if item.get("price") and item["id"] in paper_ids]
-    selected_keys = [row["key"] for row in performance_report.get("strategies", [])]
     raw_scores: dict[str, float] = {}
     diagnostics: dict[str, dict[str, Any]] = {}
     for asset in assets:
         rows = {row["key"]: row for row in asset.get("strategy_comparison", [])}
-        votes = [int(rows[key].get("latest_target", 0)) for key in selected_keys if key in rows]
+        selected = asset.get("strategy_selection", {}).get("selected")
+        selected_keys = [selected["key"]] if selected and selected.get("key") in rows else []
+        votes = [int(rows[key].get("latest_target", 0)) for key in selected_keys]
         consensus = statistics.fmean(votes) if votes else 0.0
         trend = asset.get("trend_quality", {})
         risk_adjusted = float(trend.get("risk_adjusted_trend") or 0)
         noise_ratio = float(trend.get("noise_ratio") or 99)
         trend_side = 1 if risk_adjusted > 0 else -1 if risk_adjusted < 0 else 0
         vote_side = 1 if consensus > 0 else -1 if consensus < 0 else 0
-        aligned = vote_side != 0 and vote_side == trend_side and abs(consensus) >= 0.25 and abs(risk_adjusted) >= 0.25
+        signal = asset.get("signal", "neutral")
+        technical_side = 1 if signal in ("long", "watch_long") else -1 if signal in ("short", "watch_short") else 0
+        aligned = vote_side != 0 and vote_side == trend_side == technical_side and abs(consensus) >= 0.25 and abs(risk_adjusted) >= 0.25
         volatility = max(float(trend.get("volatility_20d_pct") or 0) / 100, 0.03)
         noise_penalty = 1 / (1 + noise_ratio)
         vol_multiplier = float(asset.get("volatility_control", {}).get("position_multiplier", 0))
@@ -1196,6 +1285,7 @@ def build_allocation_targets(
         raw_scores[asset["id"]] = raw_score
         diagnostics[asset["id"]] = {
             "direction": vote_side if aligned else 0,
+            "technical_side": technical_side,
             "consensus": consensus,
             "votes": votes,
             "selected_strategies": selected_keys,
@@ -1203,7 +1293,7 @@ def build_allocation_targets(
             "noise_ratio": noise_ratio,
             "volatility_20d_pct": trend.get("volatility_20d_pct"),
             "volatility_multiplier": vol_multiplier,
-            "reason": "前列策略同向且与20日风险调整趋势一致" if aligned else "策略投票与趋势方向未形成一致，保持空仓",
+            "reason": "综合技术、品种选优方法与20日风险调整趋势三者一致" if aligned else "综合技术、品种选优方法与趋势方向未形成一致，保持空仓",
         }
     weights = _capped_allocation_weights(
         raw_scores, float(config.get("paper_max_weight_per_asset", 0.20)), float(config.get("paper_gross_target", 1.0))
@@ -1362,8 +1452,8 @@ def update_allocation_paper_portfolio(
         "mode": "forward_allocation_paper", "started_at": portfolio["started_at"], "updated_at": state["updated_at"],
         "initial_cash": initial_cash, "scope": scope_rows, "strategies": summary, "positions": positions,
         "position_changes": all_changes, "equity_history": {"allocation_portfolio_v1": portfolio["history"]},
-        "selected_strategies": performance_report.get("strategies", []),
-        "assumptions": "1000万元初始权益；仅指定10个品种；前列日线策略投票决定方向，20日风险调整趋势确认，逆波动率分配；单品种≤20%、组合净敞口≤40%、总名义敞口≤100%；主连价仅用于模拟盘参考手数折算；开平各万1.2、每侧1跳。",
+        "selected_strategies": {item["id"]: item.get("strategy_selection", {}).get("selected") for item in valid},
+        "assumptions": "1000万元初始权益；仅指定10个品种；综合技术、各品种最近一年可靠性折扣后选优的方法与20日风险调整趋势三者同向才配置，之后按逆波动率分配；单品种≤20%、组合净敞口≤40%、总名义敞口≤100%；主连价仅用于模拟盘参考手数折算；开平各万1.2、每侧1跳。",
     }
     atomic_json(PAPER_REPORT_PATH, paper_report)
     return {
@@ -1584,6 +1674,7 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
         volatility_control = volatility_position_control(daily, int(config["atr_period"]))
         trend_quality = trend_quality_snapshot(daily)
         strategy_comparison = compare_strategies(daily, five, asset, config)
+        strategy_selection = select_asset_strategy(strategy_comparison, config)
         result = {
             **base,
             **latest,
@@ -1605,6 +1696,7 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             "technical_methods": technical["groups"],
             "volatility_control": volatility_control,
             "trend_quality": trend_quality,
+            "strategy_selection": strategy_selection,
             "risk_levels": research_risk_levels(
                 daily_closes[-1], latest["prior_high"], latest["prior_low"], technical["values"]["atr14"],
                 technical["values"]["ma20"], technical["values"]["boll_upper"], technical["values"]["boll_lower"],
@@ -1624,6 +1716,7 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             },
             "backtest": run_backtest(daily, daily_signals, asset, config),
         }
+        result["operation_view"] = build_operation_research_view(result)
         return result
     except Exception as exc:
         return {
@@ -1659,7 +1752,7 @@ def scan_once() -> dict[str, Any]:
         results.sort(key=lambda item: order[item["id"]])
         counts = {key: sum(item.get("signal") == key for item in results) for key in ("long", "short", "watch_long", "watch_short", "neutral", "missing")}
         bucket_keys = ("trend_long", "warn_long", "trend_short", "warn_short", "divergence")
-        operation_summary = {
+        capital_flow_summary = {
             key: [item["id"] for item in results if item.get("capital_bucket") == key]
             for key in bucket_keys
         }
@@ -1684,11 +1777,11 @@ def scan_once() -> dict[str, Any]:
                 strategy.pop("return_series", None)
         signal_changes = update_signal_change_log(results, generated_at)
         payload = {
-            "schema_version": 9,
+            "schema_version": 10,
             "generated_at": generated_at.isoformat(timespec="seconds"),
             "interval_seconds": int(config["scan_interval_seconds"]),
             "summary": counts,
-            "operation_summary": operation_summary,
+            "capital_flow_summary": capital_flow_summary,
             "trend_ranking": trend_ranking,
             "market_breadth": market_breadth,
             "performance": {key: performance_report[key] for key in ("assumptions", "strategies", "selection", "frequency_assessment", "sources")},
@@ -1698,11 +1791,11 @@ def scan_once() -> dict[str, Any]:
             "methodology": {
                 "bar": "日线四因子为主；周线和60分钟确认趋势；5分钟仅作盘中预警",
                 "factors": "mom5超过±3% / 突破20日高低 / 收盘相对MA20 / 日线RSI14区间",
-                "decision": "日线四因子至少3项同向触发，再结合周线与小时线给出综合结论",
+                "decision": "操作总结以日线四因子、周线/小时确认和品种选优方法共同决定方向；价格×总持仓只作交叉验证，不单独触发交易",
                 "execution": "核心模型在交易日15:20后刷新；全市场行情在交易时段每15分钟刷新；回测绩效只统计最近365个自然日，5分钟策略不进入定时交易信号",
                 "capital_structure": "价格上涨且总持仓增加归为多头增仓；价格下跌且总持仓增加归为空头增仓；上涨缩仓提示警惕追多，下跌缩仓提示警惕追空。该分类只描述价格与总持仓组合，不判定多空持仓归属",
                 "trend_quality": "20日收益率刻画中期趋势，3日收益率相对20日趋势的绝对比例刻画短期噪音；20日收益率除以20日同期限波动率得到风险调整后趋势",
-                "allocation": "1000万元模拟组合以最近一年Sharpe前列的日线策略做品种自身时间序列投票，再用20日风险调整趋势确认和逆波动率配置；单品种≤20%、净敞口≤40%、总名义敞口≤100%",
+                "allocation": "1000万元模拟组合要求综合技术、品种选优方法与20日风险调整趋势三者同向，再按逆波动率配置；品种方法需交易数达标、收益和Sharpe均为正并经可靠性折扣排序；单品种≤20%、净敞口≤40%、总名义敞口≤100%",
                 "open_interest": "优先读取行情商的品种加权合约持仓字段；若无该序列，将全部挂牌分月合约持仓逐日求和；两者均失败才明确标记主连降级",
                 "technical": "主流指标层覆盖均线、MACD、ADX、ROC、RSI、KDJ、CCI、ATR、布林带、唐奇安、量比与OBV，仅作交叉验证",
                 "risk": "支撑压力综合20日高低、MA20、布林带与ATR；方向信号与仓位分离，ATR波动率升至历史高分位时分档降至75%/50%/25%，不自动下单",
@@ -1710,7 +1803,7 @@ def scan_once() -> dict[str, Any]:
             },
             "warnings": [
                 "主连换月可能产生跳空，生产使用前应接入后复权连续合约或固定主力合约。",
-                "品种加权合约或全分月合约汇总持仓可降低主力换月扰动，但仍不可直接解释为资金净流入或流出；页面展示数据口径与降级状态。",
+                "品种加权合约或全分月合约汇总持仓可降低主力换月扰动，但只能作为资金流向参考，不能直接识别多空双方，也不单独构成操作建议。",
                 "黑色板块覆盖螺纹钢、热卷、不锈钢、铁矿石、焦炭、焦煤、硅铁与锰硅主力连续；已按要求删除线材。",
                 "最近一年按Sharpe选择策略属于同窗筛选，存在选择偏差；应继续观察前向模拟盘，不能把排名直接外推为未来收益。",
                 "模拟盘参考手数由主力连续价和交易单位折算；主力连续不是可成交月份，实盘前必须映射具体合约并复核保证金、手续费和平今规则。",

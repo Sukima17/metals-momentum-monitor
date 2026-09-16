@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="单品种期货技术方法适配、最近一年回测、资金持仓参考与风险控制">
+  <title>品种技术方法研究 | 商品动量模型</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="asset-page">
+    <header class="asset-header">
+      <div><p class="eyebrow">SINGLE-ASSET METHOD RESEARCH</p><h1 id="assetTitle">品种研究页</h1><p id="assetSubtitle">载入真实行情与回测数据…</p></div>
+      <div class="asset-header-actions"><select id="assetSelect" aria-label="切换研究品种"></select><a class="back-link" href="index.html">← 返回工作台</a></div>
+    </header>
+
+    <section class="panel">
+      <div class="section-head"><div><p class="eyebrow">OPERATION VIEW</p><h2>操作总结 · 技术指标为主</h2></div><span id="assetAsOf" class="scope-note">等待数据</span></div>
+      <div id="assetSummary" class="asset-summary-grid"></div>
+      <p class="panel-note">综合技术与该品种选优方法决定方向；价格×品种总持仓只用于确认或提示背离。该页面不构成自动交易指令。</p>
+    </section>
+
+    <section class="panel">
+      <div class="section-head"><div><p class="eyebrow">PER-ASSET METHOD SELECTION</p><h2>该品种适配方法</h2></div><span id="selectionConfidence" class="scope-note">等待筛选</span></div>
+      <div id="strategyHero" class="strategy-hero"></div>
+      <div class="table-scroll"><table class="strategy-table"><thead><tr><th>排序</th><th>方法</th><th>频率</th><th>交易数</th><th>胜率</th><th>收益</th><th>Sharpe</th><th>最大回撤</th><th>当前方向</th><th>门槛</th></tr></thead><tbody id="strategyRows"></tbody></table></div>
+      <div id="selectionNote" class="asset-method-note"></div>
+    </section>
+
+    <section class="asset-two-col">
+      <article class="panel"><div class="section-head compact"><div><p class="eyebrow">PRICE HISTORY</p><h2>最近60个交易日</h2></div></div><div id="assetSpark" class="spark-wrap asset-spark"></div></article>
+      <article class="panel"><div class="section-head compact"><div><p class="eyebrow">PRICE × OPEN INTEREST REFERENCE</p><h2>资金流向参考</h2></div></div><div id="assetOi"></div></article>
+    </section>
+
+    <section class="panel technical-panel">
+      <div class="section-head"><div><p class="eyebrow">TECHNICAL TOOLKIT</p><h2>主流技术指标全景</h2></div><span class="scope-note">交叉验证层</span></div>
+      <div id="assetTechnical" class="asset-technical-grid"></div>
+      <div id="assetRisk" class="risk-panel"></div>
+    </section>
+
+    <footer id="assetFooter" class="asset-page-footer"></footer>
+  </main>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="asset.js"></script>
+</body>
+</html>

@@ -16,6 +16,8 @@ from momentum_monitor import (
     volatility_position_control,
     aggregate_oi_change,
     _capped_allocation_weights,
+    build_operation_research_view,
+    select_asset_strategy,
 )
 from market_universe import UNIVERSE
 from research_backtest import compare_strategies, run_strategy
@@ -111,6 +113,19 @@ if __name__ == "__main__":
         {"bars": [{"hold": value} for value in (300, 306, 312, 318, 324, 330)]},
     ]
     assert abs(aggregate_oi_change(oi_series, 5) - 20.0) < 1e-9
+    selection = select_asset_strategy([
+        {"key": "one_trade", "name": "单笔高收益", "status": "ok", "frequency": "daily", "ranking_eligible": True,
+         "trades": 1, "sharpe": 4.0, "net_return_pct": 20, "max_drawdown_pct": -2, "latest_target": 1},
+        {"key": "robust", "name": "稳健趋势", "status": "ok", "frequency": "daily", "ranking_eligible": True,
+         "trades": 12, "sharpe": 0.8, "net_return_pct": 9, "max_drawdown_pct": -12, "latest_target": 1},
+    ], config)
+    assert selection["selected"]["key"] == "robust"
+    operation = build_operation_research_view({
+        "signal": "long", "capital_bucket": "trend_long", "strategy_selection": selection,
+        "volatility_control": {"position_multiplier": 0.5},
+        "trend_quality": {"risk_adjusted_trend": 0.8},
+    })
+    assert operation["action"] == "顺势做多" and operation["capital_alignment"] == "确认"
     direct_reversal = classify_signal_change(
         {"signal": "long", "daily_signal": "long", "score": 70},
         {"signal": "short", "daily_signal": "short", "score": -65},
@@ -121,4 +136,4 @@ if __name__ == "__main__":
     )
     assert direct_reversal and direct_reversal["severity"] == "major"
     assert score_jump and score_jump["severity"] == "major"
-    print("signal, trend quality, allocation, aggregate OI, strategy comparison, market universe and risk checks OK")
+    print("signal, per-asset method selection, operation summary, allocation, aggregate OI, strategy comparison, market universe and risk checks OK")
