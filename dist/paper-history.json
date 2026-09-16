@@ -1,7 +1,7 @@
 {
   "mode": "forward_allocation_paper",
   "started_at": "2026-09-16T15:29:22+08:00",
-  "updated_at": "2026-09-16T20:19:25+08:00",
+  "updated_at": "2026-09-16T21:58:24+08:00",
   "initial_cash": 10000000.0,
   "scope": [
     {
@@ -59,17 +59,17 @@
     {
       "key": "allocation_portfolio_v1",
       "name": "1000万动态多空组合",
-      "equity": 9996525.0936,
-      "return_pct": -0.03474906400000588,
-      "max_drawdown_pct": -0.03474906400000588,
-      "trades": 16,
+      "equity": 9969611.7116,
+      "return_pct": -0.3038828839999952,
+      "max_drawdown_pct": -0.3038828839999952,
+      "trades": 20,
       "active_positions": 3,
       "long_positions": 1,
       "short_positions": 2,
-      "gross_exposure_pct": 58.144604705901806,
-      "net_exposure_pct": -18.680891434920493,
-      "cash_buffer_cny": 4184085.0935999993,
-      "observations": 6
+      "gross_exposure_pct": 58.300465134837154,
+      "net_exposure_pct": -18.98599518973868,
+      "cash_buffer_cny": 4157281.7116,
+      "observations": 8
     }
   ],
   "positions": [
@@ -86,8 +86,8 @@
       "position_size_pct": 0.0,
       "target_weight_pct": 0.0,
       "notional_cny": 0.0,
-      "entry_price": 107740.0,
-      "current_price": 107740.0,
+      "entry_price": 107850.0,
+      "current_price": 107850.0,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
       "volatility_control": {
@@ -117,7 +117,7 @@
         1
       ],
       "entry_time": null,
-      "bar_time": "2026-09-16 15:00:00"
+      "bar_time": "2026-09-16 21:55:00"
     },
     {
       "strategy_key": "allocation_portfolio_v1",
@@ -132,8 +132,8 @@
       "position_size_pct": 0.0,
       "target_weight_pct": 0.0,
       "notional_cny": 0.0,
-      "entry_price": 24185.0,
-      "current_price": 24185.0,
+      "entry_price": 24275.0,
+      "current_price": 24275.0,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
       "volatility_control": {
@@ -163,7 +163,7 @@
         0
       ],
       "entry_time": null,
-      "bar_time": "2026-09-16 15:00:00"
+      "bar_time": "2026-09-16 21:55:00"
     },
     {
       "strategy_key": "allocation_portfolio_v1",
@@ -178,8 +178,8 @@
       "position_size_pct": 0.0,
       "target_weight_pct": 0.0,
       "notional_cny": 0.0,
-      "entry_price": 15870.0,
-      "current_price": 15870.0,
+      "entry_price": 15905.0,
+      "current_price": 15905.0,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
       "volatility_control": {
@@ -209,7 +209,7 @@
         -1
       ],
       "entry_time": null,
-      "bar_time": "2026-09-16 15:00:00"
+      "bar_time": "2026-09-16 21:55:00"
     },
     {
       "strategy_key": "allocation_portfolio_v1",
@@ -221,11 +221,11 @@
       "lots": 15,
       "signed_lots": 15,
       "contract_multiplier": 5.0,
-      "position_size_pct": 19.731856635490654,
-      "target_weight_pct": 19.731856635490654,
-      "notional_cny": 1972500.0,
-      "entry_price": 26300.0,
-      "current_price": 26300.0,
+      "position_size_pct": 19.65723497254924,
+      "target_weight_pct": 19.654994085837306,
+      "notional_cny": 1959750.0,
+      "entry_price": 26130.0,
+      "current_price": 26130.0,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0.0,
       "volatility_control": {
@@ -250,12 +250,12 @@
         "high_quality": false,
         "formula": "20日收益率 ÷ (近20日日收益率标准差 × √20)；噪音比率=|3日收益率|÷|20日收益率|"
       },
-      "allocation_reason": "综合技术、品种选优方法与20日风险调整趋势三者一致",
+      "allocation_reason": "综合技术、品种选优方法与20日风险调整趋势一致；近月月差背离仅作风险提示，不改变配置",
       "strategy_votes": [
         1
       ],
-      "entry_time": "2026-09-16T15:29:22+08:00",
-      "bar_time": "2026-09-16 15:00:00"
+      "entry_time": "2026-09-16T21:58:24+08:00",
+      "bar_time": "2026-09-16 21:55:00"
     },
     {
       "strategy_key": "allocation_portfolio_v1",
@@ -267,13 +267,13 @@
       "lots": 16,
       "signed_lots": -16,
       "contract_multiplier": 1.0,
-      "position_size_pct": 19.533187599860316,
-      "target_weight_pct": -19.533187599860316,
-      "notional_cny": 1952640.0,
+      "position_size_pct": 19.712703532007435,
+      "target_weight_pct": -19.71045632198716,
+      "notional_cny": 1965280.0,
       "entry_price": 122040.0,
-      "current_price": 122040.0,
-      "unrealized_cny": -0.0,
-      "unrealized_pct": -0.0,
+      "current_price": 122830.0,
+      "unrealized_cny": -12640.0,
+      "unrealized_pct": -0.6431653504844094,
       "volatility_control": {
         "atr_pct": 1.7002622091117667,
         "percentile_252": 36.11111111111111,
@@ -296,12 +296,12 @@
         "high_quality": false,
         "formula": "20日收益率 ÷ (近20日日收益率标准差 × √20)；噪音比率=|3日收益率|÷|20日收益率|"
       },
-      "allocation_reason": "综合技术、品种选优方法与20日风险调整趋势三者一致",
+      "allocation_reason": "综合技术、品种选优方法与20日风险调整趋势一致；近月月差仅作风险参考",
       "strategy_votes": [
         -1
       ],
       "entry_time": "2026-09-16T15:29:22+08:00",
-      "bar_time": "2026-09-16 15:00:00"
+      "bar_time": "2026-09-16 21:55:00"
     },
     {
       "strategy_key": "allocation_portfolio_v1",
@@ -313,8 +313,8 @@
       "lots": 15,
       "signed_lots": -15,
       "contract_multiplier": 1.0,
-      "position_size_pct": 18.87956047055083,
-      "target_weight_pct": -18.87956047055083,
+      "position_size_pct": 18.930526630280482,
+      "target_weight_pct": -18.928368586911976,
       "notional_cny": 1887300.0,
       "entry_price": 125820.0,
       "current_price": 125820.0,
@@ -342,11 +342,11 @@
         "high_quality": false,
         "formula": "20日收益率 ÷ (近20日日收益率标准差 × √20)；噪音比率=|3日收益率|÷|20日收益率|"
       },
-      "allocation_reason": "综合技术、品种选优方法与20日风险调整趋势三者一致",
+      "allocation_reason": "综合技术、品种选优方法与20日风险调整趋势一致；近月月差背离仅作风险提示，不改变配置",
       "strategy_votes": [
         -1
       ],
-      "entry_time": "2026-09-16T15:29:22+08:00",
+      "entry_time": "2026-09-16T21:58:24+08:00",
       "bar_time": "2026-09-16 15:00:00"
     },
     {
@@ -362,8 +362,8 @@
       "position_size_pct": 0.0,
       "target_weight_pct": 0.0,
       "notional_cny": 0.0,
-      "entry_price": 398430.0,
-      "current_price": 398430.0,
+      "entry_price": 398030.0,
+      "current_price": 398030.0,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
       "volatility_control": {
@@ -393,7 +393,7 @@
         -1
       ],
       "entry_time": null,
-      "bar_time": "2026-09-16 15:00:00"
+      "bar_time": "2026-09-16 21:55:00"
     },
     {
       "strategy_key": "allocation_portfolio_v1",
@@ -408,8 +408,8 @@
       "position_size_pct": 0.0,
       "target_weight_pct": 0.0,
       "notional_cny": 0.0,
-      "entry_price": 940.52,
-      "current_price": 940.52,
+      "entry_price": 941.66,
+      "current_price": 941.66,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
       "volatility_control": {
@@ -439,7 +439,7 @@
         0
       ],
       "entry_time": null,
-      "bar_time": "2026-09-16 15:00:00"
+      "bar_time": "2026-09-16 21:55:00"
     },
     {
       "strategy_key": "allocation_portfolio_v1",
@@ -454,8 +454,8 @@
       "position_size_pct": 0.0,
       "target_weight_pct": 0.0,
       "notional_cny": 0.0,
-      "entry_price": 15832.0,
-      "current_price": 15832.0,
+      "entry_price": 15791.0,
+      "current_price": 15791.0,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
       "volatility_control": {
@@ -485,7 +485,7 @@
         -1
       ],
       "entry_time": null,
-      "bar_time": "2026-09-16 15:00:00"
+      "bar_time": "2026-09-16 21:55:00"
     },
     {
       "strategy_key": "allocation_portfolio_v1",
@@ -500,8 +500,8 @@
       "position_size_pct": 0.0,
       "target_weight_pct": 0.0,
       "notional_cny": 0.0,
-      "entry_price": 13540.0,
-      "current_price": 13540.0,
+      "entry_price": 13570.0,
+      "current_price": 13570.0,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
       "volatility_control": {
@@ -531,10 +531,98 @@
         -1
       ],
       "entry_time": null,
-      "bar_time": "2026-09-16 15:00:00"
+      "bar_time": "2026-09-16 21:55:00"
     }
   ],
   "position_changes": [
+    {
+      "time": "2026-09-16T21:58:24+08:00",
+      "strategy_key": "allocation_portfolio_v1",
+      "strategy": "1000万动态多空组合",
+      "asset_id": "zinc",
+      "asset": "沪锌",
+      "symbol": "ZN0",
+      "from_lots": 0,
+      "to_lots": 15,
+      "from_position": 0,
+      "to_position": 15,
+      "target_weight_pct": 19.654994085837306,
+      "price": 26130.0,
+      "bar_time": "2026-09-16 21:55:00",
+      "reason": "open",
+      "allocation_reason": "综合技术、品种选优方法与20日风险调整趋势一致；近月月差背离仅作风险提示，不改变配置",
+      "strategy_votes": [
+        1
+      ],
+      "risk_adjusted_trend": 0.7353172683099851,
+      "noise_ratio": 0.4893509152043007
+    },
+    {
+      "time": "2026-09-16T21:58:24+08:00",
+      "strategy_key": "allocation_portfolio_v1",
+      "strategy": "1000万动态多空组合",
+      "asset_id": "lithium",
+      "asset": "碳酸锂",
+      "symbol": "LC0",
+      "from_lots": 0,
+      "to_lots": -15,
+      "from_position": 0,
+      "to_position": -15,
+      "target_weight_pct": -18.928368586911976,
+      "price": 125820.0,
+      "bar_time": "2026-09-16 15:00:00",
+      "reason": "open",
+      "allocation_reason": "综合技术、品种选优方法与20日风险调整趋势一致；近月月差背离仅作风险提示，不改变配置",
+      "strategy_votes": [
+        -1
+      ],
+      "risk_adjusted_trend": -1.3315353290428036,
+      "noise_ratio": 0.40488767632205275
+    },
+    {
+      "time": "2026-09-16T21:51:24+08:00",
+      "strategy_key": "allocation_portfolio_v1",
+      "strategy": "1000万动态多空组合",
+      "asset_id": "zinc",
+      "asset": "沪锌",
+      "symbol": "ZN0",
+      "from_lots": 15,
+      "to_lots": 0,
+      "from_position": 15,
+      "to_position": 0,
+      "target_weight_pct": 0.0,
+      "price": 26140.0,
+      "bar_time": "2026-09-16 21:50:00",
+      "reason": "close",
+      "allocation_reason": "近月月差结构背离，保持空仓",
+      "strategy_votes": [
+        1
+      ],
+      "risk_adjusted_trend": 0.7353172683099851,
+      "noise_ratio": 0.4893509152043007
+    },
+    {
+      "time": "2026-09-16T21:51:24+08:00",
+      "strategy_key": "allocation_portfolio_v1",
+      "strategy": "1000万动态多空组合",
+      "asset_id": "lithium",
+      "asset": "碳酸锂",
+      "symbol": "LC0",
+      "from_lots": -15,
+      "to_lots": 0,
+      "from_position": -15,
+      "to_position": 0,
+      "target_weight_pct": 0.0,
+      "price": 125820.0,
+      "bar_time": "2026-09-16 15:00:00",
+      "reason": "close",
+      "allocation_reason": "近月月差结构背离，保持空仓",
+      "strategy_votes": [
+        -1
+      ],
+      "risk_adjusted_trend": -1.3315353290428036,
+      "noise_ratio": 0.40488767632205275
+    },
     {
       "time": "2026-09-16T20:16:36+08:00",
       "strategy_key": "allocation_portfolio_v1",
@@ -943,6 +1031,18 @@
         "equity": 9996525.0936,
         "pnl": 0.0,
         "costs": 0.0
+      },
+      {
+        "time": "2026-09-16T21:51:24+08:00",
+        "equity": 9970108.3576,
+        "pnl": -25280.0,
+        "costs": 1136.7359999999999
+      },
+      {
+        "time": "2026-09-16T21:58:24+08:00",
+        "equity": 9969611.7116,
+        "pnl": 640.0,
+        "costs": 1136.646
       }
     ]
   },
@@ -1108,5 +1208,5 @@
       "passed": true
     }
   },
-  "assumptions": "1000万元初始权益；仅指定10个品种；综合技术、各品种最近一年可靠性折扣后选优的方法与20日风险调整趋势三者同向才配置，之后按逆波动率分配；单品种≤20%、组合净敞口≤40%、总名义敞口≤100%；主连价仅用于模拟盘参考手数折算；开平各万1.2、每侧1跳。"
+  "assumptions": "1000万元初始权益；仅指定10个品种；综合技术、各品种选优方法与20日风险调整趋势三者同向时配置，再按逆波动率分配；近月月差背离只作风险提示，不改变方向或仓位；单品种≤20%、组合净敞口≤40%、总名义敞口≤100%；主连价仅用于模拟盘参考手数折算；开平各万1.2、每侧1跳。"
 }

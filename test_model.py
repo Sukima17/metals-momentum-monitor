@@ -16,7 +16,9 @@ from momentum_monitor import (
     volatility_position_control,
     aggregate_oi_change,
     _capped_allocation_weights,
+    build_allocation_targets,
     build_operation_research_view,
+    contract_expiry_month,
     select_asset_strategy,
 )
 from market_universe import UNIVERSE
@@ -113,6 +115,10 @@ if __name__ == "__main__":
         {"bars": [{"hold": value} for value in (300, 306, 312, 318, 324, 330)]},
     ]
     assert abs(aggregate_oi_change(oi_series, 5) - 20.0) < 1e-9
+    shanghai_now = __import__("datetime").datetime(2026, 9, 16)
+    assert contract_expiry_month("CU2610", shanghai_now) == (2026, 10)
+    assert contract_expiry_month("MA701", shanghai_now) == (2027, 1)
+    assert contract_expiry_month("CU0", shanghai_now) is None
     selection = select_asset_strategy([
         {"key": "one_trade", "name": "单笔高收益", "status": "ok", "frequency": "daily", "ranking_eligible": True,
          "trades": 1, "sharpe": 4.0, "net_return_pct": 20, "max_drawdown_pct": -2, "latest_target": 1},
@@ -124,8 +130,26 @@ if __name__ == "__main__":
         "signal": "long", "capital_bucket": "trend_long", "strategy_selection": selection,
         "volatility_control": {"position_multiplier": 0.5},
         "trend_quality": {"risk_adjusted_trend": 0.8},
+        "calendar_spread": {"status": "ok", "structure": "backwardation", "structure_side": 1},
     })
-    assert operation["action"] == "顺势做多" and operation["capital_alignment"] == "确认"
+    assert operation["action"] == "顺势做多" and operation["capital_alignment"] == "确认" and operation["calendar_alignment"] == "同向参考"
+    spread_warning = build_operation_research_view({
+        "signal": "long", "capital_bucket": "trend_long", "strategy_selection": selection,
+        "volatility_control": {"position_multiplier": 1.0},
+        "trend_quality": {"risk_adjusted_trend": 0.8},
+        "calendar_spread": {"status": "ok", "structure": "contango", "structure_side": -1},
+    })
+    assert spread_warning["action"] == "顺势做多" and spread_warning["calendar_alignment"] == "风险提示"
+    allocation_with_spread_warning = build_allocation_targets([{
+        "id": "copper", "price": 100_000, "multiplier": 5, "signal": "long",
+        "strategy_comparison": [{"key": "robust", "latest_target": 1}],
+        "strategy_selection": selection,
+        "trend_quality": {"risk_adjusted_trend": 0.8, "noise_ratio": 0.2, "volatility_20d_pct": 4.0},
+        "volatility_control": {"position_multiplier": 1.0},
+        "calendar_spread": {"status": "ok", "structure": "contango", "structure_side": -1},
+    }], {}, config, 10_000_000)[0]
+    assert allocation_with_spread_warning["direction"] == 1 and allocation_with_spread_warning["target_lots"] > 0
+    assert allocation_with_spread_warning["calendar_spread_warning"] is True
     direct_reversal = classify_signal_change(
         {"signal": "long", "daily_signal": "long", "score": 70},
         {"signal": "short", "daily_signal": "short", "score": -65},
@@ -136,4 +160,4 @@ if __name__ == "__main__":
     )
     assert direct_reversal and direct_reversal["severity"] == "major"
     assert score_jump and score_jump["severity"] == "major"
-    print("signal, per-asset method selection, operation summary, allocation, aggregate OI, strategy comparison, market universe and risk checks OK")
+    print("signal, per-asset method selection, calendar spread, operation summary, allocation, aggregate OI, strategy comparison, market universe and risk checks OK")

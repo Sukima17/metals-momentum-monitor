@@ -220,11 +220,91 @@ def fetch_sina_contract_table(node: str) -> list[dict[str, Any]]:
             continue
         try:
             position = float(row.get("position") or 0)
+            trade = float(row.get("trade") or 0)
+            bid = float(row.get("bidprice1") or 0)
+            ask = float(row.get("askprice1") or 0)
+            volume = float(row.get("volume") or 0)
         except (TypeError, ValueError):
             continue
         if position > 0:
-            rows.append({"symbol": symbol, "name": str(row.get("name") or symbol), "position": position})
+            rows.append({
+                "symbol": symbol, "name": str(row.get("name") or symbol), "position": position,
+                "trade": trade, "bid": bid, "ask": ask, "volume": volume,
+                "tradedate": str(row.get("tradedate") or ""), "ticktime": str(row.get("ticktime") or ""),
+                "exchange": str(row.get("exchange") or "").upper(),
+            })
     return sorted(rows, key=lambda item: item["position"], reverse=True)
+
+
+def contract_expiry_month(symbol: str, now: datetime) -> tuple[int, int] | None:
+    """Parse a listed domestic futures symbol into a comparable year/month."""
+    match = re.search(r"(\d{3,4})$", symbol.upper())
+    if not match:
+        return None
+    digits = match.group(1)
+    month = int(digits[-2:])
+    if month < 1 or month > 12:
+        return None
+    if len(digits) == 4:
+        year = 2000 + int(digits[:2])
+    else:
+        year = (now.year // 10) * 10 + int(digits[0])
+        if year < now.year - 1:
+            year += 10
+    return year, month
+
+
+def nearby_calendar_spread(symbol: str, now: datetime, tick: float) -> dict[str, Any]:
+    """Build a synchronized near-minus-next spread from live bid/ask midpoints."""
+    node = SINA_MARKET_NODES.get(symbol)
+    if not node:
+        raise ValueError(f"缺少{symbol}的新浪品种节点")
+    table = fetch_sina_contract_table(node)
+    current_month = (now.year, now.month)
+    candidates: list[dict[str, Any]] = []
+    for row in table:
+        expiry = contract_expiry_month(row["symbol"], now)
+        if not expiry or expiry < current_month or row["bid"] <= 0 or row["ask"] <= 0 or row["ask"] < row["bid"]:
+            continue
+        candidates.append({**row, "expiry": expiry, "mid": (row["bid"] + row["ask"]) / 2})
+    candidates.sort(key=lambda item: (item["expiry"], item["symbol"]))
+    if len(candidates) < 2:
+        raise ValueError(f"{symbol}缺少两个有效近月买卖盘")
+    near, far = candidates[0], candidates[1]
+    if near["tradedate"] != far["tradedate"]:
+        raise ValueError(f"近远月交易日不一致: {near['tradedate']} / {far['tradedate']}")
+    try:
+        near_time = datetime.strptime(near["ticktime"], "%H:%M:%S")
+        far_time = datetime.strptime(far["ticktime"], "%H:%M:%S")
+        quote_gap_seconds = abs((near_time - far_time).total_seconds())
+    except ValueError:
+        quote_gap_seconds = None
+    if quote_gap_seconds is not None and quote_gap_seconds > 900:
+        raise ValueError(f"近远月报价时间差过大: {quote_gap_seconds:.0f}秒")
+    month_gap = (far["expiry"][0] - near["expiry"][0]) * 12 + far["expiry"][1] - near["expiry"][1]
+    if month_gap <= 0:
+        raise ValueError("近远月到期顺序异常")
+    spread = near["mid"] - far["mid"]
+    spread_pct = spread / far["mid"] * 100 if far["mid"] else None
+    annualized_pct = spread_pct * 12 / month_gap if spread_pct is not None else None
+    neutral_band = max(float(tick) * 2, far["mid"] * 0.0002)
+    structure = "backwardation" if spread > neutral_band else "contango" if spread < -neutral_band else "flat"
+    structure_side = 1 if structure == "backwardation" else -1 if structure == "contango" else 0
+    return {
+        "status": "ok", "near_symbol": near["symbol"], "far_symbol": far["symbol"],
+        "near_price": near["mid"], "far_price": far["mid"], "near_trade": near["trade"], "far_trade": far["trade"],
+        "near_bid": near["bid"], "near_ask": near["ask"], "far_bid": far["bid"], "far_ask": far["ask"],
+        "spread": spread, "spread_pct": spread_pct, "annualized_pct": annualized_pct,
+        "short_near_long_far": near["bid"] - far["ask"],
+        "long_near_short_far": near["ask"] - far["bid"],
+        "month_gap": month_gap, "structure": structure, "structure_side": structure_side,
+        "as_of": f"{near['tradedate']} {min(near['ticktime'], far['ticktime'])}",
+        "quote_gap_seconds": quote_gap_seconds,
+        "source_mode": "live/intraday",
+        "source": "新浪财经分月合约实时买一/卖一",
+        "formula": "月差=近月买卖盘中值−次近月买卖盘中值；近月高于远月为BACKWARDATION，近月低于远月为CONTANGO；年化为按月份间隔线性折算的研究代理。",
+        "execution_note": "结构判断使用同步买卖盘中值；另保留卖近买远=近月买一−远月卖一、买近卖远=近月卖一−远月买一的可成交边界，不与收盘/结算价混用。",
+    }
 
 
 def fetch_eastmoney_weighted_oi(symbol: str, now: datetime) -> dict[str, Any]:
@@ -344,6 +424,30 @@ def cached_position_changes(asset_id: str, as_of: str) -> dict[str, Any] | None:
         if position.get("mode") in ("weighted_contract", "aggregate_all_contracts") and position.get("as_of") == as_of:
             return dict(position)
     except (OSError, ValueError):
+        pass
+    return None
+
+
+def cached_calendar_spread(asset_id: str, now: datetime) -> dict[str, Any] | None:
+    """Reuse a recent real spread snapshot only after a live-source failure."""
+    if not LATEST_PATH.exists():
+        return None
+    try:
+        with LATEST_PATH.open("r", encoding="utf-8") as handle:
+            payload = json.load(handle)
+        generated = datetime.fromisoformat(payload.get("generated_at"))
+        if generated.tzinfo is None:
+            generated = generated.replace(tzinfo=now.tzinfo)
+        if abs((now - generated.astimezone(now.tzinfo)).total_seconds()) > 24 * 3600:
+            return None
+        asset = next((row for row in payload.get("assets", []) if row.get("id") == asset_id), None)
+        spread = (asset or {}).get("calendar_spread") or {}
+        if spread.get("status") == "ok":
+            cached = dict(spread)
+            cached["source_mode"] = "terminal cache after live error"
+            cached["cache_generated_at"] = payload.get("generated_at")
+            return cached
+    except (OSError, TypeError, ValueError):
         pass
     return None
 
@@ -1027,6 +1131,12 @@ def build_operation_research_view(asset: dict[str, Any]) -> dict[str, Any]:
     method_side = int(selected.get("latest_target") or 0) if selected else 0
     risk_adjusted = float(asset.get("trend_quality", {}).get("risk_adjusted_trend") or 0)
     trend_side = 1 if risk_adjusted >= 0.25 else -1 if risk_adjusted <= -0.25 else 0
+    calendar_spread = asset.get("calendar_spread", {})
+    spread_side = int(calendar_spread.get("structure_side") or 0)
+    spread_labels = {
+        "backwardation": "BACKWARDATION · 近月升水", "contango": "CONTANGO · 近月贴水",
+        "flat": "近远月平水", "missing": "近月月差缺失",
+    }
     capital = asset.get("capital_bucket", "divergence")
     capital_labels = {
         "trend_long": "涨价增仓 · 多头结构参考", "trend_short": "跌价增仓 · 空头结构参考",
@@ -1046,6 +1156,18 @@ def build_operation_research_view(asset: dict[str, Any]) -> dict[str, Any]:
         action, reason = "仅观察技术方向", "该品种尚无通过可靠性门槛的固定方法"
     else:
         action, reason = "观望", "综合技术方向尚未形成"
+    if technical_side and spread_side == technical_side:
+        spread_alignment = "同向参考"
+        reason += "；近月月差结构同向，仅作风险参考"
+    elif technical_side and spread_side == -technical_side:
+        spread_alignment = "风险提示"
+        reason += "；近月月差结构背离，仅提示风险、不改变方向"
+    elif calendar_spread.get("status") == "ok":
+        spread_alignment = "中性"
+        reason += "；近远月接近平水"
+    else:
+        spread_alignment = "数据缺失"
+        reason += "；近月月差暂缺，不据此反向"
     if technical_side > 0:
         flow_alignment = "确认" if capital == "trend_long" else "背离" if capital in ("trend_short", "warn_long") else "中性"
     elif technical_side < 0:
@@ -1058,9 +1180,11 @@ def build_operation_research_view(asset: dict[str, Any]) -> dict[str, Any]:
     return {
         "action": action, "reason": reason, "technical_signal": signal, "technical_side": technical_side,
         "risk_adjusted_trend": risk_adjusted, "trend_side": trend_side,
+        "calendar_reference": spread_labels.get(calendar_spread.get("structure"), "近月月差缺失"),
+        "calendar_alignment": spread_alignment, "calendar_spread": calendar_spread,
         "selected_method": selected, "capital_reference": capital_labels.get(capital, capital_labels["divergence"]),
         "capital_alignment": flow_alignment, "position_multiplier": multiplier,
-        "priority": "技术指标与品种选优方法决定方向；价格×总持仓只作资金结构交叉验证，不单独产生买卖信号。",
+        "priority": "综合技术、品种选优方法与风险调整趋势决定方向；近月月差背离仅作风险提示，不改变方向或仓位；价格×总持仓只作资金结构交叉验证。",
     }
 
 
@@ -1277,7 +1401,11 @@ def build_allocation_targets(
         vote_side = 1 if consensus > 0 else -1 if consensus < 0 else 0
         signal = asset.get("signal", "neutral")
         technical_side = 1 if signal in ("long", "watch_long") else -1 if signal in ("short", "watch_short") else 0
-        aligned = vote_side != 0 and vote_side == trend_side == technical_side and abs(consensus) >= 0.25 and abs(risk_adjusted) >= 0.25
+        spread = asset.get("calendar_spread", {})
+        spread_side = int(spread.get("structure_side") or 0)
+        base_aligned = vote_side != 0 and vote_side == trend_side == technical_side and abs(consensus) >= 0.25 and abs(risk_adjusted) >= 0.25
+        spread_warning = spread.get("status") == "ok" and spread_side == -technical_side
+        aligned = base_aligned
         volatility = max(float(trend.get("volatility_20d_pct") or 0) / 100, 0.03)
         noise_penalty = 1 / (1 + noise_ratio)
         vol_multiplier = float(asset.get("volatility_control", {}).get("position_multiplier", 0))
@@ -1286,6 +1414,8 @@ def build_allocation_targets(
         diagnostics[asset["id"]] = {
             "direction": vote_side if aligned else 0,
             "technical_side": technical_side,
+            "calendar_spread_side": spread_side,
+            "calendar_spread_status": spread.get("status", "missing"),
             "consensus": consensus,
             "votes": votes,
             "selected_strategies": selected_keys,
@@ -1293,7 +1423,8 @@ def build_allocation_targets(
             "noise_ratio": noise_ratio,
             "volatility_20d_pct": trend.get("volatility_20d_pct"),
             "volatility_multiplier": vol_multiplier,
-            "reason": "综合技术、品种选优方法与20日风险调整趋势三者一致" if aligned else "综合技术、品种选优方法与趋势方向未形成一致，保持空仓",
+            "calendar_spread_warning": spread_warning,
+            "reason": ("综合技术、品种选优方法与20日风险调整趋势一致；近月月差背离仅作风险提示，不改变配置" if aligned and spread_warning else "综合技术、品种选优方法与20日风险调整趋势一致；近月月差仅作风险参考" if aligned else "综合技术、品种选优方法与趋势方向未形成一致，保持空仓"),
         }
     weights = _capped_allocation_weights(
         raw_scores, float(config.get("paper_max_weight_per_asset", 0.20)), float(config.get("paper_gross_target", 1.0))
@@ -1453,7 +1584,7 @@ def update_allocation_paper_portfolio(
         "initial_cash": initial_cash, "scope": scope_rows, "strategies": summary, "positions": positions,
         "position_changes": all_changes, "equity_history": {"allocation_portfolio_v1": portfolio["history"]},
         "selected_strategies": {item["id"]: item.get("strategy_selection", {}).get("selected") for item in valid},
-        "assumptions": "1000万元初始权益；仅指定10个品种；综合技术、各品种最近一年可靠性折扣后选优的方法与20日风险调整趋势三者同向才配置，之后按逆波动率分配；单品种≤20%、组合净敞口≤40%、总名义敞口≤100%；主连价仅用于模拟盘参考手数折算；开平各万1.2、每侧1跳。",
+        "assumptions": "1000万元初始权益；仅指定10个品种；综合技术、各品种选优方法与20日风险调整趋势三者同向时配置，再按逆波动率分配；近月月差背离只作风险提示，不改变方向或仓位；单品种≤20%、组合净敞口≤40%、总名义敞口≤100%；主连价仅用于模拟盘参考手数折算；开平各万1.2、每侧1跳。",
     }
     atomic_json(PAPER_REPORT_PATH, paper_report)
     return {
@@ -1662,6 +1793,16 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
                             "method": "加权合约与全合约加总均不可用，明确降级为主力连续持仓变化",
                             "error": f"加权合约: {weighted_exc}; 全合约加总: {aggregate_exc}",
                         }
+        try:
+            calendar_spread = nearby_calendar_spread(asset["symbol"], generated_at, float(asset["tick"]))
+        except Exception as spread_exc:
+            calendar_spread = cached_calendar_spread(asset["id"], generated_at) or {
+                "status": "missing", "structure": "missing", "structure_side": 0,
+                "source_mode": "missing", "error": str(spread_exc),
+                "formula": "月差=近月买卖盘中值−次近月买卖盘中值",
+            }
+            if calendar_spread.get("status") == "ok":
+                calendar_spread["live_error"] = str(spread_exc)
         technical = technical_snapshot(daily)
         oi_week = position_changes.get("week")
         oi_mode = "加权合约" if position_changes.get("mode") == "weighted_contract" else "全合约汇总" if position_changes.get("mode") == "aggregate_all_contracts" else "主连降级"
@@ -1670,6 +1811,13 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             "value": "—" if oi_week is None else f"{oi_week:+.2f}%",
             "signal": "long" if oi_week is not None and oi_week > 0.15 else "short" if oi_week is not None and oi_week < -0.15 else "neutral",
             "note": f"{oi_mode} · {position_changes.get('contract_count', 0)}合约 · 覆盖率" + ("—" if position_changes.get("coverage_pct") is None else f"{position_changes['coverage_pct']:.1f}%"),
+        })
+        spread_labels = {"backwardation": "BACKWARDATION", "contango": "CONTANGO", "flat": "平水", "missing": "缺失"}
+        technical["groups"]["volume_position"].append({
+            "name": "近月月差结构",
+            "value": spread_labels.get(calendar_spread.get("structure"), "缺失"),
+            "signal": "long" if calendar_spread.get("structure_side") == 1 else "short" if calendar_spread.get("structure_side") == -1 else "neutral",
+            "note": f"{calendar_spread.get('near_symbol', '—')}−{calendar_spread.get('far_symbol', '—')} = " + ("—" if calendar_spread.get("spread") is None else f"{calendar_spread['spread']:+.{int(asset['decimals'])}f}") + "；实时买卖盘中值，非结算价",
         })
         volatility_control = volatility_position_control(daily, int(config["atr_period"]))
         trend_quality = trend_quality_snapshot(daily)
@@ -1692,6 +1840,7 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             "change_pct": (five_closes[-1] / daily_closes[-1] - 1) * 100,
             "returns": returns,
             "position_changes": position_changes,
+            "calendar_spread": calendar_spread,
             "capital_bucket": capital_bucket(returns["month"], position_changes["week"]),
             "technical_methods": technical["groups"],
             "volatility_control": volatility_control,
@@ -1777,7 +1926,7 @@ def scan_once() -> dict[str, Any]:
                 strategy.pop("return_series", None)
         signal_changes = update_signal_change_log(results, generated_at)
         payload = {
-            "schema_version": 10,
+            "schema_version": 12,
             "generated_at": generated_at.isoformat(timespec="seconds"),
             "interval_seconds": int(config["scan_interval_seconds"]),
             "summary": counts,
@@ -1791,12 +1940,13 @@ def scan_once() -> dict[str, Any]:
             "methodology": {
                 "bar": "日线四因子为主；周线和60分钟确认趋势；5分钟仅作盘中预警",
                 "factors": "mom5超过±3% / 突破20日高低 / 收盘相对MA20 / 日线RSI14区间",
-                "decision": "操作总结以日线四因子、周线/小时确认和品种选优方法共同决定方向；价格×总持仓只作交叉验证，不单独触发交易",
+                "decision": "操作总结以日线四因子、周线/小时确认、品种选优方法和20日风险调整趋势共同决定方向；近月月差与价格×总持仓只作风险参考，不改变方向或仓位",
                 "execution": "核心模型在交易日15:20后刷新；全市场行情在交易时段每15分钟刷新；回测绩效只统计最近365个自然日，5分钟策略不进入定时交易信号",
                 "capital_structure": "价格上涨且总持仓增加归为多头增仓；价格下跌且总持仓增加归为空头增仓；上涨缩仓提示警惕追多，下跌缩仓提示警惕追空。该分类只描述价格与总持仓组合，不判定多空持仓归属",
                 "trend_quality": "20日收益率刻画中期趋势，3日收益率相对20日趋势的绝对比例刻画短期噪音；20日收益率除以20日同期限波动率得到风险调整后趋势",
-                "allocation": "1000万元模拟组合要求综合技术、品种选优方法与20日风险调整趋势三者同向，再按逆波动率配置；品种方法需交易数达标、收益和Sharpe均为正并经可靠性折扣排序；单品种≤20%、净敞口≤40%、总名义敞口≤100%",
+                "allocation": "1000万元模拟组合要求综合技术、品种选优方法与20日风险调整趋势三者同向，再按逆波动率配置；近月月差背离仅作风险提示，不改变配置；单品种≤20%、净敞口≤40%、总名义敞口≤100%",
                 "open_interest": "优先读取行情商的品种加权合约持仓字段；若无该序列，将全部挂牌分月合约持仓逐日求和；两者均失败才明确标记主连降级",
+                "calendar_spread": "按到期月份选择最近两个仍挂牌且有有效买卖盘的分月合约；月差=近月买卖盘中值−次近月买卖盘中值，正值为BACKWARDATION、负值为CONTANGO；保留两侧可成交边界并核对报价交易日和时间差",
                 "technical": "主流指标层覆盖均线、MACD、ADX、ROC、RSI、KDJ、CCI、ATR、布林带、唐奇安、量比与OBV，仅作交叉验证",
                 "risk": "支撑压力综合20日高低、MA20、布林带与ATR；方向信号与仓位分离，ATR波动率升至历史高分位时分档降至75%/50%/25%，不自动下单",
                 "cost": "所有策略对比统一按开仓万1.2、平仓万1.2，并在每一侧额外计1跳滑点",
@@ -1804,6 +1954,7 @@ def scan_once() -> dict[str, Any]:
             "warnings": [
                 "主连换月可能产生跳空，生产使用前应接入后复权连续合约或固定主力合约。",
                 "品种加权合约或全分月合约汇总持仓可降低主力换月扰动，但只能作为资金流向参考，不能直接识别多空双方，也不单独构成操作建议。",
+                "近月月差使用实时买卖盘中值而非官方结算价；它仅作为期限结构风险提示，不改变技术方向、模拟盘配置或仓位。",
                 "黑色板块覆盖螺纹钢、热卷、不锈钢、铁矿石、焦炭、焦煤、硅铁与锰硅主力连续；已按要求删除线材。",
                 "最近一年按Sharpe选择策略属于同窗筛选，存在选择偏差；应继续观察前向模拟盘，不能把排名直接外推为未来收益。",
                 "模拟盘参考手数由主力连续价和交易单位折算；主力连续不是可成交月份，实盘前必须映射具体合约并复核保证金、手续费和平今规则。",
