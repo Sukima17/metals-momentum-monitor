@@ -1,5 +1,7 @@
 """Small deterministic checks for the signal engine; run with `python test_model.py`."""
 
+from datetime import datetime, timedelta
+
 from momentum_monitor import (
     EASTMONEY_WEIGHTED_CODES,
     capital_bucket,
@@ -22,7 +24,7 @@ from momentum_monitor import (
     select_asset_strategy,
 )
 from market_universe import UNIVERSE
-from research_backtest import compare_strategies, run_strategy
+from research_backtest import _extended_horizon_result, _ma_trend, compare_strategies, run_strategy
 
 
 def make_bars(direction: int) -> list[dict]:
@@ -55,6 +57,22 @@ def latest_signal(direction: int) -> dict:
     atr = rolling_atr(bars, config["atr_period"])
     rsi = rolling_rsi(closes, config["rsi_period"])
     return point_signal(bars, len(bars) - 1, config, fast, slow, atr, rsi)
+
+
+def make_daily_history(count: int) -> list[dict]:
+    bars = make_bars(1)[:1] * count
+    start = datetime(2020, 1, 1)
+    output = []
+    price = 100.0
+    for index, _ in enumerate(bars):
+        opening = price
+        price += 0.06 + (index % 5) * 0.005
+        output.append({
+            "datetime": (start + timedelta(days=index)).strftime("%Y-%m-%d"),
+            "open": opening, "high": price + 0.05, "low": opening - 0.05,
+            "close": price, "volume": 100 + index, "hold": 1000,
+        })
+    return output
 
 
 if __name__ == "__main__":
@@ -115,17 +133,26 @@ if __name__ == "__main__":
         {"bars": [{"hold": value} for value in (300, 306, 312, 318, 324, 330)]},
     ]
     assert abs(aggregate_oi_change(oi_series, 5) - 20.0) < 1e-9
-    shanghai_now = __import__("datetime").datetime(2026, 9, 16)
+    shanghai_now = datetime(2026, 9, 16)
     assert contract_expiry_month("CU2610", shanghai_now) == (2026, 10)
     assert contract_expiry_month("MA701", shanghai_now) == (2027, 1)
     assert contract_expiry_month("CU0", shanghai_now) is None
     selection = select_asset_strategy([
-        {"key": "one_trade", "name": "单笔高收益", "status": "ok", "frequency": "daily", "ranking_eligible": True,
+        {"key": "one_trade", "name": "单笔高收益", "status": "ok", "frequency": "daily", "ranking_eligible": True, "low_turnover": True,
          "trades": 1, "sharpe": 4.0, "net_return_pct": 20, "max_drawdown_pct": -2, "latest_target": 1},
         {"key": "robust", "name": "稳健趋势", "status": "ok", "frequency": "daily", "ranking_eligible": True,
          "trades": 12, "sharpe": 0.8, "net_return_pct": 9, "max_drawdown_pct": -12, "latest_target": 1},
     ], config)
     assert selection["selected"]["key"] == "robust"
+    assert selection["candidates"][0]["eligible_rank"] == 1
+    assert next(row for row in selection["candidates"] if row["key"] == "one_trade")["eligibility_status"] == "high_performance_low_sample"
+    weak_daily = select_asset_strategy([{
+        "key": "daily_four_factor", "name": "日线四因子", "status": "ok", "frequency": "daily", "ranking_eligible": True,
+        "trades": 15, "sharpe": 0.29, "net_return_pct": 8, "max_drawdown_pct": -5, "latest_target": 1,
+    }], config)
+    assert weak_daily["selected"] is None and weak_daily["candidates"][0]["eligibility_status"] == "quality_below_threshold"
+    long_result = _extended_horizon_result(make_daily_history(2300), lambda: _ma_trend, 0.1, 0.00012, 1, 60)
+    assert long_result["status"] == "ok" and long_result["window_years"] == 5 and long_result["selection_role"] == "context_only"
     operation = build_operation_research_view({
         "signal": "long", "capital_bucket": "trend_long", "strategy_selection": selection,
         "volatility_control": {"position_multiplier": 0.5},

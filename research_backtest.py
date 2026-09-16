@@ -10,6 +10,8 @@ from typing import Any, Callable
 
 SignalFn = Callable[[list[dict[str, Any]], int], int]
 
+LOW_TURNOVER_STRATEGIES = {"ma_trend", "turtle_20_10", "ewmac_ensemble", "tsmom_ensemble"}
+
 
 def _ema(values: list[float], period: int) -> list[float]:
     alpha = 2 / (period + 1)
@@ -283,25 +285,69 @@ def run_strategy(
     }
 
 
-def compare_strategies(daily: list[dict[str, Any]], five: list[dict[str, Any]], asset: dict[str, Any], config: dict[str, Any]) -> list[dict[str, Any]]:
+def _extended_horizon_result(
+    bars: list[dict[str, Any]], signal_factory: Callable[[], SignalFn], tick: float,
+    fee: float, slip: float, warmup: int,
+) -> dict[str, Any]:
+    """Use the longest fully covered 5y/3y window; never synthesize missing history."""
+    if not bars:
+        return {"status": "insufficient", "window_label": "长周期数据不足", "selection_role": "context_only"}
+    latest = datetime.fromisoformat(bars[-1]["datetime"])
+    parsed = [datetime.fromisoformat(row["datetime"]) for row in bars]
+    for years in (5, 3):
+        evaluation_start = latest - timedelta(days=round(365.25 * years))
+        evaluation_index = next((index for index, value in enumerate(parsed) if value >= evaluation_start), len(bars))
+        if evaluation_index < warmup + 1 or len(bars) - evaluation_index < 200 * years:
+            continue
+        scoped = bars[max(0, evaluation_index - warmup - 5) :]
+        result = run_strategy(
+            scoped, signal_factory(), tick, "daily", fee, slip, warmup,
+            evaluation_start.isoformat(sep=" "),
+        )
+        result.pop("return_series", None)
+        return {
+            **result,
+            "window_years": years,
+            "window_label": f"{years}年",
+            "selection_role": "context_only",
+            "source_mode": "同一行情源的主力连续日线（真实历史，未补造）",
+            "note": "仅用于低换手方法的长期稳定性核验，不替代最近一年门槛，也不直接触发方法切换。",
+        }
+    return {
+        "status": "insufficient", "window_label": "长周期数据不足", "selection_role": "context_only",
+        "available_start": bars[0]["datetime"], "available_end": bars[-1]["datetime"],
+        "note": "真实日线覆盖不足3年，未补造历史。",
+    }
+
+
+def compare_strategies(
+    daily: list[dict[str, Any]], five: list[dict[str, Any]], asset: dict[str, Any], config: dict[str, Any],
+    extended_daily: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
     fee = float(config.get("commission_per_side_bps", 1.2)) / 10000
     slip = float(config.get("slippage_ticks_per_side", 1))
     latest_daily = datetime.fromisoformat(daily[-1]["datetime"])
     evaluation_start = (latest_daily - timedelta(days=int(config.get("backtest_calendar_days", 365)))).isoformat(sep=" ")
-    definitions = [
-        ("daily_four_factor", "日线四因子", daily, _daily_four_factor, "daily", 60),
-        ("ma_trend", "移动均线10/30/60", daily, _ma_trend, "daily", 60),
-        ("fibonacci_0618", "斐波那契0.618通道", daily, _fibonacci_channel, "daily", 60),
-        ("fdt_channel", "FDT启发通道共振", daily, _fdt_channel_baseline, "daily", 60),
-        ("turtle_20_10", "Turtle 20/10通道", daily, _make_turtle_signal(), "daily", 60),
-        ("bollinger_cci", "布林突破 + CCI", daily, _make_bollinger_cci_signal(), "daily", 60),
-        ("ewmac_ensemble", "多周期EWMAC", daily, _ewmac_ensemble, "daily", 200),
-        ("tsmom_ensemble", "TSMOM 20/60/120", daily, _tsmom_ensemble, "daily", 130),
-        ("risk_adjusted_trend", "20日风险调整趋势", daily, _risk_adjusted_trend_signal, "daily", 60),
-        ("five_minute_momentum", "5分钟动量", five, _five_minute_momentum, "5m", 60),
+    definitions: list[tuple[str, str, list[dict[str, Any]], Callable[[], SignalFn], str, int]] = [
+        ("daily_four_factor", "日线四因子", daily, lambda: _daily_four_factor, "daily", 60),
+        ("ma_trend", "移动均线10/30/60", daily, lambda: _ma_trend, "daily", 60),
+        ("fibonacci_0618", "斐波那契0.618通道", daily, lambda: _fibonacci_channel, "daily", 60),
+        ("fdt_channel", "FDT启发通道共振", daily, lambda: _fdt_channel_baseline, "daily", 60),
+        ("turtle_20_10", "Turtle 20/10通道", daily, lambda: _make_turtle_signal(), "daily", 60),
+        ("bollinger_cci", "布林突破 + CCI", daily, lambda: _make_bollinger_cci_signal(), "daily", 60),
+        ("ewmac_ensemble", "多周期EWMAC", daily, lambda: _ewmac_ensemble, "daily", 200),
+        ("tsmom_ensemble", "TSMOM 20/60/120", daily, lambda: _tsmom_ensemble, "daily", 130),
+        ("risk_adjusted_trend", "20日风险调整趋势", daily, lambda: _risk_adjusted_trend_signal, "daily", 60),
+        ("five_minute_momentum", "5分钟动量", five, lambda: _five_minute_momentum, "5m", 60),
     ]
     output = []
-    for key, name, bars, function, frequency, warmup in definitions:
-        result = run_strategy(bars, function, float(asset["tick"]), frequency, fee, slip, warmup, evaluation_start if frequency == "daily" else None)
-        output.append({"key": key, "name": name, "ranking_eligible": frequency == "daily", **result})
+    minimum_trades = int(config.get("minimum_asset_strategy_trades", 8))
+    history = extended_daily or daily
+    for key, name, bars, signal_factory, frequency, warmup in definitions:
+        result = run_strategy(bars, signal_factory(), float(asset["tick"]), frequency, fee, slip, warmup, evaluation_start if frequency == "daily" else None)
+        low_turnover = frequency == "daily" and (key in LOW_TURNOVER_STRATEGIES or int(result.get("trades") or 0) < minimum_trades)
+        row = {"key": key, "name": name, "ranking_eligible": frequency == "daily", "low_turnover": low_turnover, **result}
+        if low_turnover:
+            row["long_horizon"] = _extended_horizon_result(history, signal_factory, float(asset["tick"]), fee, slip, warmup)
+        output.append(row)
     return output

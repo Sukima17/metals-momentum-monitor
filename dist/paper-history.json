@@ -1,7 +1,7 @@
 {
   "mode": "forward_allocation_paper",
   "started_at": "2026-09-16T15:29:22+08:00",
-  "updated_at": "2026-09-16T21:58:24+08:00",
+  "updated_at": "2026-09-16T23:51:08+08:00",
   "initial_cash": 10000000.0,
   "scope": [
     {
@@ -59,17 +59,17 @@
     {
       "key": "allocation_portfolio_v1",
       "name": "1000万动态多空组合",
-      "equity": 9969611.7116,
-      "return_pct": -0.3038828839999952,
+      "equity": 9973036.7116,
+      "return_pct": -0.26963288400000396,
       "max_drawdown_pct": -0.3038828839999952,
       "trades": 20,
       "active_positions": 3,
       "long_positions": 1,
       "short_positions": 2,
-      "gross_exposure_pct": 58.300465134837154,
-      "net_exposure_pct": -18.98599518973868,
-      "cash_buffer_cny": 4157281.7116,
-      "observations": 8
+      "gross_exposure_pct": 58.29874258095678,
+      "net_exposure_pct": -18.945132306615946,
+      "cash_buffer_cny": 4158881.7116,
+      "observations": 10
     }
   ],
   "positions": [
@@ -86,8 +86,8 @@
       "position_size_pct": 0.0,
       "target_weight_pct": 0.0,
       "notional_cny": 0.0,
-      "entry_price": 107850.0,
-      "current_price": 107850.0,
+      "entry_price": 108080.0,
+      "current_price": 108080.0,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
       "volatility_control": {
@@ -117,7 +117,7 @@
         1
       ],
       "entry_time": null,
-      "bar_time": "2026-09-16 21:55:00"
+      "bar_time": "2026-09-16 23:50:00"
     },
     {
       "strategy_key": "allocation_portfolio_v1",
@@ -132,8 +132,8 @@
       "position_size_pct": 0.0,
       "target_weight_pct": 0.0,
       "notional_cny": 0.0,
-      "entry_price": 24275.0,
-      "current_price": 24275.0,
+      "entry_price": 24270.0,
+      "current_price": 24270.0,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
       "volatility_control": {
@@ -159,11 +159,9 @@
         "formula": "20日收益率 ÷ (近20日日收益率标准差 × √20)；噪音比率=|3日收益率|÷|20日收益率|"
       },
       "allocation_reason": "综合技术、品种选优方法与趋势方向未形成一致，保持空仓",
-      "strategy_votes": [
-        0
-      ],
+      "strategy_votes": [],
       "entry_time": null,
-      "bar_time": "2026-09-16 21:55:00"
+      "bar_time": "2026-09-16 23:50:00"
     },
     {
       "strategy_key": "allocation_portfolio_v1",
@@ -209,7 +207,7 @@
         -1
       ],
       "entry_time": null,
-      "bar_time": "2026-09-16 21:55:00"
+      "bar_time": "2026-09-16 23:50:00"
     },
     {
       "strategy_key": "allocation_portfolio_v1",
@@ -221,13 +219,13 @@
       "lots": 15,
       "signed_lots": 15,
       "contract_multiplier": 5.0,
-      "position_size_pct": 19.65723497254924,
-      "target_weight_pct": 19.654994085837306,
-      "notional_cny": 1959750.0,
+      "position_size_pct": 19.676805137170415,
+      "target_weight_pct": 19.676805137170415,
+      "notional_cny": 1962375.0,
       "entry_price": 26130.0,
-      "current_price": 26130.0,
-      "unrealized_cny": 0.0,
-      "unrealized_pct": 0.0,
+      "current_price": 26165.0,
+      "unrealized_cny": 2625.0,
+      "unrealized_pct": 0.13376648194152493,
       "volatility_control": {
         "atr_pct": 1.9853340575774032,
         "percentile_252": 91.26984126984127,
@@ -255,7 +253,7 @@
         1
       ],
       "entry_time": "2026-09-16T21:58:24+08:00",
-      "bar_time": "2026-09-16 21:55:00"
+      "bar_time": "2026-09-16 23:50:00"
     },
     {
       "strategy_key": "allocation_portfolio_v1",
@@ -267,13 +265,13 @@
       "lots": 16,
       "signed_lots": -16,
       "contract_multiplier": 1.0,
-      "position_size_pct": 19.712703532007435,
-      "target_weight_pct": -19.71045632198716,
-      "notional_cny": 1965280.0,
+      "position_size_pct": 19.69791204834373,
+      "target_weight_pct": -19.69791204834373,
+      "notional_cny": 1964480.0,
       "entry_price": 122040.0,
-      "current_price": 122830.0,
-      "unrealized_cny": -12640.0,
-      "unrealized_pct": -0.6431653504844094,
+      "current_price": 122780.0,
+      "unrealized_cny": -11840.0,
+      "unrealized_pct": -0.602704023456589,
       "volatility_control": {
         "atr_pct": 1.7002622091117667,
         "percentile_252": 36.11111111111111,
@@ -301,7 +299,7 @@
         -1
       ],
       "entry_time": "2026-09-16T15:29:22+08:00",
-      "bar_time": "2026-09-16 21:55:00"
+      "bar_time": "2026-09-16 23:50:00"
     },
     {
       "strategy_key": "allocation_portfolio_v1",
@@ -313,8 +311,8 @@
       "lots": 15,
       "signed_lots": -15,
       "contract_multiplier": 1.0,
-      "position_size_pct": 18.930526630280482,
-      "target_weight_pct": -18.928368586911976,
+      "position_size_pct": 18.924025395442623,
+      "target_weight_pct": -18.924025395442623,
       "notional_cny": 1887300.0,
       "entry_price": 125820.0,
       "current_price": 125820.0,
@@ -362,8 +360,8 @@
       "position_size_pct": 0.0,
       "target_weight_pct": 0.0,
       "notional_cny": 0.0,
-      "entry_price": 398030.0,
-      "current_price": 398030.0,
+      "entry_price": 400030.0,
+      "current_price": 400030.0,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
       "volatility_control": {
@@ -393,7 +391,7 @@
         -1
       ],
       "entry_time": null,
-      "bar_time": "2026-09-16 21:55:00"
+      "bar_time": "2026-09-16 23:50:00"
     },
     {
       "strategy_key": "allocation_portfolio_v1",
@@ -408,8 +406,8 @@
       "position_size_pct": 0.0,
       "target_weight_pct": 0.0,
       "notional_cny": 0.0,
-      "entry_price": 941.66,
-      "current_price": 941.66,
+      "entry_price": 944.1,
+      "current_price": 944.1,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
       "volatility_control": {
@@ -439,7 +437,7 @@
         0
       ],
       "entry_time": null,
-      "bar_time": "2026-09-16 21:55:00"
+      "bar_time": "2026-09-16 23:50:00"
     },
     {
       "strategy_key": "allocation_portfolio_v1",
@@ -454,8 +452,8 @@
       "position_size_pct": 0.0,
       "target_weight_pct": 0.0,
       "notional_cny": 0.0,
-      "entry_price": 15791.0,
-      "current_price": 15791.0,
+      "entry_price": 15831.0,
+      "current_price": 15831.0,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
       "volatility_control": {
@@ -485,7 +483,7 @@
         -1
       ],
       "entry_time": null,
-      "bar_time": "2026-09-16 21:55:00"
+      "bar_time": "2026-09-16 23:50:00"
     },
     {
       "strategy_key": "allocation_portfolio_v1",
@@ -500,8 +498,8 @@
       "position_size_pct": 0.0,
       "target_weight_pct": 0.0,
       "notional_cny": 0.0,
-      "entry_price": 13570.0,
-      "current_price": 13570.0,
+      "entry_price": 13580.0,
+      "current_price": 13580.0,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
       "volatility_control": {
@@ -531,7 +529,7 @@
         -1
       ],
       "entry_time": null,
-      "bar_time": "2026-09-16 21:55:00"
+      "bar_time": "2026-09-16 23:50:00"
     }
   ],
   "position_changes": [
@@ -1043,6 +1041,18 @@
         "equity": 9969611.7116,
         "pnl": 640.0,
         "costs": 1136.646
+      },
+      {
+        "time": "2026-09-16T23:46:14+08:00",
+        "equity": 9973301.7116,
+        "pnl": 3690.0,
+        "costs": 0.0
+      },
+      {
+        "time": "2026-09-16T23:51:08+08:00",
+        "equity": 9973036.7116,
+        "pnl": -265.0,
+        "costs": 0.0
       }
     ]
   },
@@ -1050,6 +1060,7 @@
     "copper": {
       "key": "tsmom_ensemble",
       "name": "TSMOM 20/60/120",
+      "frequency": "daily",
       "trades": 11,
       "win_rate_pct": 45.45454545454545,
       "net_return_pct": 14.331971290179846,
@@ -1061,27 +1072,45 @@
       "sample_end": "2026-09-16",
       "reliability": 0.7416198487095663,
       "selection_score": 0.6806091985628182,
-      "passed": true
+      "passed": true,
+      "minimum_sharpe": 0.0,
+      "trade_pass": true,
+      "sharpe_pass": true,
+      "return_pass": true,
+      "low_turnover": true,
+      "high_performance_low_sample": false,
+      "eligibility_status": "passed",
+      "status_text": "通过门槛",
+      "failure_reasons": [],
+      "long_horizon": {
+        "status": "ok",
+        "frequency": "daily",
+        "trades": 99,
+        "win_rate_pct": 38.38383838383838,
+        "net_return_pct": 13.17039096400816,
+        "annual_return_pct": 2.61241105272354,
+        "max_drawdown_pct": -24.09251612300578,
+        "sharpe": 0.2350420052894948,
+        "profit_factor": 1.2355171658668507,
+        "avg_trade_pct": 0.18221259279550336,
+        "positive_trades": 38,
+        "latest_target": 1,
+        "sample_start": "2021-09-17",
+        "sample_end": "2026-09-16",
+        "observations": 1209,
+        "window_years": 5,
+        "window_label": "5年",
+        "selection_role": "context_only",
+        "source_mode": "同一行情源的主力连续日线（真实历史，未补造）",
+        "note": "仅用于低换手方法的长期稳定性核验，不替代最近一年门槛，也不直接触发方法切换。"
+      },
+      "eligible_rank": 1
     },
-    "aluminium": {
-      "key": "daily_four_factor",
-      "name": "日线四因子",
-      "trades": 15,
-      "win_rate_pct": 40.0,
-      "net_return_pct": 0.21716391306221272,
-      "sharpe": 0.0686041292908038,
-      "max_drawdown_pct": -9.236473775526255,
-      "profit_factor": 1.0469945973019807,
-      "latest_target": 0,
-      "sample_start": "2025-09-17",
-      "sample_end": "2026-09-16",
-      "reliability": 0.8660254037844386,
-      "selection_score": 0.061041648118314785,
-      "passed": true
-    },
+    "aluminium": null,
     "lead": {
       "key": "tsmom_ensemble",
       "name": "TSMOM 20/60/120",
+      "frequency": "daily",
       "trades": 15,
       "win_rate_pct": 33.33333333333333,
       "net_return_pct": 1.5855598942133398,
@@ -1093,11 +1122,44 @@
       "sample_end": "2026-09-16",
       "reliability": 0.8660254037844386,
       "selection_score": 0.19243762519074972,
-      "passed": true
+      "passed": true,
+      "minimum_sharpe": 0.0,
+      "trade_pass": true,
+      "sharpe_pass": true,
+      "return_pass": true,
+      "low_turnover": true,
+      "high_performance_low_sample": false,
+      "eligibility_status": "passed",
+      "status_text": "通过门槛",
+      "failure_reasons": [],
+      "long_horizon": {
+        "status": "ok",
+        "frequency": "daily",
+        "trades": 128,
+        "win_rate_pct": 26.5625,
+        "net_return_pct": -41.88880609322578,
+        "annual_return_pct": -10.697609502202532,
+        "max_drawdown_pct": -46.46639329848256,
+        "sharpe": -0.7728724668433882,
+        "profit_factor": 0.4195611157440557,
+        "avg_trade_pct": -0.3963750937695934,
+        "positive_trades": 34,
+        "latest_target": -1,
+        "sample_start": "2021-09-17",
+        "sample_end": "2026-09-16",
+        "observations": 1209,
+        "window_years": 5,
+        "window_label": "5年",
+        "selection_role": "context_only",
+        "source_mode": "同一行情源的主力连续日线（真实历史，未补造）",
+        "note": "仅用于低换手方法的长期稳定性核验，不替代最近一年门槛，也不直接触发方法切换。"
+      },
+      "eligible_rank": 1
     },
     "zinc": {
       "key": "tsmom_ensemble",
       "name": "TSMOM 20/60/120",
+      "frequency": "daily",
       "trades": 11,
       "win_rate_pct": 45.45454545454545,
       "net_return_pct": 10.34102017010361,
@@ -1109,11 +1171,44 @@
       "sample_end": "2026-09-16",
       "reliability": 0.7416198487095663,
       "selection_score": 0.62469460584819,
-      "passed": true
+      "passed": true,
+      "minimum_sharpe": 0.0,
+      "trade_pass": true,
+      "sharpe_pass": true,
+      "return_pass": true,
+      "low_turnover": true,
+      "high_performance_low_sample": false,
+      "eligibility_status": "passed",
+      "status_text": "通过门槛",
+      "failure_reasons": [],
+      "long_horizon": {
+        "status": "ok",
+        "frequency": "daily",
+        "trades": 97,
+        "win_rate_pct": 38.144329896907216,
+        "net_return_pct": -26.160295761158146,
+        "annual_return_pct": -6.12568342485571,
+        "max_drawdown_pct": -47.89555307643752,
+        "sharpe": -0.2266767477903278,
+        "profit_factor": 0.7800350798159386,
+        "avg_trade_pct": -0.22649203370626647,
+        "positive_trades": 37,
+        "latest_target": 1,
+        "sample_start": "2021-09-17",
+        "sample_end": "2026-09-16",
+        "observations": 1209,
+        "window_years": 5,
+        "window_label": "5年",
+        "selection_role": "context_only",
+        "source_mode": "同一行情源的主力连续日线（真实历史，未补造）",
+        "note": "仅用于低换手方法的长期稳定性核验，不替代最近一年门槛，也不直接触发方法切换。"
+      },
+      "eligible_rank": 1
     },
     "nickel": {
       "key": "bollinger_cci",
       "name": "布林突破 + CCI",
+      "frequency": "daily",
       "trades": 10,
       "win_rate_pct": 50.0,
       "net_return_pct": 3.2639897506518967,
@@ -1125,11 +1220,23 @@
       "sample_end": "2026-09-16",
       "reliability": 0.7071067811865476,
       "selection_score": 0.2090473654138951,
-      "passed": true
+      "passed": true,
+      "minimum_sharpe": 0.0,
+      "trade_pass": true,
+      "sharpe_pass": true,
+      "return_pass": true,
+      "low_turnover": false,
+      "high_performance_low_sample": false,
+      "eligibility_status": "passed",
+      "status_text": "通过门槛",
+      "failure_reasons": [],
+      "long_horizon": null,
+      "eligible_rank": 1
     },
     "lithium": {
       "key": "fibonacci_0618",
       "name": "斐波那契0.618通道",
+      "frequency": "daily",
       "trades": 19,
       "win_rate_pct": 31.57894736842105,
       "net_return_pct": 62.53095885382762,
@@ -1141,11 +1248,23 @@
       "sample_end": "2026-09-16",
       "reliability": 0.9746794344808963,
       "selection_score": 1.2560315804817481,
-      "passed": true
+      "passed": true,
+      "minimum_sharpe": 0.0,
+      "trade_pass": true,
+      "sharpe_pass": true,
+      "return_pass": true,
+      "low_turnover": false,
+      "high_performance_low_sample": false,
+      "eligibility_status": "passed",
+      "status_text": "通过门槛",
+      "failure_reasons": [],
+      "long_horizon": null,
+      "eligible_rank": 1
     },
     "tin": {
       "key": "tsmom_ensemble",
       "name": "TSMOM 20/60/120",
+      "frequency": "daily",
       "trades": 12,
       "win_rate_pct": 58.333333333333336,
       "net_return_pct": 51.33079629653743,
@@ -1157,11 +1276,44 @@
       "sample_end": "2026-09-16",
       "reliability": 0.7745966692414834,
       "selection_score": 1.091848792107284,
-      "passed": true
+      "passed": true,
+      "minimum_sharpe": 0.0,
+      "trade_pass": true,
+      "sharpe_pass": true,
+      "return_pass": true,
+      "low_turnover": true,
+      "high_performance_low_sample": false,
+      "eligibility_status": "passed",
+      "status_text": "通过门槛",
+      "failure_reasons": [],
+      "long_horizon": {
+        "status": "ok",
+        "frequency": "daily",
+        "trades": 68,
+        "win_rate_pct": 33.82352941176471,
+        "net_return_pct": 50.761624962502694,
+        "annual_return_pct": 8.933724443211943,
+        "max_drawdown_pct": -60.417074597574214,
+        "sharpe": 0.4237112513982813,
+        "profit_factor": 1.49790783919578,
+        "avg_trade_pct": 0.7726165621451657,
+        "positive_trades": 23,
+        "latest_target": -1,
+        "sample_start": "2021-09-17",
+        "sample_end": "2026-09-16",
+        "observations": 1209,
+        "window_years": 5,
+        "window_label": "5年",
+        "selection_role": "context_only",
+        "source_mode": "同一行情源的主力连续日线（真实历史，未补造）",
+        "note": "仅用于低换手方法的长期稳定性核验，不替代最近一年门槛，也不直接触发方法切换。"
+      },
+      "eligible_rank": 1
     },
     "gold": {
       "key": "daily_four_factor",
       "name": "日线四因子",
+      "frequency": "daily",
       "trades": 25,
       "win_rate_pct": 48.0,
       "net_return_pct": 20.851310518597145,
@@ -1173,11 +1325,23 @@
       "sample_end": "2026-09-16",
       "reliability": 1.0,
       "selection_score": 1.3570399550890655,
-      "passed": true
+      "passed": true,
+      "minimum_sharpe": 0.3,
+      "trade_pass": true,
+      "sharpe_pass": true,
+      "return_pass": true,
+      "low_turnover": false,
+      "high_performance_low_sample": false,
+      "eligibility_status": "passed",
+      "status_text": "通过门槛",
+      "failure_reasons": [],
+      "long_horizon": null,
+      "eligible_rank": 1
     },
     "silver": {
       "key": "daily_four_factor",
       "name": "日线四因子",
+      "frequency": "daily",
       "trades": 39,
       "win_rate_pct": 56.41025641025641,
       "net_return_pct": 68.87101509632798,
@@ -1189,11 +1353,23 @@
       "sample_end": "2026-09-16",
       "reliability": 1.0,
       "selection_score": 1.6208885508247572,
-      "passed": true
+      "passed": true,
+      "minimum_sharpe": 0.3,
+      "trade_pass": true,
+      "sharpe_pass": true,
+      "return_pass": true,
+      "low_turnover": false,
+      "high_performance_low_sample": false,
+      "eligibility_status": "passed",
+      "status_text": "通过门槛",
+      "failure_reasons": [],
+      "long_horizon": null,
+      "eligible_rank": 1
     },
     "stainless_steel": {
       "key": "fibonacci_0618",
       "name": "斐波那契0.618通道",
+      "frequency": "daily",
       "trades": 18,
       "win_rate_pct": 33.33333333333333,
       "net_return_pct": 3.088122445307029,
@@ -1205,7 +1381,18 @@
       "sample_end": "2026-09-16",
       "reliability": 0.9486832980505138,
       "selection_score": 0.3114390222882038,
-      "passed": true
+      "passed": true,
+      "minimum_sharpe": 0.0,
+      "trade_pass": true,
+      "sharpe_pass": true,
+      "return_pass": true,
+      "low_turnover": false,
+      "high_performance_low_sample": false,
+      "eligibility_status": "passed",
+      "status_text": "通过门槛",
+      "failure_reasons": [],
+      "long_horizon": null,
+      "eligible_rank": 1
     }
   },
   "assumptions": "1000万元初始权益；仅指定10个品种；综合技术、各品种选优方法与20日风险调整趋势三者同向时配置，再按逆波动率分配；近月月差背离只作风险提示，不改变方向或仓位；单品种≤20%、组合净敞口≤40%、总名义敞口≤100%；主连价仅用于模拟盘参考手数折算；开平各万1.2、每侧1跳。"

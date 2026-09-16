@@ -22,6 +22,8 @@
   "top_strategy_count": 4,
   "minimum_ranked_strategy_trades": 20,
   "minimum_asset_strategy_trades": 8,
+  "strategy_min_sharpe": {"default": 0.0, "daily_four_factor": 0.3},
+  "high_performance_low_sample_sharpe": 0.3,
   "paper_max_weight_per_asset": 0.20,
   "paper_gross_target": 1.0,
   "paper_max_net_exposure": 0.40,

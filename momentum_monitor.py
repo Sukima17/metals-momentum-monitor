@@ -43,6 +43,7 @@ LATEST_PATH = DIST / "latest.json"
 HISTORY_PATH = STATE_DIR / "scan_history.jsonl"
 PAPER_PATH = STATE_DIR / "paper_portfolio.json"
 PAPER_REPORT_PATH = DIST / "paper-history.json"
+FORWARD_WATCH_PATH = STATE_DIR / "strategy_forward_watch.json"
 SIGNAL_STATE_PATH = STATE_DIR / "signal_state.json"
 PERFORMANCE_PATH = DIST / "performance-report.json"
 SINA_ENDPOINT = (
@@ -1083,8 +1084,11 @@ def aggregate_strategy_performance(results: list[dict[str, Any]], generated_at: 
 
 
 def select_asset_strategy(strategy_rows: list[dict[str, Any]], config: dict[str, Any]) -> dict[str, Any]:
-    """Select a per-asset research method with a trade-count reliability haircut."""
+    """Select only eligible methods; keep strong low-sample results on a forward watchlist."""
     minimum_trades = int(config.get("minimum_asset_strategy_trades", 8))
+    sharpe_floors = config.get("strategy_min_sharpe", {})
+    default_sharpe_floor = float(sharpe_floors.get("default", 0))
+    watch_sharpe = float(config.get("high_performance_low_sample_sharpe", 0.3))
     candidates: list[dict[str, Any]] = []
     for row in strategy_rows:
         if row.get("status") != "ok" or row.get("frequency") != "daily" or not row.get("ranking_eligible", True):
@@ -1097,28 +1101,181 @@ def select_asset_strategy(strategy_rows: list[dict[str, Any]], config: dict[str,
         return_component = 0.15 * clamp(net_return / 20, -1, 1)
         drawdown_penalty = 0.15 * max(0.0, drawdown / 25 - 1)
         selection_score = sharpe * reliability + return_component - drawdown_penalty
-        passed = trades >= minimum_trades and sharpe > 0 and net_return > 0
+        minimum_sharpe = float(sharpe_floors.get(row["key"], default_sharpe_floor))
+        trade_pass = trades >= minimum_trades
+        sharpe_pass = sharpe >= minimum_sharpe if minimum_sharpe > 0 else sharpe > 0
+        return_pass = net_return > 0
+        passed = trade_pass and sharpe_pass and return_pass
+        low_turnover = bool(row.get("low_turnover"))
+        high_performance_low_sample = low_turnover and not trade_pass and sharpe >= watch_sharpe and return_pass
+        if passed:
+            eligibility_status = "passed"
+            status_text = "通过门槛"
+        elif high_performance_low_sample:
+            eligibility_status = "high_performance_low_sample"
+            status_text = "高绩效但样本不足 · 前向观察"
+        elif not trade_pass:
+            eligibility_status = "sample_insufficient"
+            status_text = f"样本不足（{trades}/{minimum_trades}笔）"
+        else:
+            eligibility_status = "quality_below_threshold"
+            status_text = f"质量未达标（Sharpe需{'≥' if minimum_sharpe > 0 else '>'}{minimum_sharpe:.2f}且收益>0）"
+        failure_reasons = []
+        if not trade_pass:
+            failure_reasons.append(f"交易数{trades}<{minimum_trades}")
+        if not sharpe_pass:
+            failure_reasons.append(f"Sharpe {sharpe:.2f}未达{minimum_sharpe:.2f}")
+        if not return_pass:
+            failure_reasons.append("最近一年收益≤0")
         candidates.append({
-            "key": row["key"], "name": row["name"], "trades": trades,
+            "key": row["key"], "name": row["name"], "frequency": row.get("frequency", "daily"), "trades": trades,
             "win_rate_pct": row.get("win_rate_pct"), "net_return_pct": net_return,
             "sharpe": sharpe, "max_drawdown_pct": row.get("max_drawdown_pct"),
             "profit_factor": row.get("profit_factor"), "latest_target": int(row.get("latest_target") or 0),
             "sample_start": row.get("sample_start"), "sample_end": row.get("sample_end"),
             "reliability": reliability, "selection_score": selection_score, "passed": passed,
+            "minimum_sharpe": minimum_sharpe, "trade_pass": trade_pass, "sharpe_pass": sharpe_pass,
+            "return_pass": return_pass, "low_turnover": low_turnover,
+            "high_performance_low_sample": high_performance_low_sample,
+            "eligibility_status": eligibility_status, "status_text": status_text,
+            "failure_reasons": failure_reasons, "long_horizon": row.get("long_horizon"),
         })
-    candidates.sort(key=lambda item: (item["passed"], item["selection_score"], item["trades"]), reverse=True)
+    status_priority = {"passed": 3, "high_performance_low_sample": 2, "sample_insufficient": 1, "quality_below_threshold": 0}
+    candidates.sort(key=lambda item: (status_priority[item["eligibility_status"]], item["selection_score"], item["trades"]), reverse=True)
+    eligible_rank = 0
+    for item in candidates:
+        if item["passed"]:
+            eligible_rank += 1
+            item["eligible_rank"] = eligible_rank
+        else:
+            item["eligible_rank"] = None
     selected = next((item for item in candidates if item["passed"]), None)
+    forward_watch = [item for item in candidates if item["high_performance_low_sample"]]
     if selected:
         confidence = "较高" if selected["trades"] >= 15 and selected["sharpe"] >= 0.75 and abs(float(selected["max_drawdown_pct"] or 0)) <= 20 else "观察"
         verdict = f"沿用{selected['name']}作为该品种研究方法；仍需前向模拟验证"
     else:
         confidence = "不足"
-        verdict = "最近一年没有方法同时通过交易数、正收益和正Sharpe门槛，暂不固定沿用"
+        verdict = "暂无可靠方法；最近一年没有方法同时通过交易数、收益和策略质量门槛"
+        if forward_watch:
+            verdict += f"；{forward_watch[0]['name']}为高绩效低样本候选，仅进入前向观察"
     return {
         "selected": selected, "confidence": confidence, "minimum_trades": minimum_trades,
-        "method": "仅比较日线方法；交易数至少达标且收益、Sharpe均为正，再按Sharpe可靠性折扣、收益奖励和回撤惩罚排序。",
-        "warning": "同一最近一年窗口内选优，存在选择偏差；选择结果只用于研究和前向模拟，不代表样本外有效。",
-        "verdict": verdict, "candidates": candidates,
+        "method": "可用排名仅包含通过门槛的方法并优先展示；最近一年交易数至少达标、收益为正，日线四因子Sharpe须≥0.30，其他方法Sharpe须>0，再按可靠性折扣后的综合分排序。",
+        "warning": "高绩效但不足8笔的低换手方法只进入前向观察，不直接替换；另列真实3年/5年结果作长期稳定性背景，不用于放宽最近一年门槛。同窗选优仍存在选择偏差。",
+        "quality_thresholds": {"default_sharpe": default_sharpe_floor, "daily_four_factor_sharpe": float(sharpe_floors.get("daily_four_factor", 0.3)), "minimum_trades": minimum_trades},
+        "verdict": verdict, "candidates": candidates, "forward_watch": forward_watch,
+    }
+
+
+def update_strategy_forward_watch(
+    results: list[dict[str, Any]], generated_at: datetime, config: dict[str, Any]
+) -> dict[str, Any]:
+    """Forward-only observer for high-performance, low-sample methods; never backfill returns."""
+    try:
+        with FORWARD_WATCH_PATH.open("r", encoding="utf-8") as handle:
+            state = json.load(handle)
+    except (FileNotFoundError, OSError, ValueError):
+        state = {"started_at": generated_at.isoformat(timespec="seconds"), "records": {}}
+    records = state.setdefault("records", {})
+    fee = float(config.get("commission_per_side_bps", 1.2)) / 10000
+    slip_ticks = float(config.get("slippage_ticks_per_side", 1))
+    assets = {item["id"]: item for item in results if item.get("price") and item.get("daily_open")}
+    current_keys: set[str] = set()
+
+    for asset in assets.values():
+        candidates = asset.get("strategy_selection", {}).get("forward_watch", [])
+        for candidate in candidates:
+            record_key = f"{asset['id']}:{candidate['key']}"
+            current_keys.add(record_key)
+            daily_date = str(asset["daily_date"])
+            daily_open = float(asset["daily_open"])
+            vol_multiplier = float(asset.get("volatility_control", {}).get("position_multiplier") or 0)
+            next_target = int(candidate.get("latest_target") or 0) * vol_multiplier
+            record = records.get(record_key)
+            if not record:
+                record = {
+                    "asset_id": asset["id"], "asset": asset["name"], "symbol": asset["symbol"],
+                    "strategy_key": candidate["key"], "strategy": candidate["name"],
+                    "started_at": generated_at.isoformat(timespec="seconds"), "status": "watching",
+                    "equity": 1.0, "position": 0.0, "pending_target": next_target,
+                    "last_daily_date": daily_date, "last_open": daily_open,
+                    "trades": 0, "observations": 0, "history": [],
+                }
+                records[record_key] = record
+            elif daily_date > str(record.get("last_daily_date") or ""):
+                prior_position = float(record.get("position") or 0)
+                prior_open = float(record.get("last_open") or daily_open)
+                target = float(record.get("pending_target") or 0)
+                holding_return = prior_position * (daily_open / prior_open - 1) if prior_open > 0 else 0.0
+                turnover = abs(target - prior_position)
+                friction = turnover * (fee + slip_ticks * float(asset["tick"]) / daily_open) if daily_open > 0 else 0.0
+                record["equity"] = max(0.01, float(record.get("equity") or 1) * (1 + holding_return - friction))
+                if turnover:
+                    record["trades"] = int(record.get("trades") or 0) + 1
+                record["position"] = target
+                record["pending_target"] = next_target
+                record["last_daily_date"] = daily_date
+                record["last_open"] = daily_open
+                record["observations"] = int(record.get("observations") or 0) + 1
+                record.setdefault("history", []).append({
+                    "date": daily_date, "equity": record["equity"], "position": target,
+                    "holding_return": holding_return, "friction": friction,
+                })
+                record["history"] = record["history"][-750:]
+            else:
+                record["pending_target"] = next_target
+            record["status"] = "watching"
+            record["updated_at"] = generated_at.isoformat(timespec="seconds")
+
+    for record_key, record in records.items():
+        if record_key in current_keys or record.get("status") == "closed":
+            continue
+        asset = assets.get(record.get("asset_id"))
+        if not asset:
+            continue
+        daily_date = str(asset["daily_date"])
+        if daily_date > str(record.get("last_daily_date") or ""):
+            daily_open = float(asset["daily_open"])
+            prior_position = float(record.get("position") or 0)
+            prior_open = float(record.get("last_open") or daily_open)
+            holding_return = prior_position * (daily_open / prior_open - 1) if prior_open > 0 else 0.0
+            friction = abs(prior_position) * (fee + slip_ticks * float(asset["tick"]) / daily_open) if daily_open > 0 else 0.0
+            record["equity"] = max(0.01, float(record.get("equity") or 1) * (1 + holding_return - friction))
+            if prior_position:
+                record["trades"] = int(record.get("trades") or 0) + 1
+            record.update({"position": 0.0, "pending_target": 0.0, "last_daily_date": daily_date, "last_open": daily_open, "status": "closed"})
+            record["observations"] = int(record.get("observations") or 0) + 1
+        else:
+            record["status"] = "pending_exit"
+        record["updated_at"] = generated_at.isoformat(timespec="seconds")
+
+    rows = []
+    for record_key, record in records.items():
+        row = {
+            "record_key": record_key, "asset_id": record["asset_id"], "asset": record["asset"],
+            "strategy_key": record["strategy_key"], "strategy": record["strategy"],
+            "status": record.get("status"), "started_at": record.get("started_at"),
+            "return_pct": (float(record.get("equity") or 1) - 1) * 100,
+            "trades": int(record.get("trades") or 0), "observations": int(record.get("observations") or 0),
+            "position": float(record.get("position") or 0), "pending_target": float(record.get("pending_target") or 0),
+            "last_daily_date": record.get("last_daily_date"),
+        }
+        rows.append(row)
+        asset = assets.get(record["asset_id"])
+        if asset:
+            candidate = next((item for item in asset.get("strategy_selection", {}).get("candidates", []) if item["key"] == record["strategy_key"]), None)
+            if candidate:
+                candidate["forward_test"] = row
+            watch_candidate = next((item for item in asset.get("strategy_selection", {}).get("forward_watch", []) if item["key"] == record["strategy_key"]), None)
+            if watch_candidate:
+                watch_candidate["forward_test"] = row
+    rows.sort(key=lambda item: (item["status"] == "watching", item["return_pct"]), reverse=True)
+    state["updated_at"] = generated_at.isoformat(timespec="seconds")
+    atomic_json(FORWARD_WATCH_PATH, state)
+    return {
+        "updated_at": state["updated_at"], "rows": rows,
+        "method": "高绩效低样本方法首次进入观察时不回填；信号在观察日收盘登记、下一交易日开盘执行，开平各万1.2并每侧1跳。该账本与1000万元正式模拟组合隔离。",
     }
 
 
@@ -1721,6 +1878,7 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             )
         if len(daily) < 60 or len(hourly) < 35 or len(five) < 35:
             raise ValueError("多周期指标预热数据不足")
+        daily_history = daily
         # Keep the full source response in state/raw, but bound model work to a
         # reproducible recent window so scheduled scans finish well within 5m.
         daily = daily[-600:]
@@ -1821,7 +1979,7 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
         })
         volatility_control = volatility_position_control(daily, int(config["atr_period"]))
         trend_quality = trend_quality_snapshot(daily)
-        strategy_comparison = compare_strategies(daily, five, asset, config)
+        strategy_comparison = compare_strategies(daily, five, asset, config, extended_daily=daily_history)
         strategy_selection = select_asset_strategy(strategy_comparison, config)
         result = {
             **base,
@@ -1835,8 +1993,10 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             "price": five_closes[-1],
             "bar_time": five[-1]["datetime"],
             "daily_date": daily[-1]["datetime"],
+            "daily_open": daily[-1]["open"],
+            "daily_close": daily[-1]["close"],
             "age_minutes": round(age_minutes, 1),
-            "bars": {"daily": len(daily), "hourly": len(hourly), "five": len(five), "weekly": len(weekly)},
+            "bars": {"daily": len(daily), "daily_history": len(daily_history), "hourly": len(hourly), "five": len(five), "weekly": len(weekly)},
             "change_pct": (five_closes[-1] / daily_closes[-1] - 1) * 100,
             "returns": returns,
             "position_changes": position_changes,
@@ -1919,6 +2079,7 @@ def scan_once() -> dict[str, Any]:
             "method": "20日趋势=20日收益率；20日波动率=近20日日收益率标准差×√20；风险调整后趋势=20日趋势÷20日波动率；噪音比率=|3日收益率|÷|20日收益率|。",
             "quality_rule": "高质量趋势：|风险调整后趋势|≥0.75、噪音比率≤35%、|20日收益率|≥1%。",
         }
+        forward_watch = update_strategy_forward_watch(results, generated_at, config)
         performance_report = aggregate_strategy_performance(results, generated_at, config)
         paper_trading = update_allocation_paper_portfolio(results, generated_at, config, performance_report)
         for item in results:
@@ -1926,7 +2087,7 @@ def scan_once() -> dict[str, Any]:
                 strategy.pop("return_series", None)
         signal_changes = update_signal_change_log(results, generated_at)
         payload = {
-            "schema_version": 12,
+            "schema_version": 13,
             "generated_at": generated_at.isoformat(timespec="seconds"),
             "interval_seconds": int(config["scan_interval_seconds"]),
             "summary": counts,
@@ -1935,6 +2096,7 @@ def scan_once() -> dict[str, Any]:
             "market_breadth": market_breadth,
             "performance": {key: performance_report[key] for key in ("assumptions", "strategies", "selection", "frequency_assessment", "sources")},
             "paper_trading": paper_trading,
+            "forward_watch": forward_watch,
             "signal_changes": signal_changes,
             "assets": results,
             "methodology": {
@@ -1944,6 +2106,7 @@ def scan_once() -> dict[str, Any]:
                 "execution": "核心模型在交易日15:20后刷新；全市场行情在交易时段每15分钟刷新；回测绩效只统计最近365个自然日，5分钟策略不进入定时交易信号",
                 "capital_structure": "价格上涨且总持仓增加归为多头增仓；价格下跌且总持仓增加归为空头增仓；上涨缩仓提示警惕追多，下跌缩仓提示警惕追空。该分类只描述价格与总持仓组合，不判定多空持仓归属",
                 "trend_quality": "20日收益率刻画中期趋势，3日收益率相对20日趋势的绝对比例刻画短期噪音；20日收益率除以20日同期限波动率得到风险调整后趋势",
+                "strategy_selection": "所有品种统一先按最近一年硬门槛筛选，再排可用名次：至少8笔、收益>0；日线四因子Sharpe≥0.30，其他方法Sharpe>0。高绩效但低于8笔的方法仅列入前向观察；低换手方法另用真实5年、数据不足时3年历史作背景核验，不直接替换。",
                 "allocation": "1000万元模拟组合要求综合技术、品种选优方法与20日风险调整趋势三者同向，再按逆波动率配置；近月月差背离仅作风险提示，不改变配置；单品种≤20%、净敞口≤40%、总名义敞口≤100%",
                 "open_interest": "优先读取行情商的品种加权合约持仓字段；若无该序列，将全部挂牌分月合约持仓逐日求和；两者均失败才明确标记主连降级",
                 "calendar_spread": "按到期月份选择最近两个仍挂牌且有有效买卖盘的分月合约；月差=近月买卖盘中值−次近月买卖盘中值，正值为BACKWARDATION、负值为CONTANGO；保留两侧可成交边界并核对报价交易日和时间差",
@@ -1957,6 +2120,7 @@ def scan_once() -> dict[str, Any]:
                 "近月月差使用实时买卖盘中值而非官方结算价；它仅作为期限结构风险提示，不改变技术方向、模拟盘配置或仓位。",
                 "黑色板块覆盖螺纹钢、热卷、不锈钢、铁矿石、焦炭、焦煤、硅铁与锰硅主力连续；已按要求删除线材。",
                 "最近一年按Sharpe选择策略属于同窗筛选，存在选择偏差；应继续观察前向模拟盘，不能把排名直接外推为未来收益。",
+                "低换手方法的3年/5年结果只用于稳定性背景；最近一年样本不足时仍不能直接替换当前方法，避免事后放宽门槛。",
                 "模拟盘参考手数由主力连续价和交易单位折算；主力连续不是可成交月份，实盘前必须映射具体合约并复核保证金、手续费和平今规则。",
                 "公开接口可能限流或中断；实盘研究建议切换至iFinD、Wind、CTP或交易所授权源。",
             ],
