@@ -717,6 +717,37 @@ def volatility_position_control(bars: list[dict[str, Any]], period: int = 14) ->
     }
 
 
+def trend_quality_snapshot(bars: list[dict[str, Any]]) -> dict[str, Any]:
+    """Rankable 20-day trend quality with a transparent 3-day noise penalty."""
+    if len(bars) < 22:
+        return {
+            "status": "insufficient", "return_20d_pct": None, "return_3d_pct": None,
+            "volatility_20d_pct": None, "risk_adjusted_trend": None, "noise_ratio": None,
+            "quality_score": None, "direction": "neutral", "high_quality": False,
+        }
+    closes = [float(row["close"]) for row in bars[-22:]]
+    daily_returns = [closes[index] / closes[index - 1] - 1 for index in range(1, len(closes))]
+    trend_20d = closes[-1] / closes[-21] - 1
+    noise_3d = closes[-1] / closes[-4] - 1
+    volatility_20d = statistics.stdev(daily_returns[-20:]) * math.sqrt(20) if len(daily_returns) >= 20 else 0.0
+    risk_adjusted = trend_20d / volatility_20d if volatility_20d > 0 else 0.0
+    noise_ratio = abs(noise_3d) / max(abs(trend_20d), 1e-6)
+    quality_score = abs(risk_adjusted) / (1 + noise_ratio)
+    high_quality = abs(risk_adjusted) >= 0.75 and noise_ratio <= 0.35 and abs(trend_20d) >= 0.01
+    return {
+        "status": "ok",
+        "return_20d_pct": trend_20d * 100,
+        "return_3d_pct": noise_3d * 100,
+        "volatility_20d_pct": volatility_20d * 100,
+        "risk_adjusted_trend": risk_adjusted,
+        "noise_ratio": noise_ratio,
+        "quality_score": quality_score,
+        "direction": "long" if risk_adjusted > 0 else "short" if risk_adjusted < 0 else "neutral",
+        "high_quality": high_quality,
+        "formula": "20日收益率 ÷ (近20日日收益率标准差 × √20)；噪音比率=|3日收益率|÷|20日收益率|",
+    }
+
+
 def prepare_bars(
     raw_bars: list[dict[str, Any]], asset: dict[str, Any], generated_at: datetime, timeframe: str
 ) -> tuple[list[dict[str, Any]], dict[str, int]]:
@@ -879,15 +910,31 @@ def aggregate_strategy_performance(results: list[dict[str, Any]], generated_at: 
         winners = sum((row.get("win_rate_pct") or 0) * row["trades"] / 100 for row in rows)
         returns = [row["net_return_pct"] for row in rows]
         sharpes = [row["sharpe"] for row in rows]
+        returns_by_date: dict[str, list[float]] = {}
+        for row in rows:
+            for point in row.get("return_series", []):
+                returns_by_date.setdefault(point["date"], []).append(float(point["return"]))
+        portfolio_returns = [statistics.fmean(returns_by_date[date]) for date in sorted(returns_by_date)]
+        portfolio_mean = statistics.fmean(portfolio_returns) if portfolio_returns else 0.0
+        portfolio_vol = statistics.stdev(portfolio_returns) if len(portfolio_returns) > 1 else 0.0
+        portfolio_sharpe = portfolio_mean / portfolio_vol * math.sqrt(252) if portfolio_vol > 0 else 0.0
+        portfolio_equity, portfolio_peak, portfolio_drawdown = 1.0, 1.0, 0.0
+        for value in portfolio_returns:
+            portfolio_equity *= 1 + value
+            portfolio_peak = max(portfolio_peak, portfolio_equity)
+            portfolio_drawdown = min(portfolio_drawdown, portfolio_equity / portfolio_peak - 1)
         summary.append({
             "key": key, "name": names[key], "frequency": rows[0]["frequency"], "assets": len(rows),
             "trades": trades, "win_rate_pct": winners / trades * 100 if trades else None,
             "equal_weight_return_pct": statistics.fmean(returns), "median_return_pct": statistics.median(returns),
             "average_sharpe": statistics.fmean(sharpes), "positive_assets": sum(value > 0 for value in returns),
             "worst_drawdown_pct": min(row["max_drawdown_pct"] for row in rows),
+            "portfolio_return_pct": (portfolio_equity - 1) * 100,
+            "portfolio_sharpe": portfolio_sharpe,
+            "portfolio_max_drawdown_pct": portfolio_drawdown * 100,
             "sample_start": min(row["sample_start"] for row in rows), "sample_end": max(row["sample_end"] for row in rows),
         })
-    summary.sort(key=lambda row: row["equal_weight_return_pct"], reverse=True)
+    summary.sort(key=lambda row: row["portfolio_sharpe"], reverse=True)
     daily = next((row for row in summary if row["key"] == "daily_four_factor"), None)
     five = next((row for row in summary if row["key"] == "five_minute_momentum"), None)
     enough_intraday = bool(five and five["trades"] >= 30 and five["positive_assets"] >= 5)
@@ -898,6 +945,11 @@ def aggregate_strategy_performance(results: list[dict[str, Any]], generated_at: 
         "reason": "5分钟样本在成本后仍具备跨品种正收益与风险调整优势。" if effective else "当前5分钟样本期较短，且尚未同时满足成本后收益、Sharpe和跨品种稳定性门槛。",
         "criteria": "5分钟总交易≥30、至少5个品种为正、等权收益>0、平均Sharpe>0.5且不低于日线四因子",
     }
+    eligible = [row for row in summary if row["frequency"] == "daily" and row["trades"] >= int(config.get("minimum_ranked_strategy_trades", 20))]
+    top_count = int(config.get("top_strategy_count", 4))
+    top_strategies = eligible[:top_count]
+    for rank, row in enumerate(top_strategies, 1):
+        row["sharpe_rank"] = rank
     return {
         "generated_at": generated_at.isoformat(timespec="seconds"),
         "assumptions": {
@@ -905,12 +957,22 @@ def aggregate_strategy_performance(results: list[dict[str, Any]], generated_at: 
             "slippage": "开仓1跳 + 平仓1跳",
             "execution": "信号K线收盘后生成，下一根K线开盘执行，避免前视",
             "price_series": "主力连续未复权；换月跳空会影响收益，结果仅供研究筛选",
-            "portfolio": "跨品种汇总为各品种收益等权平均，不含保证金杠杆和资金容量约束",
+            "portfolio": "按交易日对各有效品种策略收益等权合成组合净值，再计算组合收益、Sharpe和最大回撤；不含保证金杠杆和资金容量约束",
+            "window": f"最近{int(config.get('backtest_calendar_days', 365))}个自然日；指标预热使用窗口前历史，但绩效只统计窗口内",
         },
-        "strategies": summary, "frequency_assessment": frequency,
+        "strategies": top_strategies,
+        "all_strategies": summary,
+        "selection": {
+            "metric": "portfolio_sharpe", "top_n": top_count,
+            "minimum_total_trades": int(config.get("minimum_ranked_strategy_trades", 20)),
+            "note": "仅展示最近一年17品种逐日等权组合Sharpe靠前且交易数达标的日线策略；这是同窗筛选结果，不能视为独立样本证明。",
+        },
+        "frequency_assessment": frequency,
         "sources": [
             {"name": "CTAAgents/FDT", "url": "https://github.com/CTAAgents/FDT", "adaptation": "参考DC20/DC55、布林带与MACD独立趋势子信号，构造透明通道共振基线"},
-            {"name": "VeighNa CTA Strategy", "url": "https://github.com/vnpy/vnpy_ctastrategy", "adaptation": "参考通道突破、CCI、ATR止损及下一K线执行框架"},
+            {"name": "VeighNa CTA Strategy", "url": "https://github.com/vnpy/vnpy_ctastrategy", "adaptation": "参考Turtle 20/10、布林突破、CCI和下一K线执行框架"},
+            {"name": "TrendFollowingSystems", "url": "https://github.com/ArturSepp/TrendFollowingSystems", "adaptation": "参考多周期EWMAC、TSMOM与波动率缩放的可复现研究设计"},
+            {"name": "Trend Atlas", "url": "https://github.com/0xpg/crypto-trend-following", "adaptation": "参考多速度趋势投票、风险预算、仓位上限与无前视执行原则；未采用其加密资产数据"},
         ],
         "per_asset": [{"id": item["id"], "name": item["name"], "strategies": item.get("strategy_comparison", [])} for item in results if item.get("strategy_comparison")],
     }
@@ -1083,6 +1145,235 @@ def update_paper_portfolio(results: list[dict[str, Any]], generated_at: datetime
     }
 
 
+def _capped_allocation_weights(raw_scores: dict[str, float], cap: float, gross_target: float = 1.0) -> dict[str, float]:
+    """Normalize positive scores into capped gross weights without forced leverage."""
+    positive = {key: value for key, value in raw_scores.items() if value > 0}
+    if not positive:
+        return {key: 0.0 for key in raw_scores}
+    weights = {key: 0.0 for key in raw_scores}
+    remaining = set(positive)
+    remaining_budget = gross_target
+    while remaining and remaining_budget > 1e-9:
+        total = sum(positive[key] for key in remaining)
+        if total <= 0:
+            break
+        provisional = {key: remaining_budget * positive[key] / total for key in remaining}
+        capped = [key for key, value in provisional.items() if value > cap]
+        if not capped:
+            for key, value in provisional.items():
+                weights[key] = value
+            break
+        for key in capped:
+            weights[key] = cap
+            remaining_budget -= cap
+            remaining.remove(key)
+    return weights
+
+
+def build_allocation_targets(
+    results: list[dict[str, Any]], performance_report: dict[str, Any], config: dict[str, Any], equity: float
+) -> list[dict[str, Any]]:
+    """Construct a transparent time-series allocation; cross-sectional rank never sets direction."""
+    paper_ids = set(config.get("paper_asset_ids", []))
+    assets = [item for item in results if item.get("price") and item["id"] in paper_ids]
+    selected_keys = [row["key"] for row in performance_report.get("strategies", [])]
+    raw_scores: dict[str, float] = {}
+    diagnostics: dict[str, dict[str, Any]] = {}
+    for asset in assets:
+        rows = {row["key"]: row for row in asset.get("strategy_comparison", [])}
+        votes = [int(rows[key].get("latest_target", 0)) for key in selected_keys if key in rows]
+        consensus = statistics.fmean(votes) if votes else 0.0
+        trend = asset.get("trend_quality", {})
+        risk_adjusted = float(trend.get("risk_adjusted_trend") or 0)
+        noise_ratio = float(trend.get("noise_ratio") or 99)
+        trend_side = 1 if risk_adjusted > 0 else -1 if risk_adjusted < 0 else 0
+        vote_side = 1 if consensus > 0 else -1 if consensus < 0 else 0
+        aligned = vote_side != 0 and vote_side == trend_side and abs(consensus) >= 0.25 and abs(risk_adjusted) >= 0.25
+        volatility = max(float(trend.get("volatility_20d_pct") or 0) / 100, 0.03)
+        noise_penalty = 1 / (1 + noise_ratio)
+        vol_multiplier = float(asset.get("volatility_control", {}).get("position_multiplier", 0))
+        raw_score = abs(consensus) * min(abs(risk_adjusted), 2.0) * noise_penalty * vol_multiplier / volatility if aligned else 0.0
+        raw_scores[asset["id"]] = raw_score
+        diagnostics[asset["id"]] = {
+            "direction": vote_side if aligned else 0,
+            "consensus": consensus,
+            "votes": votes,
+            "selected_strategies": selected_keys,
+            "risk_adjusted_trend": risk_adjusted,
+            "noise_ratio": noise_ratio,
+            "volatility_20d_pct": trend.get("volatility_20d_pct"),
+            "volatility_multiplier": vol_multiplier,
+            "reason": "前列策略同向且与20日风险调整趋势一致" if aligned else "策略投票与趋势方向未形成一致，保持空仓",
+        }
+    weights = _capped_allocation_weights(
+        raw_scores, float(config.get("paper_max_weight_per_asset", 0.20)), float(config.get("paper_gross_target", 1.0))
+    )
+    max_net = float(config.get("paper_max_net_exposure", 0.40))
+    signed = {asset_id: diagnostics[asset_id]["direction"] * weight for asset_id, weight in weights.items()}
+    long_total = sum(value for value in signed.values() if value > 0)
+    short_total = abs(sum(value for value in signed.values() if value < 0))
+    net = long_total - short_total
+    if net > max_net and long_total > 0:
+        long_scale = (max_net + short_total) / long_total
+        signed = {key: value * long_scale if value > 0 else value for key, value in signed.items()}
+    elif net < -max_net and short_total > 0:
+        short_scale = (max_net + long_total) / short_total
+        signed = {key: value * short_scale if value < 0 else value for key, value in signed.items()}
+    targets = []
+    for asset in assets:
+        weight = signed.get(asset["id"], 0.0)
+        multiplier = float(asset.get("multiplier", 1))
+        price = float(asset["price"])
+        contract_notional = price * multiplier
+        reference_lots = math.floor(abs(weight) * equity / contract_notional) if contract_notional > 0 else 0
+        signed_lots = reference_lots if weight > 0 else -reference_lots if weight < 0 else 0
+        actual_notional = abs(signed_lots) * contract_notional
+        targets.append({
+            "asset": asset,
+            "target_lots": signed_lots,
+            "target_weight": (actual_notional / equity if equity > 0 else 0) * (1 if signed_lots > 0 else -1 if signed_lots < 0 else 0),
+            "target_notional": actual_notional,
+            "contract_multiplier": multiplier,
+            **diagnostics[asset["id"]],
+        })
+        if weight and reference_lots == 0:
+            targets[-1]["reason"] += "；目标金额不足主连参考价1手，暂不建仓"
+    return targets
+
+
+def update_allocation_paper_portfolio(
+    results: list[dict[str, Any]], generated_at: datetime, config: dict[str, Any], performance_report: dict[str, Any]
+) -> dict[str, Any]:
+    """Forward-only CNY10m portfolio with integer reference lots and auditable allocation."""
+    initial_cash = float(config.get("initial_paper_cash", 10_000_000))
+    if PAPER_PATH.exists():
+        try:
+            with PAPER_PATH.open("r", encoding="utf-8") as handle:
+                state = json.load(handle)
+        except (OSError, ValueError):
+            state = {}
+    else:
+        state = {}
+    portfolio = state.setdefault("allocation_portfolio_v1", {
+        "name": "1000万动态多空组合", "started_at": generated_at.isoformat(timespec="seconds"),
+        "initial_cash": initial_cash, "equity": initial_cash, "positions": {}, "last_prices": {},
+        "last_bars": {}, "entry_prices": {}, "entry_times": {}, "history": [], "change_history": [], "trades": 0,
+    })
+    paper_ids = set(config.get("paper_asset_ids", []))
+    valid = [item for item in results if item.get("price") and item["id"] in paper_ids]
+    by_symbol = {item["symbol"]: item for item in valid}
+    fee = float(config.get("commission_per_side_bps", 1.2)) / 10000
+    slip_ticks = float(config.get("slippage_ticks_per_side", 1))
+    pnl = 0.0
+    for symbol, stored_lots in portfolio["positions"].items():
+        asset = by_symbol.get(symbol)
+        prior_price = portfolio["last_prices"].get(symbol)
+        if not asset or prior_price is None or portfolio["last_bars"].get(symbol) == asset["bar_time"]:
+            continue
+        pnl += float(stored_lots) * float(asset.get("multiplier", 1)) * (float(asset["price"]) - float(prior_price))
+    marked_equity = max(1.0, float(portfolio["equity"]) + pnl)
+    targets = build_allocation_targets(valid, performance_report, config, marked_equity)
+    costs = 0.0
+    changes: list[dict[str, Any]] = []
+    target_symbols = {row["asset"]["symbol"] for row in targets}
+    for symbol in set(portfolio["positions"]) - target_symbols:
+        portfolio["positions"][symbol] = 0
+    for target in targets:
+        asset = target["asset"]
+        symbol, price = asset["symbol"], float(asset["price"])
+        multiplier = float(target["contract_multiplier"])
+        prior_lots = int(portfolio["positions"].get(symbol, 0))
+        target_lots = int(target["target_lots"])
+        delta_lots = target_lots - prior_lots
+        if delta_lots:
+            turnover_notional = abs(delta_lots) * price * multiplier
+            costs += turnover_notional * fee + abs(delta_lots) * slip_ticks * float(asset["tick"]) * multiplier
+            reason = "open" if prior_lots == 0 else "close" if target_lots == 0 else "reverse" if prior_lots * target_lots < 0 else "rebalance"
+            record = {
+                "time": generated_at.isoformat(timespec="seconds"), "strategy_key": "allocation_portfolio_v1",
+                "strategy": portfolio["name"], "asset_id": asset["id"], "asset": asset["name"], "symbol": symbol,
+                "from_lots": prior_lots, "to_lots": target_lots,
+                "from_position": prior_lots, "to_position": target_lots,
+                "target_weight_pct": target["target_weight"] * 100, "price": price, "bar_time": asset["bar_time"],
+                "reason": reason, "allocation_reason": target["reason"], "strategy_votes": target["votes"],
+                "risk_adjusted_trend": target["risk_adjusted_trend"], "noise_ratio": target["noise_ratio"],
+            }
+            changes.append(record)
+            portfolio["change_history"].append(record)
+            portfolio["trades"] += 1
+            if target_lots and (prior_lots == 0 or prior_lots * target_lots < 0):
+                portfolio["entry_prices"][symbol] = price
+                portfolio["entry_times"][symbol] = generated_at.isoformat(timespec="seconds")
+            elif target_lots == 0:
+                portfolio["entry_prices"].pop(symbol, None)
+                portfolio["entry_times"].pop(symbol, None)
+        portfolio["positions"][symbol] = target_lots
+        portfolio["last_prices"][symbol] = price
+        portfolio["last_bars"][symbol] = asset["bar_time"]
+    portfolio["equity"] = max(1.0, marked_equity - costs)
+    portfolio["history"].append({
+        "time": generated_at.isoformat(timespec="seconds"), "equity": portfolio["equity"],
+        "pnl": pnl, "costs": costs,
+    })
+    portfolio["history"] = portfolio["history"][-1000:]
+    portfolio["change_history"] = portfolio["change_history"][-3000:]
+    positions = []
+    for target in targets:
+        asset, lots = target["asset"], int(target["target_lots"])
+        symbol, price = asset["symbol"], float(asset["price"])
+        entry_price = float(portfolio["entry_prices"].get(symbol) or price)
+        multiplier = float(target["contract_multiplier"])
+        notional = abs(lots) * price * multiplier
+        unrealized = lots * multiplier * (price - entry_price)
+        positions.append({
+            "strategy_key": "allocation_portfolio_v1", "strategy": portfolio["name"], "asset_id": asset["id"],
+            "asset": asset["name"], "symbol": symbol, "side": 1 if lots > 0 else -1 if lots < 0 else 0,
+            "lots": abs(lots), "signed_lots": lots, "contract_multiplier": multiplier,
+            "position_size_pct": notional / portfolio["equity"] * 100 if portfolio["equity"] else 0,
+            "target_weight_pct": target["target_weight"] * 100, "notional_cny": notional,
+            "entry_price": entry_price, "current_price": price,
+            "unrealized_cny": unrealized, "unrealized_pct": unrealized / notional * 100 if notional else 0,
+            "volatility_control": asset.get("volatility_control"), "trend_quality": asset.get("trend_quality"),
+            "allocation_reason": target["reason"], "strategy_votes": target["votes"],
+            "entry_time": portfolio["entry_times"].get(symbol), "bar_time": asset["bar_time"],
+        })
+    gross_notional = sum(row["notional_cny"] for row in positions)
+    net_notional = sum(row["notional_cny"] * row["side"] for row in positions)
+    peak, max_drawdown = initial_cash, 0.0
+    for point in portfolio["history"]:
+        peak = max(peak, float(point["equity"]))
+        if peak:
+            max_drawdown = min(max_drawdown, float(point["equity"]) / peak - 1)
+    summary = [{
+        "key": "allocation_portfolio_v1", "name": portfolio["name"], "equity": portfolio["equity"],
+        "return_pct": (portfolio["equity"] / initial_cash - 1) * 100, "max_drawdown_pct": max_drawdown * 100,
+        "trades": portfolio["trades"], "active_positions": sum(row["side"] != 0 for row in positions),
+        "long_positions": sum(row["side"] > 0 for row in positions), "short_positions": sum(row["side"] < 0 for row in positions),
+        "gross_exposure_pct": gross_notional / portfolio["equity"] * 100 if portfolio["equity"] else 0,
+        "net_exposure_pct": net_notional / portfolio["equity"] * 100 if portfolio["equity"] else 0,
+        "cash_buffer_cny": max(0.0, portfolio["equity"] - gross_notional), "observations": len(portfolio["history"]),
+    }]
+    all_changes = sorted(portfolio["change_history"], key=lambda row: row["time"], reverse=True)
+    scope_rows = [{"id": asset["id"], "name": asset["name"], "symbol": asset["symbol"]} for asset in config["assets"] if asset["id"] in paper_ids]
+    state["updated_at"] = generated_at.isoformat(timespec="seconds")
+    state["paper_asset_ids"] = sorted(paper_ids)
+    atomic_json(PAPER_PATH, state)
+    paper_report = {
+        "mode": "forward_allocation_paper", "started_at": portfolio["started_at"], "updated_at": state["updated_at"],
+        "initial_cash": initial_cash, "scope": scope_rows, "strategies": summary, "positions": positions,
+        "position_changes": all_changes, "equity_history": {"allocation_portfolio_v1": portfolio["history"]},
+        "selected_strategies": performance_report.get("strategies", []),
+        "assumptions": "1000万元初始权益；仅指定10个品种；前列日线策略投票决定方向，20日风险调整趋势确认，逆波动率分配；单品种≤20%、组合净敞口≤40%、总名义敞口≤100%；主连价仅用于模拟盘参考手数折算；开平各万1.2、每侧1跳。",
+    }
+    atomic_json(PAPER_REPORT_PATH, paper_report)
+    return {
+        **{key: paper_report[key] for key in ("mode", "started_at", "updated_at", "initial_cash", "scope", "strategies", "positions")},
+        "recent_changes": all_changes[:30], "history_count": len(all_changes), "history_url": "paper-history.json",
+        "allocation_method": paper_report["assumptions"],
+        "note": "单一1000万元组合账本；方向来自品种自身时间序列信号，不使用板块截面强弱。参考手数按主连价和交易单位折算，不代表可成交合约或真实委托。",
+    }
+
+
 def classify_signal_change(previous: dict[str, Any], current: dict[str, Any]) -> dict[str, str] | None:
     """Classify a cross-scan signal change without inventing observations."""
     prior_signal, signal = previous.get("signal"), current.get("signal")
@@ -1165,7 +1456,7 @@ def update_signal_change_log(results: list[dict[str, Any]], generated_at: dateti
 
 
 def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: datetime) -> dict[str, Any]:
-    base = {key: asset[key] for key in ("id", "name", "short_name", "symbol", "exchange", "sector", "provider", "decimals", "unit", "bar_timezone")}
+    base = {key: asset[key] for key in ("id", "name", "short_name", "symbol", "exchange", "sector", "provider", "tick", "multiplier", "decimals", "unit", "bar_timezone")}
     try:
         if asset["provider"] == "sina":
             cache_errors: dict[str, str] = {}
@@ -1291,6 +1582,7 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             "note": f"{oi_mode} · {position_changes.get('contract_count', 0)}合约 · 覆盖率" + ("—" if position_changes.get("coverage_pct") is None else f"{position_changes['coverage_pct']:.1f}%"),
         })
         volatility_control = volatility_position_control(daily, int(config["atr_period"]))
+        trend_quality = trend_quality_snapshot(daily)
         strategy_comparison = compare_strategies(daily, five, asset, config)
         result = {
             **base,
@@ -1312,6 +1604,7 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             "capital_bucket": capital_bucket(returns["month"], position_changes["week"]),
             "technical_methods": technical["groups"],
             "volatility_control": volatility_control,
+            "trend_quality": trend_quality,
             "risk_levels": research_risk_levels(
                 daily_closes[-1], latest["prior_high"], latest["prior_low"], technical["values"]["atr14"],
                 technical["values"]["ma20"], technical["values"]["boll_upper"], technical["values"]["boll_lower"],
@@ -1370,17 +1663,35 @@ def scan_once() -> dict[str, Any]:
             key: [item["id"] for item in results if item.get("capital_bucket") == key]
             for key in bucket_keys
         }
+        trend_rows = [
+            {"id": item["id"], "name": item["name"], "short_name": item["short_name"], "symbol": item["symbol"], **item["trend_quality"]}
+            for item in results if item.get("trend_quality", {}).get("status") == "ok"
+        ]
+        trend_rows.sort(key=lambda row: row["risk_adjusted_trend"], reverse=True)
+        for rank, row in enumerate(trend_rows, 1):
+            row["rank"] = rank
+        trend_ranking = {
+            "as_of": generated_at.isoformat(timespec="seconds"),
+            "rows": trend_rows,
+            "high_quality": [row for row in trend_rows if row["high_quality"]],
+            "method": "20日趋势=20日收益率；20日波动率=近20日日收益率标准差×√20；风险调整后趋势=20日趋势÷20日波动率；噪音比率=|3日收益率|÷|20日收益率|。",
+            "quality_rule": "高质量趋势：|风险调整后趋势|≥0.75、噪音比率≤35%、|20日收益率|≥1%。",
+        }
         performance_report = aggregate_strategy_performance(results, generated_at, config)
-        paper_trading = update_paper_portfolio(results, generated_at, config)
+        paper_trading = update_allocation_paper_portfolio(results, generated_at, config, performance_report)
+        for item in results:
+            for strategy in item.get("strategy_comparison", []):
+                strategy.pop("return_series", None)
         signal_changes = update_signal_change_log(results, generated_at)
         payload = {
-            "schema_version": 8,
+            "schema_version": 9,
             "generated_at": generated_at.isoformat(timespec="seconds"),
             "interval_seconds": int(config["scan_interval_seconds"]),
             "summary": counts,
             "operation_summary": operation_summary,
+            "trend_ranking": trend_ranking,
             "market_breadth": market_breadth,
-            "performance": {key: performance_report[key] for key in ("assumptions", "strategies", "frequency_assessment", "sources")},
+            "performance": {key: performance_report[key] for key in ("assumptions", "strategies", "selection", "frequency_assessment", "sources")},
             "paper_trading": paper_trading,
             "signal_changes": signal_changes,
             "assets": results,
@@ -1388,8 +1699,10 @@ def scan_once() -> dict[str, Any]:
                 "bar": "日线四因子为主；周线和60分钟确认趋势；5分钟仅作盘中预警",
                 "factors": "mom5超过±3% / 突破20日高低 / 收盘相对MA20 / 日线RSI14区间",
                 "decision": "日线四因子至少3项同向触发，再结合周线与小时线给出综合结论",
-                "execution": "核心模型在交易日15:20后刷新；全市场行情在交易时段每15分钟刷新；5分钟策略不进入定时交易信号",
+                "execution": "核心模型在交易日15:20后刷新；全市场行情在交易时段每15分钟刷新；回测绩效只统计最近365个自然日，5分钟策略不进入定时交易信号",
                 "capital_structure": "价格上涨且总持仓增加归为多头增仓；价格下跌且总持仓增加归为空头增仓；上涨缩仓提示警惕追多，下跌缩仓提示警惕追空。该分类只描述价格与总持仓组合，不判定多空持仓归属",
+                "trend_quality": "20日收益率刻画中期趋势，3日收益率相对20日趋势的绝对比例刻画短期噪音；20日收益率除以20日同期限波动率得到风险调整后趋势",
+                "allocation": "1000万元模拟组合以最近一年Sharpe前列的日线策略做品种自身时间序列投票，再用20日风险调整趋势确认和逆波动率配置；单品种≤20%、净敞口≤40%、总名义敞口≤100%",
                 "open_interest": "优先读取行情商的品种加权合约持仓字段；若无该序列，将全部挂牌分月合约持仓逐日求和；两者均失败才明确标记主连降级",
                 "technical": "主流指标层覆盖均线、MACD、ADX、ROC、RSI、KDJ、CCI、ATR、布林带、唐奇安、量比与OBV，仅作交叉验证",
                 "risk": "支撑压力综合20日高低、MA20、布林带与ATR；方向信号与仓位分离，ATR波动率升至历史高分位时分档降至75%/50%/25%，不自动下单",
@@ -1399,6 +1712,8 @@ def scan_once() -> dict[str, Any]:
                 "主连换月可能产生跳空，生产使用前应接入后复权连续合约或固定主力合约。",
                 "品种加权合约或全分月合约汇总持仓可降低主力换月扰动，但仍不可直接解释为资金净流入或流出；页面展示数据口径与降级状态。",
                 "黑色板块覆盖螺纹钢、热卷、不锈钢、铁矿石、焦炭、焦煤、硅铁与锰硅主力连续；已按要求删除线材。",
+                "最近一年按Sharpe选择策略属于同窗筛选，存在选择偏差；应继续观察前向模拟盘，不能把排名直接外推为未来收益。",
+                "模拟盘参考手数由主力连续价和交易单位折算；主力连续不是可成交月份，实盘前必须映射具体合约并复核保证金、手续费和平今规则。",
                 "公开接口可能限流或中断；实盘研究建议切换至iFinD、Wind、CTP或交易所授权源。",
             ],
         }

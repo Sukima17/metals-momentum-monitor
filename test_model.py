@@ -12,8 +12,10 @@ from momentum_monitor import (
     rolling_atr,
     rolling_rsi,
     technical_snapshot,
+    trend_quality_snapshot,
     volatility_position_control,
     aggregate_oi_change,
+    _capped_allocation_weights,
 )
 from market_universe import UNIVERSE
 from research_backtest import compare_strategies, run_strategy
@@ -74,7 +76,7 @@ if __name__ == "__main__":
     assert levels["long_atr_stop"] == 96 and levels["short_atr_stop"] == 104
     assert levels["long_break_even_trigger"] == 100.2
     comparison = compare_strategies(make_bars(1), make_bars(1), {"tick": 0.1}, config)
-    assert len(comparison) == 5
+    assert len(comparison) == 10
     assert {row["frequency"] for row in comparison} == {"daily", "5m"}
     friction_test = run_strategy(make_bars(1), lambda bars, index: 1, 0.1, "daily", 0.00012, 1, 60)
     assert friction_test["trades"] == 1 and friction_test["net_return_pct"] is not None
@@ -85,6 +87,8 @@ if __name__ == "__main__":
     assert sum(asset["sector"] == "ferrous" for asset in config["assets"]) == 8
     assert "wire_rod" not in {asset["id"] for asset in config["assets"]}
     assert len(config["paper_asset_ids"]) == 10
+    assert config["initial_paper_cash"] == 10_000_000
+    assert all(asset["multiplier"] > 0 for asset in config["assets"])
     assert set(config["paper_asset_ids"]) <= {asset["id"] for asset in config["assets"]}
     assert {asset["symbol"] for asset in config["assets"]} == set(EASTMONEY_WEIGHTED_CODES)
     detailed_levels = research_risk_levels(100, 110, 90, 2, ma20=98, boll_upper=108, boll_lower=92)
@@ -98,6 +102,10 @@ if __name__ == "__main__":
             bar["low"] = bar["close"] - 12
     volatility = volatility_position_control(volatile_bars)
     assert volatility["regime"] == "surge" and volatility["position_multiplier"] == 0.25
+    trend_quality = trend_quality_snapshot(make_bars(1))
+    assert trend_quality["risk_adjusted_trend"] > 0 and trend_quality["noise_ratio"] >= 0
+    capped = _capped_allocation_weights({"a": 9, "b": 1, "c": 1, "d": 1, "e": 1}, 0.20)
+    assert max(capped.values()) <= 0.20 + 1e-12 and sum(capped.values()) <= 1.0 + 1e-12
     oi_series = [
         {"bars": [{"hold": value} for value in (100, 110, 120, 130, 140, 150)]},
         {"bars": [{"hold": value} for value in (300, 306, 312, 318, 324, 330)]},
@@ -113,4 +121,4 @@ if __name__ == "__main__":
     )
     assert direct_reversal and direct_reversal["severity"] == "major"
     assert score_jump and score_jump["severity"] == "major"
-    print("signal, volatility sizing, aggregate OI, strategy comparison, market universe and risk checks OK")
+    print("signal, trend quality, allocation, aggregate OI, strategy comparison, market universe and risk checks OK")

@@ -17,10 +17,11 @@
       <button class="nav-item" data-scroll="changes"><span>03</span> 信号变化</button>
       <button class="nav-item" data-scroll="matrix"><span>04</span> 信号矩阵</button>
       <button class="nav-item" data-scroll="technical"><span>05</span> 技术全景</button>
-      <button class="nav-item" data-scroll="performance"><span>06</span> 策略回测</button>
-      <button class="nav-item" data-scroll="paper"><span>07</span> 模拟盘持仓</button>
-      <button class="nav-item" data-scroll="market"><span>08</span> 全市场</button>
-      <button class="nav-item" data-scroll="method"><span>09</span> 模型口径</button>
+      <button class="nav-item" data-scroll="trendQuality"><span>06</span> 趋势质量</button>
+      <button class="nav-item" data-scroll="performance"><span>07</span> 策略回测</button>
+      <button class="nav-item" data-scroll="paper"><span>08</span> 模拟盘持仓</button>
+      <button class="nav-item" data-scroll="market"><span>09</span> 全市场</button>
+      <button class="nav-item" data-scroll="method"><span>10</span> 模型口径</button>
     </nav>
     <div class="rail-foot"><i></i><span>日线主模型</span><small>周 / 60分确认 · 5分仅对照</small></div>
   </aside>
@@ -66,10 +67,17 @@
       <div id="riskPanel" class="risk-panel"></div>
     </section>
 
+    <section class="panel trend-quality-panel" id="trendQuality">
+      <div class="section-head"><div><p class="eyebrow">RISK-ADJUSTED TREND QUALITY</p><h2>风险调整后趋势排名</h2></div><span id="trendQualityTime" class="scope-note">等待计算</span></div>
+      <div id="qualityTrendChips" class="quality-trend-chips"></div>
+      <div class="table-scroll"><table class="trend-quality-table"><thead><tr><th>排名</th><th>品种</th><th>方向</th><th>20日收益</th><th>20日波动</th><th>风险调整趋势</th><th>3日收益</th><th>噪音比率</th><th>趋势质量</th></tr></thead><tbody id="trendQualityRows"></tbody></table></div>
+      <p id="trendQualityNote" class="panel-note"></p>
+    </section>
+
     <section class="panel performance-panel" id="performance">
-      <div class="section-head"><div><p class="eyebrow">WALK-FORWARD BACKTEST</p><h2>策略绩效对比</h2></div><a class="report-link" href="performance-report.json" download>下载完整绩效报表</a></div>
+      <div class="section-head"><div><p class="eyebrow">LATEST 1-YEAR BACKTEST</p><h2>最近一年 · Sharpe 前列策略</h2></div><a class="report-link" href="performance-report.json" download>下载完整绩效报表</a></div>
       <div id="frequencyVerdict" class="frequency-verdict"></div>
-      <div class="table-scroll"><table class="performance-table"><thead><tr><th>策略</th><th>频率</th><th>交易数</th><th>胜率</th><th>等权收益</th><th>平均 Sharpe</th><th>最差回撤</th><th>盈利品种</th></tr></thead><tbody id="performanceRows"></tbody></table></div>
+      <div class="table-scroll"><table class="performance-table"><thead><tr><th>Sharpe排名</th><th>策略</th><th>交易数</th><th>胜率</th><th>组合收益</th><th>组合 Sharpe</th><th>组合回撤</th><th>盈利品种</th><th>样本</th></tr></thead><tbody id="performanceRows"></tbody></table></div>
       <div id="costAssumptions" class="assumption-grid"></div>
       <div id="strategySources" class="source-links"></div>
     </section>
@@ -78,8 +86,8 @@
       <div class="section-head"><div><p class="eyebrow">FORWARD PAPER TRADING</p><h2>模拟盘持仓与变化</h2></div><div class="paper-actions"><span id="paperTime" class="scope-note">等待首次记账</span><a class="report-link" href="paper-history.json" download>下载全部头寸历史</a></div></div>
       <div id="paperScope" class="paper-scope"></div>
       <div id="paperCards" class="paper-cards"></div>
-      <h3 class="subsection-title">当前持仓</h3>
-      <div class="table-scroll"><table class="position-table"><thead><tr><th>策略</th><th>品种</th><th>方向</th><th>目标仓位</th><th>波动状态</th><th>ATR波动率</th><th>入场参考</th><th>最新价</th><th>浮动收益</th><th>入场时间</th></tr></thead><tbody id="paperPositionRows"></tbody></table></div>
+      <h3 class="subsection-title">十品种当前配置（含空仓）</h3>
+      <div class="table-scroll"><table class="position-table"><thead><tr><th>品种</th><th>方向</th><th>配置权重</th><th>参考手数</th><th>名义金额</th><th>波动状态</th><th>风险调整趋势</th><th>噪音比率</th><th>入场 / 最新</th><th>浮盈亏</th><th>入场时间</th></tr></thead><tbody id="paperPositionRows"></tbody></table></div>
       <h3 class="subsection-title">最近开仓 / 平仓 / 换向</h3>
       <div id="paperChangeLog" class="change-log"></div><p id="paperNote" class="panel-note"></p>
     </section>

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 import statistics
+from datetime import datetime, timedelta
 from typing import Any, Callable
 
 
@@ -92,6 +93,102 @@ def _fdt_channel_baseline(bars: list[dict[str, Any]], index: int) -> int:
     return 1 if sum(value > 0 for value in votes) >= 3 else -1 if sum(value < 0 for value in votes) >= 3 else 0
 
 
+def _make_turtle_signal(entry_window: int = 20, exit_window: int = 10) -> SignalFn:
+    """VeighNa-style Turtle 20/10 channel state, evaluated sequentially."""
+    position = 0
+
+    def signal(bars: list[dict[str, Any]], index: int) -> int:
+        nonlocal position
+        if index < entry_window:
+            return 0
+        close = bars[index]["close"]
+        entry_sample = bars[index - entry_window : index]
+        exit_sample = bars[index - exit_window : index]
+        if position > 0 and close < min(row["low"] for row in exit_sample):
+            position = 0
+        elif position < 0 and close > max(row["high"] for row in exit_sample):
+            position = 0
+        if position == 0:
+            if close > max(row["high"] for row in entry_sample):
+                position = 1
+            elif close < min(row["low"] for row in entry_sample):
+                position = -1
+        return position
+
+    return signal
+
+
+def _make_bollinger_cci_signal(window: int = 20, deviation: float = 2.0) -> SignalFn:
+    """Persistent Bollinger breakout gated by CCI; exits at the middle band."""
+    position = 0
+
+    def signal(bars: list[dict[str, Any]], index: int) -> int:
+        nonlocal position
+        if index < window:
+            return 0
+        sample = bars[index - window + 1 : index + 1]
+        closes = [row["close"] for row in sample]
+        typical = [(row["high"] + row["low"] + row["close"]) / 3 for row in sample]
+        middle = statistics.fmean(closes)
+        std = statistics.pstdev(closes)
+        typical_mean = statistics.fmean(typical)
+        mean_deviation = statistics.fmean(abs(value - typical_mean) for value in typical)
+        cci = 0.0 if mean_deviation == 0 else (typical[-1] - typical_mean) / (0.015 * mean_deviation)
+        close = closes[-1]
+        if position > 0 and close < middle:
+            position = 0
+        elif position < 0 and close > middle:
+            position = 0
+        if position == 0 and std > 0:
+            if close > middle + deviation * std and cci > 0:
+                position = 1
+            elif close < middle - deviation * std and cci < 0:
+                position = -1
+        return position
+
+    return signal
+
+
+def _ewmac_ensemble(bars: list[dict[str, Any]], index: int) -> int:
+    """Multi-speed EWMAC vote inspired by volatility-scaled managed-futures systems."""
+    if index < 192:
+        return 0
+    closes = [row["close"] for row in bars[: index + 1]]
+    votes = []
+    for fast_period, slow_period in ((16, 48), (32, 96), (64, 192)):
+        fast = _ema(closes, fast_period)[-1]
+        slow = _ema(closes, slow_period)[-1]
+        votes.append(1 if fast > slow else -1 if fast < slow else 0)
+    score = sum(votes)
+    return 1 if score > 0 else -1 if score < 0 else 0
+
+
+def _tsmom_ensemble(bars: list[dict[str, Any]], index: int) -> int:
+    """Time-series momentum vote across 20/60/120 trading-day horizons."""
+    if index < 120:
+        return 0
+    close = bars[index]["close"]
+    votes = [1 if close > bars[index - lag]["close"] else -1 if close < bars[index - lag]["close"] else 0 for lag in (20, 60, 120)]
+    score = sum(votes)
+    return 1 if score > 0 else -1 if score < 0 else 0
+
+
+def _risk_adjusted_trend_signal(bars: list[dict[str, Any]], index: int) -> int:
+    """20-day trend divided by 20-day horizon volatility, filtered by 3-day noise."""
+    if index < 21:
+        return 0
+    closes = [row["close"] for row in bars[index - 21 : index + 1]]
+    daily_returns = [closes[cursor] / closes[cursor - 1] - 1 for cursor in range(1, len(closes))]
+    trend = closes[-1] / closes[0] - 1
+    horizon_vol = statistics.stdev(daily_returns) * math.sqrt(20) if len(daily_returns) > 1 else 0.0
+    noise = closes[-1] / closes[-4] - 1
+    risk_adjusted = trend / horizon_vol if horizon_vol > 0 else 0.0
+    noise_ratio = abs(noise) / max(abs(trend), 1e-6)
+    if abs(risk_adjusted) < 0.5 or noise_ratio > 0.75:
+        return 0
+    return 1 if risk_adjusted > 0 else -1
+
+
 def _five_minute_momentum(bars: list[dict[str, Any]], index: int) -> int:
     if index < 22:
         return 0
@@ -111,18 +208,23 @@ def _five_minute_momentum(bars: list[dict[str, Any]], index: int) -> int:
 def run_strategy(
     bars: list[dict[str, Any]], signal_fn: SignalFn, tick: float, frequency: str,
     fee_per_side: float = 0.00012, slippage_ticks: float = 1.0, warmup: int = 60,
+    evaluation_start: str | None = None,
 ) -> dict[str, Any]:
     """Signal at close[i], execute at open[i+1]; every side pays fee and one tick."""
     if len(bars) < warmup + 5:
-        return {"status": "insufficient", "trades": 0, "net_return_pct": None}
+        return {"status": "insufficient", "frequency": frequency, "trades": 0, "net_return_pct": None}
     targets = [0] * len(bars)
     for index in range(warmup, len(bars) - 1):
         targets[index + 1] = signal_fn(bars, index)
 
+    evaluation_index = warmup + 1
+    if evaluation_start:
+        evaluation_index = max(evaluation_index, next((index for index, row in enumerate(bars) if row["datetime"] >= evaluation_start), len(bars) - 1))
     equity, peak, max_drawdown = 1.0, 1.0, 0.0
     interval_returns: list[float] = []
+    return_series: list[dict[str, Any]] = []
     previous_target = 0
-    for index in range(warmup + 1, len(bars) - 1):
+    for index in range(evaluation_index, len(bars) - 1):
         price = bars[index]["open"]
         next_price = bars[index + 1]["open"]
         target = targets[index]
@@ -130,6 +232,8 @@ def run_strategy(
         friction = turnover * (fee_per_side + slippage_ticks * tick / price) if price > 0 else 0.0
         period_return = target * (next_price / price - 1) - friction
         interval_returns.append(period_return)
+        if frequency == "daily":
+            return_series.append({"date": bars[index + 1]["datetime"][:10], "return": period_return})
         equity *= 1 + period_return
         peak = max(peak, equity)
         max_drawdown = min(max_drawdown, equity / peak - 1)
@@ -138,7 +242,7 @@ def run_strategy(
     trades: list[float] = []
     entry_price: float | None = None
     side = 0
-    for index in range(warmup + 1, len(bars)):
+    for index in range(evaluation_index, len(bars)):
         target = targets[index]
         execution = bars[index]["open"]
         if target == side:
@@ -174,24 +278,30 @@ def run_strategy(
         "profit_factor": gross_profit / gross_loss if gross_loss > 0 else None,
         "avg_trade_pct": statistics.fmean(trades) * 100 if trades else None,
         "positive_trades": positive, "latest_target": targets[-1],
-        "sample_start": bars[warmup]["datetime"], "sample_end": bars[-1]["datetime"],
-        "observations": len(interval_returns),
+        "sample_start": bars[evaluation_index]["datetime"], "sample_end": bars[-1]["datetime"],
+        "observations": len(interval_returns), "return_series": return_series,
     }
 
 
 def compare_strategies(daily: list[dict[str, Any]], five: list[dict[str, Any]], asset: dict[str, Any], config: dict[str, Any]) -> list[dict[str, Any]]:
     fee = float(config.get("commission_per_side_bps", 1.2)) / 10000
     slip = float(config.get("slippage_ticks_per_side", 1))
+    latest_daily = datetime.fromisoformat(daily[-1]["datetime"])
+    evaluation_start = (latest_daily - timedelta(days=int(config.get("backtest_calendar_days", 365)))).isoformat(sep=" ")
     definitions = [
         ("daily_four_factor", "日线四因子", daily, _daily_four_factor, "daily", 60),
         ("ma_trend", "移动均线10/30/60", daily, _ma_trend, "daily", 60),
         ("fibonacci_0618", "斐波那契0.618通道", daily, _fibonacci_channel, "daily", 60),
         ("fdt_channel", "FDT启发通道共振", daily, _fdt_channel_baseline, "daily", 60),
+        ("turtle_20_10", "Turtle 20/10通道", daily, _make_turtle_signal(), "daily", 60),
+        ("bollinger_cci", "布林突破 + CCI", daily, _make_bollinger_cci_signal(), "daily", 60),
+        ("ewmac_ensemble", "多周期EWMAC", daily, _ewmac_ensemble, "daily", 200),
+        ("tsmom_ensemble", "TSMOM 20/60/120", daily, _tsmom_ensemble, "daily", 130),
+        ("risk_adjusted_trend", "20日风险调整趋势", daily, _risk_adjusted_trend_signal, "daily", 60),
         ("five_minute_momentum", "5分钟动量", five, _five_minute_momentum, "5m", 60),
     ]
     output = []
     for key, name, bars, function, frequency, warmup in definitions:
-        result = run_strategy(bars, function, float(asset["tick"]), frequency, fee, slip, warmup)
-        output.append({"key": key, "name": name, **result})
+        result = run_strategy(bars, function, float(asset["tick"]), frequency, fee, slip, warmup, evaluation_start if frequency == "daily" else None)
+        output.append({"key": key, "name": name, "ranking_eligible": frequency == "daily", **result})
     return output
-
