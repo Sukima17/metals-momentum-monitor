@@ -1,0 +1,21 @@
+name: Daily close fallback scan
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 15:27 Asia/Shanghai. Kept separate from the high-frequency workflow so
+    # GitHub schedule throttling cannot silently remove the only close scan.
+    - cron: "27 7 * * 1-5"
+    # A second off-peak fallback at 15:47 protects against a delayed/missed run.
+    - cron: "47 7 * * 1-5"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  refresh-and-deploy:
+    uses: ./.github/workflows/pages.yml
+    with:
+      full_scan: true

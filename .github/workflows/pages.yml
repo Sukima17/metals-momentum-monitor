@@ -4,6 +4,13 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      full_scan:
+        description: Run the complete daily model scan before deployment
+        required: false
+        type: boolean
+        default: true
   schedule:
     - cron: "*/15 1-7 * * 1-5"
     - cron: "*/15 13-18 * * 1-5"
@@ -43,11 +50,11 @@ jobs:
       - name: Restore latest cloud snapshot
         run: if [ -f state/cloud_latest.json ]; then cp state/cloud_latest.json dist/latest.json; fi
       - name: Refresh real market snapshot
-        if: github.event_name != 'schedule' || github.event.schedule == '20 7 * * 1-5'
+        if: github.event_name != 'schedule' || github.event.schedule == '20 7 * * 1-5' || inputs.full_scan == true
         continue-on-error: true
         run: python momentum_monitor.py --scan
       - name: Refresh breadth only
-        if: github.event_name == 'schedule' && github.event.schedule != '20 7 * * 1-5'
+        if: github.event_name == 'schedule' && github.event.schedule != '20 7 * * 1-5' && inputs.full_scan != true
         continue-on-error: true
         run: python momentum_monitor.py --breadth-only
       - name: Preserve latest cloud snapshot
