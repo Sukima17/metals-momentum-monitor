@@ -243,20 +243,30 @@ def run_strategy(
 
     trades: list[float] = []
     entry_price: float | None = None
+    entry_cost = 0.0
     side = 0
+
+    def side_cost(price: float) -> float:
+        return fee_per_side + slippage_ticks * tick / price if price > 0 else 0.0
+
     for index in range(evaluation_index, len(bars)):
         target = targets[index]
         execution = bars[index]["open"]
         if target == side:
             continue
         if side and entry_price:
-            costs = 2 * fee_per_side + 2 * slippage_ticks * tick / entry_price
-            trades.append(side * (execution / entry_price - 1) - costs)
+            trades.append(side * (execution / entry_price - 1) - entry_cost - side_cost(execution))
         entry_price = execution if target else None
+        entry_cost = side_cost(execution) if target else 0.0
         side = target
+
+    # An open position is not a completed round trip.  Keep its mark-to-market
+    # separate so it cannot inflate trade count or win rate.
+    open_trade_unrealized_pct = None
     if side and entry_price:
-        costs = 2 * fee_per_side + 2 * slippage_ticks * tick / entry_price
-        trades.append(side * (bars[-1]["close"] / entry_price - 1) - costs)
+        open_trade_unrealized_pct = (
+            side * (float(bars[-1]["close"]) / entry_price - 1) - entry_cost
+        ) * 100
 
     positive = sum(value > 0 for value in trades)
     gross_profit = sum(value for value in trades if value > 0)
@@ -282,6 +292,148 @@ def run_strategy(
         "positive_trades": positive, "latest_target": targets[-1],
         "sample_start": bars[evaluation_index]["datetime"], "sample_end": bars[-1]["datetime"],
         "observations": len(interval_returns), "return_series": return_series,
+        "open_position": side, "open_trade_unrealized_pct": open_trade_unrealized_pct,
+        "trade_definition": "仅统计已平仓往返交易；未平仓浮盈亏单列，不计入交易数或胜率。",
+    }
+
+
+def run_four_factor_fib_atr(
+    bars: list[dict[str, Any]], tick: float, frequency: str = "daily",
+    fee_per_side: float = 0.00012, slippage_ticks: float = 1.0,
+    warmup: int = 60, evaluation_start: str | None = None,
+) -> dict[str, Any]:
+    """Four-factor entries with persistent ATR stop and lagged 0.618 trailing exit.
+
+    Signals are observed at close[i-1] and executed at open[i].  A zero score
+    holds the existing position rather than forcing an exit.  The trailing
+    level used inside bar[i] is based only on completed bars through i-1; bar
+    i's high/low can update the level for the following bar, never itself.
+    """
+    if len(bars) < warmup + 5:
+        return {"status": "insufficient", "frequency": frequency, "trades": 0, "net_return_pct": None}
+    evaluation_index = warmup + 1
+    if evaluation_start:
+        evaluation_index = max(
+            evaluation_index,
+            next((index for index, row in enumerate(bars) if row["datetime"] >= evaluation_start), len(bars) - 1),
+        )
+    equity, peak, max_drawdown = 1.0, 1.0, 0.0
+    position = 0
+    entry_price: float | None = None
+    entry_atr = 0.0
+    run_extreme: float | None = None
+    trailing_level: float | None = None
+    trade_cost = 0.0
+    trades: list[float] = []
+    interval_returns: list[float] = []
+    return_series: list[dict[str, Any]] = []
+    stop_exits = 0
+    reversal_exits = 0
+
+    def side_cost(price: float) -> float:
+        return fee_per_side + slippage_ticks * tick / price if price > 0 else 0.0
+
+    def close_trade(exit_price: float, reason: str) -> None:
+        nonlocal position, entry_price, entry_atr, run_extreme, trailing_level, trade_cost, stop_exits, reversal_exits
+        if position and entry_price:
+            exit_cost = side_cost(exit_price)
+            trades.append(position * (exit_price / entry_price - 1) - trade_cost - exit_cost)
+            if reason == "stop":
+                stop_exits += 1
+            elif reason == "reversal":
+                reversal_exits += 1
+        position = 0
+        entry_price = None
+        entry_atr = 0.0
+        run_extreme = None
+        trailing_level = None
+        trade_cost = 0.0
+
+    for index in range(evaluation_index, len(bars) - 1):
+        bar = bars[index]
+        opening = float(bar["open"])
+        next_open = float(bars[index + 1]["open"])
+        desired = _daily_four_factor(bars, index - 1)
+        period_return = 0.0
+
+        if desired and desired != position:
+            if position:
+                period_return -= side_cost(opening)
+                close_trade(opening, "reversal")
+            position = desired
+            entry_price = opening
+            entry_atr = _atr(bars, index - 1)
+            run_extreme = opening
+            trailing_level = None
+            trade_cost = side_cost(opening)
+            period_return -= trade_cost
+
+        exited = False
+        if position and entry_price:
+            fixed_stop = entry_price - 2 * entry_atr if position > 0 else entry_price + 2 * entry_atr
+            active_stop = fixed_stop
+            if trailing_level is not None:
+                active_stop = max(active_stop, trailing_level) if position > 0 else min(active_stop, trailing_level)
+            if position > 0 and opening <= active_stop:
+                exit_price = opening
+                exited = True
+            elif position < 0 and opening >= active_stop:
+                exit_price = opening
+                exited = True
+            elif position > 0 and float(bar["low"]) <= active_stop:
+                exit_price = active_stop
+                exited = True
+            elif position < 0 and float(bar["high"]) >= active_stop:
+                exit_price = active_stop
+                exited = True
+            if exited:
+                period_return += position * (exit_price / opening - 1) - side_cost(exit_price)
+                close_trade(exit_price, "stop")
+            else:
+                period_return += position * (next_open / opening - 1)
+                if position > 0:
+                    run_extreme = max(float(run_extreme or entry_price), float(bar["high"]))
+                    if run_extreme >= entry_price * 1.002:
+                        trailing_level = entry_price + (run_extreme - entry_price) * 0.618
+                else:
+                    run_extreme = min(float(run_extreme or entry_price), float(bar["low"]))
+                    if run_extreme <= entry_price * 0.998:
+                        trailing_level = entry_price - (entry_price - run_extreme) * 0.618
+
+        interval_returns.append(period_return)
+        return_series.append({"date": bars[index + 1]["datetime"][:10], "return": period_return})
+        equity *= 1 + period_return
+        peak = max(peak, equity)
+        max_drawdown = min(max_drawdown, equity / peak - 1)
+
+    latest_signal = _daily_four_factor(bars, len(bars) - 1)
+    latest_target = latest_signal if latest_signal and latest_signal != position else position
+    unrealized_trade_pct = None
+    if position and entry_price:
+        unrealized_trade_pct = (
+            position * (float(bars[-1]["close"]) / entry_price - 1) - trade_cost
+        ) * 100
+    positive = sum(value > 0 for value in trades)
+    gross_profit = sum(value for value in trades if value > 0)
+    gross_loss = abs(sum(value for value in trades if value < 0))
+    mean_return = statistics.fmean(interval_returns) if interval_returns else 0.0
+    volatility = statistics.stdev(interval_returns) if len(interval_returns) > 1 else 0.0
+    sharpe = mean_return / volatility * math.sqrt(252) if volatility > 0 else 0.0
+    return {
+        "status": "ok", "frequency": frequency, "trades": len(trades),
+        "win_rate_pct": positive / len(trades) * 100 if trades else None,
+        "net_return_pct": (equity - 1) * 100,
+        "annual_return_pct": (equity ** (252 / max(1, len(interval_returns))) - 1) * 100 if equity > 0 else -100.0,
+        "max_drawdown_pct": max_drawdown * 100, "sharpe": sharpe,
+        "profit_factor": gross_profit / gross_loss if gross_loss > 0 else None,
+        "avg_trade_pct": statistics.fmean(trades) * 100 if trades else None,
+        "positive_trades": positive, "latest_target": latest_target,
+        "sample_start": bars[evaluation_index]["datetime"], "sample_end": bars[-1]["datetime"],
+        "observations": len(interval_returns), "return_series": return_series,
+        "open_position": position, "open_trade_unrealized_pct": unrealized_trade_pct,
+        "stop_exits": stop_exits, "reversal_exits": reversal_exits,
+        "trade_definition": "仅统计已平仓往返交易；零评分保持原仓；未平仓浮盈亏单列，不计胜率。",
+        "execution_note": "收盘信号次日开盘执行；2×ATR固定止损；0.618追踪线仅用前一日已完成高低点，跳空按开盘不利成交。",
     }
 
 
@@ -320,6 +472,37 @@ def _extended_horizon_result(
     }
 
 
+def _extended_managed_horizon_result(
+    bars: list[dict[str, Any]], tick: float, fee: float, slip: float, warmup: int = 60,
+) -> dict[str, Any]:
+    """Long-window verification for the managed four-factor strategy."""
+    if not bars:
+        return {"status": "insufficient", "window_label": "长周期数据不足", "selection_role": "context_only"}
+    latest = datetime.fromisoformat(bars[-1]["datetime"])
+    parsed = [datetime.fromisoformat(row["datetime"]) for row in bars]
+    for years in (5, 3):
+        evaluation_start = latest - timedelta(days=round(365.25 * years))
+        evaluation_index = next((index for index, value in enumerate(parsed) if value >= evaluation_start), len(bars))
+        if evaluation_index < warmup + 1 or len(bars) - evaluation_index < 200 * years:
+            continue
+        scoped = bars[max(0, evaluation_index - warmup - 5) :]
+        result = run_four_factor_fib_atr(
+            scoped, tick, "daily", fee, slip, warmup, evaluation_start.isoformat(sep=" "),
+        )
+        result.pop("return_series", None)
+        return {
+            **result, "window_years": years, "window_label": f"{years}年",
+            "selection_role": "context_only",
+            "source_mode": "同一行情源的主力连续日线（真实历史，未补造）",
+            "note": "固定参数长期核验；不因焦煤近期结果调参，也不替代最近一年硬门槛。",
+        }
+    return {
+        "status": "insufficient", "window_label": "长周期数据不足", "selection_role": "context_only",
+        "available_start": bars[0]["datetime"], "available_end": bars[-1]["datetime"],
+        "note": "真实日线覆盖不足3年，未补造历史。",
+    }
+
+
 def compare_strategies(
     daily: list[dict[str, Any]], five: list[dict[str, Any]], asset: dict[str, Any], config: dict[str, Any],
     extended_daily: list[dict[str, Any]] | None = None,
@@ -350,4 +533,17 @@ def compare_strategies(
         if low_turnover:
             row["long_horizon"] = _extended_horizon_result(history, signal_factory, float(asset["tick"]), fee, slip, warmup)
         output.append(row)
+    managed = run_four_factor_fib_atr(
+        daily, float(asset["tick"]), "daily", fee, slip, 60, evaluation_start,
+    )
+    managed_row = {
+        "key": "four_factor_fib_atr", "name": "四因子入场 + 0.618/ATR持仓管理",
+        "ranking_eligible": True,
+        "low_turnover": int(managed.get("trades") or 0) < minimum_trades,
+        **managed,
+    }
+    managed_row["long_horizon"] = _extended_managed_horizon_result(
+        history, float(asset["tick"]), fee, slip, 60,
+    )
+    output.append(managed_row)
     return output

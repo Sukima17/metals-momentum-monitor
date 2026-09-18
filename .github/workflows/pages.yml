@@ -13,6 +13,7 @@ on:
         default: true
   schedule:
     - cron: "*/15 1-7 * * 1-5"
+    - cron: "15 10 * * 1-5"
     - cron: "*/15 13-18 * * 1-5"
     - cron: "20 7 * * 1-5"
 
@@ -23,7 +24,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
@@ -49,12 +50,25 @@ jobs:
           restore-keys: paper-ledger-
       - name: Restore latest cloud snapshot
         run: if [ -f state/cloud_latest.json ]; then cp state/cloud_latest.json dist/latest.json; fi
+      - name: Determine refresh mode
+        id: refresh_mode
+        shell: bash
+        run: |
+          shanghai_hm="$(TZ=Asia/Shanghai date +%H%M)"
+          full_scan=false
+          if [[ "${{ github.event_name }}" != "schedule" || "${{ inputs.full_scan }}" == "true" ]]; then
+            full_scan=true
+          elif (( 10#$shanghai_hm >= 1515 && 10#$shanghai_hm < 2100 )); then
+            full_scan=true
+          fi
+          echo "full_scan=$full_scan" >> "$GITHUB_OUTPUT"
+          echo "Shanghai time $shanghai_hm; full_scan=$full_scan"
       - name: Refresh real market snapshot
-        if: github.event_name != 'schedule' || github.event.schedule == '20 7 * * 1-5' || inputs.full_scan == true
+        if: steps.refresh_mode.outputs.full_scan == 'true'
         continue-on-error: true
         run: python momentum_monitor.py --scan
       - name: Refresh breadth only
-        if: github.event_name == 'schedule' && github.event.schedule != '20 7 * * 1-5' && inputs.full_scan != true
+        if: steps.refresh_mode.outputs.full_scan != 'true'
         continue-on-error: true
         run: python momentum_monitor.py --breadth-only
       - name: Preserve latest cloud snapshot

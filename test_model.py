@@ -24,7 +24,8 @@ from momentum_monitor import (
     select_asset_strategy,
 )
 from market_universe import UNIVERSE
-from research_backtest import _extended_horizon_result, _ma_trend, compare_strategies, run_strategy
+import research_backtest
+from research_backtest import _extended_horizon_result, _ma_trend, compare_strategies, run_strategy, run_four_factor_fib_atr
 
 
 def make_bars(direction: int) -> list[dict]:
@@ -98,10 +99,34 @@ if __name__ == "__main__":
     assert levels["long_atr_stop"] == 96 and levels["short_atr_stop"] == 104
     assert levels["long_break_even_trigger"] == 100.2
     comparison = compare_strategies(make_bars(1), make_bars(1), {"tick": 0.1}, config)
-    assert len(comparison) == 10
+    assert len(comparison) == 11
     assert {row["frequency"] for row in comparison} == {"daily", "5m"}
     friction_test = run_strategy(make_bars(1), lambda bars, index: 1, 0.1, "daily", 0.00012, 1, 60)
-    assert friction_test["trades"] == 1 and friction_test["net_return_pct"] is not None
+    assert friction_test["trades"] == 0 and friction_test["open_position"] == 1
+    assert friction_test["open_trade_unrealized_pct"] is not None and friction_test["net_return_pct"] is not None
+
+    # A trailing level learned from today's high may only be used tomorrow.
+    # If today's high and low were both used in sequence, this daily-OHLC case
+    # would manufacture a large winning exit despite unknown intraday ordering.
+    path_bars = []
+    for index in range(9):
+        high, low = (120.0, 99.0) if index == 2 else (101.0, 99.0)
+        path_bars.append({
+            "datetime": (datetime(2026, 1, 1) + timedelta(days=index)).strftime("%Y-%m-%d"),
+            "open": 100.0, "high": high, "low": low, "close": 100.0,
+            "volume": 100, "hold": 1000,
+        })
+    original_four_factor = research_backtest._daily_four_factor
+    original_atr = research_backtest._atr
+    try:
+        research_backtest._daily_four_factor = lambda bars, index: 1 if index == 1 else 0
+        research_backtest._atr = lambda bars, index: 10.0
+        lagged_trailing = run_four_factor_fib_atr(path_bars, 0.1, warmup=1)
+    finally:
+        research_backtest._daily_four_factor = original_four_factor
+        research_backtest._atr = original_atr
+    assert lagged_trailing["trades"] == 1 and lagged_trailing["stop_exits"] == 1
+    assert lagged_trailing["avg_trade_pct"] < 0
     assert {row[2] for row in UNIVERSE} >= {"SHFE", "SHFE/INE", "DCE", "CZCE", "GFEX", "CFFEX"}
     assert {row[3] for row in UNIVERSE} >= {"precious", "nonferrous", "ferrous", "energy", "agriculture", "new_energy", "financial"}
     assert len(config["assets"]) == 17
