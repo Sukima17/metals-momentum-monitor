@@ -180,11 +180,13 @@ if __name__ == "__main__":
     assert long_result["status"] == "ok" and long_result["window_years"] == 5 and long_result["selection_role"] == "context_only"
     operation = build_operation_research_view({
         "signal": "long", "capital_bucket": "trend_long", "strategy_selection": selection,
-        "volatility_control": {"position_multiplier": 0.5},
+        "volatility_control": {"position_multiplier": 0.5, "regime_text": "波动偏高"},
         "trend_quality": {"risk_adjusted_trend": 0.8},
         "calendar_spread": {"status": "ok", "structure": "backwardation", "structure_side": 1},
     })
     assert operation["action"] == "顺势做多" and operation["capital_alignment"] == "确认" and operation["calendar_alignment"] == "同向参考"
+    assert len(operation["votes"]) == 4 and not operation["conflicts"]
+    assert any("仓位上限" in item for item in operation["risk_warnings"])
     spread_warning = build_operation_research_view({
         "signal": "long", "capital_bucket": "trend_long", "strategy_selection": selection,
         "volatility_control": {"position_multiplier": 1.0},
@@ -192,6 +194,16 @@ if __name__ == "__main__":
         "calendar_spread": {"status": "ok", "structure": "contango", "structure_side": -1},
     })
     assert spread_warning["action"] == "顺势做多" and spread_warning["calendar_alignment"] == "风险提示"
+    assert any("月差" in item for item in spread_warning["risk_warnings"])
+    all_conflicts = build_operation_research_view({
+        "signal": "long", "capital_bucket": "warn_long", "strategy_selection": selection,
+        "volatility_control": {"position_multiplier": 0.5, "regime_text": "波动偏高"},
+        "trend_quality": {"risk_adjusted_trend": -0.7},
+        "calendar_spread": {"status": "ok", "structure": "contango", "structure_side": -1},
+    })
+    assert all_conflicts["action"] == "暂缓开仓"
+    assert any("风险调整趋势" in item and "相反" in item for item in all_conflicts["conflicts"])
+    assert len(all_conflicts["risk_warnings"]) == 3
     allocation_with_spread_warning = build_allocation_targets([{
         "id": "copper", "price": 100_000, "multiplier": 5, "signal": "long",
         "strategy_comparison": [{"key": "robust", "latest_target": 1}],

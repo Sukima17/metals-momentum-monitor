@@ -16,7 +16,7 @@
       <button class="nav-item" data-scroll="operation"><span>02</span> 操作总结</button>
       <button class="nav-item" data-scroll="capital"><span>03</span> 资金流向</button>
       <button class="nav-item" data-scroll="changes"><span>04</span> 信号变化</button>
-      <button class="nav-item" data-scroll="matrix"><span>05</span> 信号矩阵</button>
+      <button class="nav-item" data-scroll="matrix"><span>05</span> 技术信号矩阵</button>
       <button class="nav-item" data-scroll="technical"><span>06</span> 技术全景</button>
       <button class="nav-item" data-scroll="trendQuality"><span>07</span> 趋势质量</button>
       <button class="nav-item" data-scroll="performance"><span>08</span> 策略回测</button>
@@ -41,9 +41,9 @@
     <section id="majorAlert" class="major-alert" hidden aria-live="assertive"></section>
 
     <section class="panel operation-panel" id="operation">
-      <div class="section-head"><div><p class="eyebrow">TECHNICAL × METHOD × TERM STRUCTURE × OI</p><h2>操作总结 · 技术指标为主</h2></div><span class="scope-note">月差背离仅作风险提示 · 不改变方向</span></div>
+      <div class="section-head"><div><p class="eyebrow">FOUR-VOTE EXECUTION GATE</p><h2>操作总结 · 四票逐项核验</h2></div><span class="scope-note">方向三票须一致 · 波动率决定仓位上限</span></div>
       <div id="operationRows" class="operation-rows"></div>
-      <p class="panel-note">方向由综合技术信号、该品种回测选优方法与20日风险调整趋势共同决定；近月月差背离只作风险提示，不改变方向或模拟盘仓位；价格与品种总持仓仅作资金结构交叉验证。波动率只调整仓位上限，不自动改变方向。</p>
+      <p class="panel-note">四票依次为技术方向、适配方法、20日风险调整趋势和波动仓位。前三票方向一致才形成可执行方向；第四票只给出仓位上限。所有阻断项与风险提示同时列出，近月月差和价格×总持仓不参与方向投票。</p>
     </section>
 
     <section class="panel capital-panel" id="capital">
@@ -59,7 +59,7 @@
     </section>
 
     <section class="panel" id="matrix">
-      <div class="section-head"><div><p class="eyebrow">SIGNAL MATRIX</p><h2>金属与黑色信号矩阵</h2></div><div class="filters" role="group" aria-label="筛选信号"><button class="filter active" data-filter="all">全部</button><button class="filter" data-filter="metals">金属</button><button class="filter" data-filter="ferrous">黑色</button><button class="filter" data-filter="long">偏多</button><button class="filter" data-filter="short">偏空</button><button class="filter" data-filter="watch">观察</button><button class="filter" data-filter="missing">异常</button></div></div>
+      <div class="section-head"><div><p class="eyebrow">TECHNICAL SIGNAL MATRIX</p><h2>金属与黑色技术信号矩阵</h2></div><div class="filters" role="group" aria-label="筛选技术信号"><button class="filter active" data-filter="all">全部</button><button class="filter" data-filter="metals">金属</button><button class="filter" data-filter="ferrous">黑色</button><button class="filter" data-filter="long">偏多</button><button class="filter" data-filter="short">偏空</button><button class="filter" data-filter="watch">观察</button><button class="filter" data-filter="missing">异常</button></div></div>
       <div id="cards" class="cards" aria-live="polite"></div>
     </section>
 

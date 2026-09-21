@@ -1280,7 +1280,7 @@ def update_strategy_forward_watch(
 
 
 def build_operation_research_view(asset: dict[str, Any]) -> dict[str, Any]:
-    """Combine technical evidence first, then use OI structure only as context."""
+    """Expose four auditable votes and every blocker instead of short-circuiting."""
     signal = asset.get("signal", "neutral")
     technical_side = 1 if signal in ("long", "watch_long") else -1 if signal in ("short", "watch_short") else 0
     hard_signal = signal in ("long", "short")
@@ -1300,40 +1300,100 @@ def build_operation_research_view(asset: dict[str, Any]) -> dict[str, Any]:
         "warn_long": "涨价减仓 · 警惕继续追多", "warn_short": "跌价减仓 · 警惕继续追空",
         "divergence": "价格或总持仓变化不显著",
     }
-    if technical_side and selected and method_side == technical_side and trend_side == technical_side:
-        action = "顺势做多" if technical_side > 0 and hard_signal else "顺势做空" if technical_side < 0 and hard_signal else "观察偏多" if technical_side > 0 else "观察偏空"
-        reason = "综合技术、品种选优方法与风险调整趋势三者一致"
-    elif technical_side and selected and method_side == technical_side:
-        action, reason = "等待趋势确认", "技术方向与品种选优方法一致，但20日风险调整趋势未确认"
-    elif technical_side and selected and method_side == -technical_side:
-        action, reason = "暂缓开仓", "综合技术方向与品种选优方法冲突"
-    elif technical_side and selected and method_side == 0:
-        action, reason = "等待方法确认", "技术方向已形成，但品种选优方法当前为空仓"
-    elif technical_side and not selected:
-        action, reason = "仅观察技术方向", "该品种尚无通过可靠性门槛的固定方法"
+    signal_labels = {
+        "long": "技术偏多", "short": "技术偏空", "watch_long": "观察偏多",
+        "watch_short": "观察偏空", "neutral": "多空分歧", "missing": "数据缺失",
+    }
+    side_labels = {1: "偏多", -1: "偏空", 0: "中性"}
+    volatility = asset.get("volatility_control", {})
+    multiplier = float(volatility.get("position_multiplier") or 0)
+    regime_text = str(volatility.get("regime_text") or "波动状态缺失")
+
+    conflicts: list[str] = []
+    risk_warnings: list[str] = []
+    if not technical_side:
+        conflicts.append("综合技术尚未形成明确多空方向")
     else:
-        action, reason = "观望", "综合技术方向尚未形成"
+        if not selected:
+            conflicts.append("没有适配方法通过最近一年交易数、收益与Sharpe门槛")
+        elif method_side == 0:
+            conflicts.append(f"适配方法“{selected['name']}”当前为空仓")
+        elif method_side != technical_side:
+            conflicts.append(
+                f"适配方法“{selected['name']}”{side_labels[method_side]}，与{signal_labels.get(signal, '技术方向')}相反"
+            )
+        if trend_side == 0:
+            conflicts.append(f"20日风险调整趋势{risk_adjusted:+.2f}，未达到±0.25确认阈值")
+        elif trend_side != technical_side:
+            conflicts.append(
+                f"20日风险调整趋势{risk_adjusted:+.2f}（{side_labels[trend_side]}），与{signal_labels.get(signal, '技术方向')}相反"
+            )
+    if multiplier <= 0:
+        conflicts.append("波动率仓位票不可用，暂不允许配置仓位")
+    elif multiplier < 1:
+        risk_warnings.append(f"{regime_text}，目标仓位上限缩放至{multiplier * 100:.0f}%")
+
+    aligned = bool(
+        technical_side and selected and method_side == technical_side
+        and trend_side == technical_side and multiplier > 0
+    )
+    directional_conflict = bool(
+        technical_side and (
+            (selected and method_side and method_side != technical_side)
+            or (trend_side and trend_side != technical_side)
+        )
+    )
+    if aligned:
+        action = "顺势做多" if technical_side > 0 and hard_signal else "顺势做空" if technical_side < 0 and hard_signal else "观察偏多" if technical_side > 0 else "观察偏空"
+    elif directional_conflict:
+        action = "暂缓开仓"
+    elif technical_side and not selected:
+        action = "仅观察技术方向"
+    elif technical_side:
+        action = "等待全部确认"
+    else:
+        action = "观望"
     if technical_side and spread_side == technical_side:
         spread_alignment = "同向参考"
-        reason += "；近月月差结构同向，仅作风险参考"
     elif technical_side and spread_side == -technical_side:
         spread_alignment = "风险提示"
-        reason += "；近月月差结构背离，仅提示风险、不改变方向"
+        risk_warnings.append("近月月差结构与技术方向背离，仅作风险提示、不改变方向票")
     elif calendar_spread.get("status") == "ok":
         spread_alignment = "中性"
-        reason += "；近远月接近平水"
     else:
         spread_alignment = "数据缺失"
-        reason += "；近月月差暂缺，不据此反向"
+        risk_warnings.append("近月月差暂缺，不据此反向")
     if technical_side > 0:
         flow_alignment = "确认" if capital == "trend_long" else "背离" if capital in ("trend_short", "warn_long") else "中性"
     elif technical_side < 0:
         flow_alignment = "确认" if capital == "trend_short" else "背离" if capital in ("trend_long", "warn_short") else "中性"
     else:
         flow_alignment = "仅供参考"
-    multiplier = float(asset.get("volatility_control", {}).get("position_multiplier") or 0)
-    if technical_side and multiplier <= 0.5:
-        reason += f"；波动率偏高，仓位上限缩放至{multiplier * 100:.0f}%"
+    if flow_alignment == "背离":
+        risk_warnings.append(f"价格×品种总持仓显示“{capital_labels.get(capital, capital_labels['divergence'])}”，仅作资金结构风险参考")
+    reason_parts = (["技术方向、适配方法与20日风险调整趋势一致"] if aligned else conflicts) + risk_warnings
+    reason = "；".join(reason_parts) if reason_parts else "等待有效输入"
+    votes = {
+        "technical": {
+            "name": "技术方向", "side": technical_side,
+            "label": signal_labels.get(signal, "数据缺失"),
+            "detail": "日线四因子 + 周线/60分钟确认",
+        },
+        "method": {
+            "name": "适配方法", "side": method_side if selected else None,
+            "label": side_labels[method_side] if selected and method_side else "空仓" if selected else "无可靠方法",
+            "detail": selected["name"] if selected else "最近一年没有方法通过硬门槛",
+        },
+        "trend": {
+            "name": "风险调整趋势", "side": trend_side,
+            "label": side_labels[trend_side], "detail": f"20日趋势/波动率 = {risk_adjusted:+.2f}",
+        },
+        "volatility": {
+            "name": "波动仓位", "side": None,
+            "label": f"上限{multiplier * 100:.0f}%" if multiplier > 0 else "不可用",
+            "detail": regime_text,
+        },
+    }
     return {
         "action": action, "reason": reason, "technical_signal": signal, "technical_side": technical_side,
         "risk_adjusted_trend": risk_adjusted, "trend_side": trend_side,
@@ -1341,7 +1401,8 @@ def build_operation_research_view(asset: dict[str, Any]) -> dict[str, Any]:
         "calendar_alignment": spread_alignment, "calendar_spread": calendar_spread,
         "selected_method": selected, "capital_reference": capital_labels.get(capital, capital_labels["divergence"]),
         "capital_alignment": flow_alignment, "position_multiplier": multiplier,
-        "priority": "综合技术、品种选优方法与风险调整趋势决定方向；近月月差背离仅作风险提示，不改变方向或仓位；价格×总持仓只作资金结构交叉验证。",
+        "votes": votes, "conflicts": conflicts, "risk_warnings": risk_warnings, "aligned": aligned,
+        "priority": "四票逐项展示：技术方向、适配方法、风险调整趋势决定可执行方向，波动率决定仓位上限；近月月差与价格×总持仓只作风险提示。",
     }
 
 
@@ -2087,7 +2148,7 @@ def scan_once() -> dict[str, Any]:
                 strategy.pop("return_series", None)
         signal_changes = update_signal_change_log(results, generated_at)
         payload = {
-            "schema_version": 13,
+            "schema_version": 14,
             "generated_at": generated_at.isoformat(timespec="seconds"),
             "interval_seconds": int(config["scan_interval_seconds"]),
             "summary": counts,
@@ -2102,7 +2163,7 @@ def scan_once() -> dict[str, Any]:
             "methodology": {
                 "bar": "日线四因子为主；周线和60分钟确认趋势；5分钟仅作盘中预警",
                 "factors": "mom5超过±3% / 突破20日高低 / 收盘相对MA20 / 日线RSI14区间",
-                "decision": "操作总结以日线四因子、周线/小时确认、品种选优方法和20日风险调整趋势共同决定方向；近月月差与价格×总持仓只作风险参考，不改变方向或仓位",
+                "decision": "操作总结逐项展示四票：综合技术方向、品种适配方法、20日风险调整趋势决定可执行方向，波动率决定仓位上限；全部冲突与限制同时展示。近月月差与价格×总持仓只作风险参考，不进入方向投票",
                 "execution": "核心模型在交易日15:20后刷新；全市场行情在交易时段每15分钟刷新；回测绩效只统计最近365个自然日，5分钟策略不进入定时交易信号",
                 "capital_structure": "价格上涨且总持仓增加归为多头增仓；价格下跌且总持仓增加归为空头增仓；上涨缩仓提示警惕追多，下跌缩仓提示警惕追空。该分类只描述价格与总持仓组合，不判定多空持仓归属",
                 "trend_quality": "20日收益率刻画中期趋势，3日收益率相对20日趋势的绝对比例刻画短期噪音；20日收益率除以20日同期限波动率得到风险调整后趋势",
