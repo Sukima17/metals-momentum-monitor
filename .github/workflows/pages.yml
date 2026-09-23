@@ -55,22 +55,17 @@ jobs:
         shell: bash
         run: |
           shanghai_hm="$(TZ=Asia/Shanghai date +%H%M)"
-          full_scan=false
-          if [[ "${{ github.event_name }}" != "schedule" || "${{ inputs.full_scan }}" == "true" ]]; then
-            full_scan=true
-          elif (( 10#$shanghai_hm >= 1515 && 10#$shanghai_hm < 2100 )); then
-            full_scan=true
-          fi
+          # Every cron window in this workflow is a domestic futures trading
+          # session.  Run the full multi-timeframe scan even when GitHub starts
+          # the cron late; breadth-only runs left the displayed 5-minute price
+          # frozen at the prior close.
+          full_scan=true
           echo "full_scan=$full_scan" >> "$GITHUB_OUTPUT"
           echo "Shanghai time $shanghai_hm; full_scan=$full_scan"
       - name: Refresh real market snapshot
         if: steps.refresh_mode.outputs.full_scan == 'true'
         continue-on-error: true
         run: python momentum_monitor.py --scan
-      - name: Refresh breadth only
-        if: steps.refresh_mode.outputs.full_scan != 'true'
-        continue-on-error: true
-        run: python momentum_monitor.py --breadth-only
       - name: Preserve latest cloud snapshot
         run: mkdir -p state && cp dist/latest.json state/cloud_latest.json
       - name: Save paper-trading ledger
