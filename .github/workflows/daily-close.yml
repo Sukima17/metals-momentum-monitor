@@ -8,6 +8,9 @@ on:
     - cron: "27 7 * * 1-5"
     # A second off-peak fallback at 15:47 protects against a delayed/missed run.
     - cron: "47 7 * * 1-5"
+    # Final 16:10 verification catches providers that publish completed daily
+    # bars later than the ordinary post-close window.
+    - cron: "10 8 * * 1-5"
 
 permissions:
   contents: read

@@ -1,6 +1,7 @@
 """Small deterministic checks for the signal engine; run with `python test_model.py`."""
 
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 from momentum_monitor import (
     EASTMONEY_WEIGHTED_CODES,
@@ -20,6 +21,7 @@ from momentum_monitor import (
     _capped_allocation_weights,
     build_allocation_targets,
     build_operation_research_view,
+    build_live_daily_bar,
     contract_expiry_month,
     select_asset_strategy,
 )
@@ -51,6 +53,20 @@ def make_bars(direction: int) -> list[dict]:
 
 def latest_signal(direction: int) -> dict:
     config = load_config()
+    completed = [{"datetime": "2026-10-16", "open": 100, "high": 105, "low": 99, "close": 104, "volume": 20, "hold": 1000}]
+    live_five = [
+        {"datetime": "2026-10-16 21:05:00", "open": 105, "high": 107, "low": 104, "close": 106, "volume": 4, "hold": 1001},
+        {"datetime": "2026-10-19 09:05:00", "open": 106, "high": 109, "low": 105, "close": 108, "volume": 6, "hold": 1004},
+        {"datetime": "2026-10-19 14:55:00", "open": 108, "high": 110, "low": 107, "close": 109, "volume": 8, "hold": 1008},
+    ]
+    forming = build_live_daily_bar(completed, completed, live_five, {"bar_timezone": "Asia/Shanghai", "exchange": "SHFE"}, datetime(2026, 10, 19, 14, 56, tzinfo=ZoneInfo("Asia/Shanghai")))
+    assert forming and forming["datetime"] == "2026-10-19" and forming["open"] == 105
+    assert forming["high"] == 110 and forming["low"] == 104 and forming["close"] == 109
+    assert forming["status"] == "forming" and forming["source_mode"] == "derived_from_real_5m"
+    closed_five = live_five + [{"datetime": "2026-10-19 15:00:00", "open": 109, "high": 109, "low": 108, "close": 108.5, "volume": 2, "hold": 1009}]
+    observed = build_live_daily_bar(completed, completed, closed_five, {"bar_timezone": "Asia/Shanghai", "exchange": "SHFE"}, datetime(2026, 10, 19, 15, 10, tzinfo=ZoneInfo("Asia/Shanghai")))
+    assert observed and observed["status"] == "close_observed" and observed["close"] == 108.5
+    assert completed[-1]["datetime"] == "2026-10-16", "盘中聚合不得覆盖已确认日线"
     bars = make_bars(direction)
     closes = [bar["close"] for bar in bars]
     fast = ema(closes, config["ema_fast"])

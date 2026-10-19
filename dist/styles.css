@@ -41,3 +41,6 @@ body{background:linear-gradient(135deg,#f5fbff 0,#eaf6ff 52%,#dff1ff 100%)}.rail
 /* Honest cloud refresh controls and visible model freshness. */
 .cloud-scan{display:inline-flex;align-items:center;text-decoration:none;white-space:nowrap;background:#eaf6ff}.clock small.stale{color:#b56b18;font-weight:700}
 @media(max-width:840px){.top-actions{flex-wrap:wrap}.clock{display:flex;order:3;width:100%;padding:4px 0 0;border:0}.clock small{font-size:9px}.cloud-scan{justify-content:center}}
+
+/* Real-time daily-bar lane: visually separate provisional observations from confirmed closes. */
+.live-daily-note{padding:9px 10px;border:1px solid #8fc8f4;border-radius:8px;background:#eef8ff}.live-daily-note b,.live-daily-note span,.live-daily-note small{display:block}.live-daily-note b{color:#1465a5;font-size:12px}.live-daily-note span{margin-top:3px;color:#315f82;font:10px ui-monospace,monospace}.live-daily-note small{margin-top:4px;color:#6f879b;font-size:9px;line-height:1.4}.live-daily-metric{border:1px solid #b8dcf7;border-left:3px solid #4a9bd5;background:#eef8ff}.live-daily-metric i{display:block;margin-top:4px;color:#4d7595;font-size:8px;font-style:normal}.live-daily-metric b{white-space:normal}

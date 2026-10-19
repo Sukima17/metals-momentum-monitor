@@ -24,7 +24,7 @@ import traceback
 import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, time as dt_time
+from datetime import datetime, time as dt_time, timedelta
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -868,6 +868,110 @@ def prepare_bars(
         cutoff = local_now.replace(tzinfo=None)
         bars = [bar for bar in unique if datetime.fromisoformat(bar["datetime"]) <= cutoff]
     return bars, {"duplicate_bars_removed": raw_count - len(unique), "incomplete_bars_excluded": len(unique) - len(bars)}
+
+
+def _next_weekday(value: datetime) -> str:
+    """Infer the trading date for a domestic-futures night-session bar."""
+    candidate = value.date() + timedelta(days=1)
+    while candidate.weekday() >= 5:
+        candidate += timedelta(days=1)
+    return candidate.isoformat()
+
+
+def build_live_daily_bar(
+    raw_daily: list[dict[str, Any]],
+    completed_daily: list[dict[str, Any]],
+    five_minute: list[dict[str, Any]],
+    asset: dict[str, Any],
+    generated_at: datetime,
+) -> dict[str, Any] | None:
+    """Build a clearly-labelled forming daily bar from real 5-minute observations.
+
+    Completed daily bars remain the only inputs to backtests, paper positions and
+    confirmed signals.  This view is for intraday inspection and is replaced by
+    the provider daily bar as soon as that completed bar is available.
+    """
+    if not completed_daily or not five_minute:
+        return None
+    timezone = ZoneInfo(asset["bar_timezone"])
+    local_now = generated_at.astimezone(timezone)
+    confirmed_date = completed_daily[-1]["datetime"][:10]
+    cutoff = local_now.replace(tzinfo=None)
+
+    # Some providers publish a forming daily bar. Prefer it when present, while
+    # retaining an explicit provisional/confirmed state.
+    raw_candidates = [
+        row for row in raw_daily
+        if row.get("datetime", "")[:10] > confirmed_date
+        and datetime.fromisoformat(row["datetime"]).replace(tzinfo=None) <= cutoff
+    ]
+    if raw_candidates:
+        bar = dict(sorted(raw_candidates, key=lambda row: row["datetime"])[-1])
+        bar_date = bar["datetime"][:10]
+        after_close = local_now.date().isoformat() >= bar_date and local_now.time() >= dt_time(15, 5)
+        return {
+            **bar,
+            "datetime": bar_date,
+            "as_of": generated_at.isoformat(timespec="seconds"),
+            "status": "close_observed" if after_close else "forming",
+            "status_text": "收盘观测 · 待日线源确认" if after_close else "当日日K形成中 · 会变化",
+            "source_mode": "provider_forming_daily",
+            "confirmed_date": confirmed_date,
+            "provisional": True,
+        }
+
+    # Sina's daily endpoint normally publishes only completed sessions. Map
+    # evening bars to the next weekday so Friday night and Monday day session
+    # are aggregated into one trading-day bar.
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for row in five_minute:
+        stamp = datetime.fromisoformat(row["datetime"])
+        if stamp > cutoff:
+            continue
+        trading_date = _next_weekday(stamp) if stamp.time() >= dt_time(20, 0) else stamp.date().isoformat()
+        if trading_date > confirmed_date:
+            grouped.setdefault(trading_date, []).append(row)
+    if not grouped:
+        # No newer intraday observation: expose the confirmed bar consistently.
+        bar = dict(completed_daily[-1])
+        return {
+            **bar,
+            "datetime": confirmed_date,
+            "as_of": confirmed_date,
+            "status": "closed",
+            "status_text": "已确认收盘",
+            "source_mode": "provider_completed_daily",
+            "confirmed_date": confirmed_date,
+            "provisional": False,
+        }
+
+    trading_date = max(grouped)
+    rows = sorted(grouped[trading_date], key=lambda row: row["datetime"])
+    last_stamp = datetime.fromisoformat(rows[-1]["datetime"])
+    saw_session_close = any(
+        datetime.fromisoformat(row["datetime"]).date().isoformat() == trading_date
+        and datetime.fromisoformat(row["datetime"]).time() >= dt_time(15, 0)
+        for row in rows
+    )
+    after_close = local_now.date().isoformat() >= trading_date and local_now.time() >= dt_time(15, 5)
+    close_observed = after_close and saw_session_close
+    return {
+        "datetime": trading_date,
+        "open": float(rows[0]["open"]),
+        "high": max(float(row["high"]) for row in rows),
+        "low": min(float(row["low"]) for row in rows),
+        "close": float(rows[-1]["close"]),
+        "volume": sum(float(row.get("volume") or 0) for row in rows),
+        "hold": float(rows[-1].get("hold") or 0),
+        "settle": 0.0,
+        "as_of": last_stamp.isoformat(sep=" ", timespec="seconds"),
+        "status": "close_observed" if close_observed else "forming",
+        "status_text": "收盘观测 · 待日线源确认" if close_observed else "当日日K形成中 · 会变化",
+        "source_mode": "derived_from_real_5m",
+        "confirmed_date": confirmed_date,
+        "provisional": True,
+        "observations": len(rows),
+    }
 
 
 def point_signal(
@@ -1939,6 +2043,7 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             )
         if len(daily) < 60 or len(hourly) < 35 or len(five) < 35:
             raise ValueError("多周期指标预热数据不足")
+        live_daily_bar = build_live_daily_bar(raw_daily, daily, five, asset, generated_at)
         daily_history = daily
         # Keep the full source response in state/raw, but bound model work to a
         # reproducible recent window so scheduled scans finish well within 5m.
@@ -1950,6 +2055,10 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
         latest = daily_signals[-1]
         if latest is None:
             raise ValueError("日线四因子预热数据不足")
+        live_daily_series = list(daily)
+        if live_daily_bar and live_daily_bar["datetime"] > daily[-1]["datetime"]:
+            live_daily_series.append(live_daily_bar)
+        live_daily_analysis = daily_four_factor(live_daily_series, len(live_daily_series) - 1, config) or latest
         hourly_trend = timeframe_trend(hourly, "小时")
         weekly = aggregate_weekly(daily)
         weekly_trend = timeframe_trend(weekly, "周")
@@ -1980,7 +2089,7 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
         status = "ok" if age_minutes <= 20 else "closed" if not in_research_session(generated_at) else "stale"
         sparkline = [
             {"time": bar["datetime"], "value": round(bar["close"], int(asset["decimals"]) + 2)}
-            for bar in daily[-60:]
+            for bar in live_daily_series[-60:]
         ]
         daily_closes = [bar["close"] for bar in daily]
         holds = [bar["hold"] for bar in daily]
@@ -2056,6 +2165,32 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             "daily_date": daily[-1]["datetime"],
             "daily_open": daily[-1]["open"],
             "daily_close": daily[-1]["close"],
+            "live_daily": {
+                "date": live_daily_bar["datetime"] if live_daily_bar else daily[-1]["datetime"],
+                "open": live_daily_bar["open"] if live_daily_bar else daily[-1]["open"],
+                "high": live_daily_bar["high"] if live_daily_bar else daily[-1]["high"],
+                "low": live_daily_bar["low"] if live_daily_bar else daily[-1]["low"],
+                "close": live_daily_bar["close"] if live_daily_bar else daily[-1]["close"],
+                "as_of": live_daily_bar.get("as_of") if live_daily_bar else daily[-1]["datetime"],
+                "status": live_daily_bar.get("status", "closed") if live_daily_bar else "closed",
+                "status_text": live_daily_bar.get("status_text", "已确认收盘") if live_daily_bar else "已确认收盘",
+                "source_mode": live_daily_bar.get("source_mode", "provider_completed_daily") if live_daily_bar else "provider_completed_daily",
+                "confirmed_date": daily[-1]["datetime"],
+                "provisional": bool(live_daily_bar and live_daily_bar.get("provisional")),
+                "observations": live_daily_bar.get("observations") if live_daily_bar else None,
+                "signal": live_daily_analysis["signal"],
+                "score": live_daily_analysis["score"],
+                "momentum_pct": live_daily_analysis["momentum_pct"],
+                "threshold_pct": live_daily_analysis["threshold_pct"],
+                "ma20": live_daily_analysis["ma20"],
+                "rsi": live_daily_analysis["rsi"],
+                "prior_high": live_daily_analysis["prior_high"],
+                "prior_low": live_daily_analysis["prior_low"],
+                "long_factors": live_daily_analysis["long_factors"],
+                "short_factors": live_daily_analysis["short_factors"],
+                "long_count": live_daily_analysis["long_count"],
+                "short_count": live_daily_analysis["short_count"],
+            },
             "age_minutes": round(age_minutes, 1),
             "bars": {"daily": len(daily), "daily_history": len(daily_history), "hourly": len(hourly), "five": len(five), "weekly": len(weekly)},
             "change_pct": (five_closes[-1] / daily_closes[-1] - 1) * 100,
@@ -2072,7 +2207,7 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
                 technical["values"]["ma20"], technical["values"]["boll_upper"], technical["values"]["boll_lower"],
             ),
             "strategy_comparison": strategy_comparison,
-            "timeframes": {"week": weekly_trend, "day": {"signal": latest["signal"], "vote": latest["long_count"] - latest["short_count"]}, "hour": hourly_trend, "five": {"signal": five_signal["signal"], "score": five_signal["score"]}},
+            "timeframes": {"week": weekly_trend, "day": {"signal": latest["signal"], "vote": latest["long_count"] - latest["short_count"], "confirmed": True}, "day_live": {"signal": live_daily_analysis["signal"], "vote": live_daily_analysis["long_count"] - live_daily_analysis["short_count"], "confirmed": not bool(live_daily_bar and live_daily_bar.get("provisional"))}, "hour": hourly_trend, "five": {"signal": five_signal["signal"], "score": five_signal["score"]}},
             "sparkline": sparkline,
             "source": source,
             "quality": {
@@ -2082,6 +2217,8 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
                 "cache_retrieved_at": cache_times if asset["provider"] == "sina" else {},
                 "last_actual_observation": five[-1]["datetime"],
                 "last_daily_close": daily[-1]["datetime"],
+                "live_daily_status": live_daily_bar.get("status") if live_daily_bar else "closed",
+                "live_daily_source": live_daily_bar.get("source_mode") if live_daily_bar else "provider_completed_daily",
                 "zero_policy": "价格零值保留并在指标计算前校验；成交量/持仓量零值按真实观测保留",
             },
             "backtest": run_backtest(daily, daily_signals, asset, config),
@@ -2148,7 +2285,7 @@ def scan_once() -> dict[str, Any]:
                 strategy.pop("return_series", None)
         signal_changes = update_signal_change_log(results, generated_at)
         payload = {
-            "schema_version": 14,
+            "schema_version": 15,
             "generated_at": generated_at.isoformat(timespec="seconds"),
             "interval_seconds": int(config["scan_interval_seconds"]),
             "summary": counts,
@@ -2161,10 +2298,10 @@ def scan_once() -> dict[str, Any]:
             "signal_changes": signal_changes,
             "assets": results,
             "methodology": {
-                "bar": "日线四因子为主；周线和60分钟确认趋势；5分钟仅作盘中预警",
+                "bar": "双轨日K：盘中以真实5分钟OHLC聚合当日形成中日K并实时试算；已确认日线四因子仍为正式方向票，周线和60分钟确认趋势",
                 "factors": "mom5超过±3% / 突破20日高低 / 收盘相对MA20 / 日线RSI14区间",
                 "decision": "操作总结逐项展示四票：综合技术方向、品种适配方法、20日风险调整趋势决定可执行方向，波动率决定仓位上限；全部冲突与限制同时展示。近月月差与价格×总持仓只作风险参考，不进入方向投票",
-                "execution": "核心模型在交易日15:20后刷新；全市场行情在交易时段每15分钟刷新；回测绩效只统计最近365个自然日，5分钟策略不进入定时交易信号",
+                "execution": "交易时段约每15分钟刷新当日形成中日K；15:00后先显示收盘观测值并在15:20、15:27、15:47及16:10复核日线源。回测、模拟盘与正式方向票只使用已确认收盘K线",
                 "capital_structure": "价格上涨且总持仓增加归为多头增仓；价格下跌且总持仓增加归为空头增仓；上涨缩仓提示警惕追多，下跌缩仓提示警惕追空。该分类只描述价格与总持仓组合，不判定多空持仓归属",
                 "trend_quality": "20日收益率刻画中期趋势，3日收益率相对20日趋势的绝对比例刻画短期噪音；20日收益率除以20日同期限波动率得到风险调整后趋势",
                 "strategy_selection": "所有品种统一先按最近一年硬门槛筛选，再排可用名次：至少8笔、收益>0；日线四因子Sharpe≥0.30，其他方法Sharpe>0。高绩效但低于8笔的方法仅列入前向观察；低换手方法另用真实5年、数据不足时3年历史作背景核验，不直接替换。",
@@ -2176,6 +2313,7 @@ def scan_once() -> dict[str, Any]:
                 "cost": "所有策略对比统一按开仓万1.2、平仓万1.2，并在每一侧额外计1跳滑点",
             },
             "warnings": [
+                "盘中日K由真实5分钟OHLC聚合，标记为“形成中”且会随行情变化；15:00后的“收盘观测”并非官方结算价，日线源发布后才标记“已确认收盘”。",
                 "斐波那契/ATR追踪止盈仅使用上一根及更早的已完成K线更新；日线OHLC无法确定同一根K线内高低点先后，禁止用当日极值更新追踪线后再在当日触发，否则会产生未来路径偏差并虚增胜率。",
                 "主连换月可能产生跳空，生产使用前应接入后复权连续合约或固定主力合约。",
                 "品种加权合约或全分月合约汇总持仓可降低主力换月扰动，但只能作为资金流向参考，不能直接识别多空双方，也不单独构成操作建议。",
