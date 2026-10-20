@@ -808,11 +808,11 @@ def volatility_position_control(bars: list[dict[str, Any]], period: int = 14) ->
     spike_ratio = current / reference if reference > 0 else 1.0
     percentile = sum(value <= current for value in ratios) / len(ratios) * 100
     if percentile >= 90 or spike_ratio >= 1.6:
-        regime, regime_text, multiplier, note = "surge", "波动飙升", 0.25, "方向保留，但目标仓位缩至25%，不因技术多头加仓"
+        regime, regime_text, multiplier, note = "surge", "波动飙升", 0.35, "方向保留，但目标仓位缩至35%，不因技术多头加仓"
     elif percentile >= 75 or spike_ratio >= 1.3:
-        regime, regime_text, multiplier, note = "high", "高波动", 0.5, "目标仓位降至50%，等待波动回落"
+        regime, regime_text, multiplier, note = "high", "高波动", 0.6, "目标仓位降至60%，等待波动回落"
     elif percentile >= 60:
-        regime, regime_text, multiplier, note = "elevated", "波动偏高", 0.75, "目标仓位降至75%"
+        regime, regime_text, multiplier, note = "elevated", "波动偏高", 0.8, "目标仓位降至80%"
     else:
         regime, regime_text, multiplier, note = "normal", "正常波动", 1.0, "波动率未触发减仓"
     return {
@@ -1677,6 +1677,197 @@ def update_paper_portfolio(results: list[dict[str, Any]], generated_at: datetime
     }
 
 
+def _side(value: float | int | None, threshold: float = 0.0) -> int:
+    number = float(value or 0)
+    return 1 if number > threshold else -1 if number < -threshold else 0
+
+
+def forced_asset_direction(asset: dict[str, Any], previous_side: int = 0) -> dict[str, Any]:
+    """Return a non-flat research direction for the per-asset forced book."""
+    selected = asset.get("strategy_selection", {}).get("selected")
+    method_side = _side(selected.get("latest_target")) if selected else 0
+    signal = asset.get("signal", "neutral")
+    technical_side = 1 if signal in ("long", "watch_long") else -1 if signal in ("short", "watch_short") else 0
+    risk_adjusted = float(asset.get("trend_quality", {}).get("risk_adjusted_trend") or 0)
+    trend_side = _side(risk_adjusted)
+    score = 0.40 * method_side + 0.35 * technical_side + 0.25 * trend_side
+    if abs(score) > 1e-12:
+        direction, fallback = _side(score), "三票加权"
+    elif previous_side:
+        direction, fallback = previous_side, "综合分数为零，延续原方向"
+    elif trend_side:
+        direction, fallback = trend_side, "首次建仓采用风险调整趋势"
+    else:
+        return_20d = float(asset.get("trend_quality", {}).get("return_20d_pct") or 0)
+        direction, fallback = (_side(return_20d) or 1), "首次建仓采用20日趋势；完全持平时默认多头基准"
+    return {
+        "direction": direction,
+        "score": score,
+        "votes": {"method": method_side, "technical": technical_side, "trend": trend_side},
+        "method": selected.get("name") if selected else "暂无可靠方法",
+        "reason": f"适配方法40% + 技术方向35% + 风险调整趋势25%；{fallback}",
+    }
+
+
+def forced_asset_lots(asset: dict[str, Any], equity: float, direction: int, config: dict[str, Any]) -> dict[str, Any]:
+    """Risk-scale one independent account while preserving at least one lot."""
+    price = float(asset.get("daily_close") or asset.get("price") or 0)
+    contract_notional = price * float(asset.get("multiplier", 1))
+    volatility_20d = float(asset.get("trend_quality", {}).get("volatility_20d_pct") or 0) / 100
+    annualized_vol = volatility_20d * math.sqrt(252 / 20) if volatility_20d > 0 else 0
+    target_vol = float(config.get("individual_target_annual_volatility", 0.12))
+    max_weight = float(config.get("individual_max_notional_weight", 1.0))
+    vol_multiplier = float(asset.get("volatility_control", {}).get("position_multiplier") or 0.35)
+    risk_weight = min(max_weight, target_vol / annualized_vol if annualized_vol > 0 else 0.35)
+    target_weight = max(0.0, risk_weight * vol_multiplier)
+    lots = math.floor(equity * target_weight / contract_notional) if contract_notional > 0 else 0
+    lots = max(1, lots) if contract_notional > 0 else 0
+    return {
+        "signed_lots": direction * lots,
+        "target_weight": target_weight,
+        "annualized_volatility_pct": annualized_vol * 100 if annualized_vol else None,
+        "contract_notional": contract_notional,
+    }
+
+
+def update_individual_forced_books(
+    state: dict[str, Any], results: list[dict[str, Any]], generated_at: datetime, config: dict[str, Any]
+) -> dict[str, Any]:
+    """Maintain 17 independent, always-long-or-short, forward-only daily ledgers."""
+    initial_cash = float(config.get("individual_paper_initial_cash", 1_000_000))
+    root = state.setdefault("individual_forced_v1", {
+        "name": "17品种强制方向实验盘", "started_at": generated_at.isoformat(timespec="seconds"),
+        "initial_cash_per_asset": initial_cash, "accounts": {}, "change_history": [],
+    })
+    fee = float(config.get("commission_per_side_bps", 1.2)) / 10000
+    slip_ticks = float(config.get("slippage_ticks_per_side", 1))
+    valid = [asset for asset in results if asset.get("price") and asset.get("daily_date")]
+    rows: list[dict[str, Any]] = []
+    for asset in valid:
+        symbol = asset["symbol"]
+        multiplier = float(asset.get("multiplier", 1))
+        tick = float(asset.get("tick", 0))
+        confirmed_date = str(asset["daily_date"])[:10]
+        mark = float(asset.get("daily_settle") or asset.get("daily_close") or asset["price"])
+        daily_open = float(asset.get("daily_open") or mark)
+        account = root["accounts"].get(symbol)
+        if account is None:
+            direction = forced_asset_direction(asset)
+            sizing = forced_asset_lots(asset, initial_cash, direction["direction"], config)
+            signed_lots = int(sizing["signed_lots"])
+            costs = abs(signed_lots) * (mark * multiplier * fee + slip_ticks * tick * multiplier)
+            equity = max(1.0, initial_cash - costs)
+            account = {
+                "asset_id": asset["id"], "asset": asset["name"], "symbol": symbol,
+                "started_at": generated_at.isoformat(timespec="seconds"), "initial_cash": initial_cash,
+                "equity": equity, "signed_lots": signed_lots, "last_mark": mark,
+                "last_confirmed_date": confirmed_date, "entry_price": mark,
+                "entry_time": generated_at.isoformat(timespec="seconds"), "trades": 1,
+                "total_costs": costs, "history": [{
+                    "date": confirmed_date, "time": generated_at.isoformat(timespec="seconds"),
+                    "equity": equity, "daily_pnl": -costs, "daily_return_pct": -costs / initial_cash * 100,
+                    "costs": costs, "mark_price": mark, "side": _side(signed_lots), "lots": abs(signed_lots),
+                    "event": "initial_open",
+                }], "change_history": [],
+            }
+            change = {
+                "time": generated_at.isoformat(timespec="seconds"), "date": confirmed_date,
+                "asset_id": asset["id"], "asset": asset["name"], "symbol": symbol,
+                "from_lots": 0, "to_lots": signed_lots, "price": mark, "reason": "initial_open",
+                "direction_reason": direction["reason"], "direction_score": direction["score"],
+            }
+            account["change_history"].append(change)
+            root["change_history"].append(change)
+            pending_direction = forced_asset_direction(asset, _side(signed_lots))
+            pending_sizing = forced_asset_lots(asset, equity, pending_direction["direction"], config)
+            account.update({
+                "pending_side": pending_direction["direction"], "pending_lots": int(pending_sizing["signed_lots"]),
+                "pending_signal_date": confirmed_date, "pending_reason": pending_direction["reason"],
+                "pending_score": pending_direction["score"], "pending_votes": pending_direction["votes"],
+            })
+            root["accounts"][symbol] = account
+        elif confirmed_date > str(account.get("last_confirmed_date", "")):
+            prior_equity = float(account["equity"])
+            prior_lots = int(account.get("signed_lots", 0))
+            target_lots = int(account.get("pending_lots") or prior_lots or 1)
+            pnl_before_open = prior_lots * multiplier * (daily_open - float(account["last_mark"]))
+            delta_lots = target_lots - prior_lots
+            costs = abs(delta_lots) * (daily_open * multiplier * fee + slip_ticks * tick * multiplier)
+            pnl_after_open = target_lots * multiplier * (mark - daily_open)
+            daily_pnl = pnl_before_open + pnl_after_open - costs
+            account["equity"] = max(1.0, prior_equity + daily_pnl)
+            if delta_lots:
+                reason = "reverse" if prior_lots * target_lots < 0 else "rebalance"
+                change = {
+                    "time": generated_at.isoformat(timespec="seconds"), "date": confirmed_date,
+                    "asset_id": asset["id"], "asset": asset["name"], "symbol": symbol,
+                    "from_lots": prior_lots, "to_lots": target_lots, "price": daily_open, "reason": reason,
+                    "direction_reason": account.get("pending_reason"), "direction_score": account.get("pending_score"),
+                }
+                account["change_history"].append(change)
+                root["change_history"].append(change)
+                account["trades"] = int(account.get("trades", 0)) + 1
+                if prior_lots * target_lots <= 0:
+                    account["entry_price"] = daily_open
+                    account["entry_time"] = generated_at.isoformat(timespec="seconds")
+            account["signed_lots"] = target_lots
+            account["last_mark"] = mark
+            account["last_confirmed_date"] = confirmed_date
+            account["total_costs"] = float(account.get("total_costs", 0)) + costs
+            account["history"].append({
+                "date": confirmed_date, "time": generated_at.isoformat(timespec="seconds"),
+                "equity": account["equity"], "daily_pnl": daily_pnl,
+                "daily_return_pct": daily_pnl / prior_equity * 100 if prior_equity else 0,
+                "costs": costs, "mark_price": mark, "side": _side(target_lots), "lots": abs(target_lots),
+                "event": "daily_mark",
+            })
+            direction = forced_asset_direction(asset, _side(target_lots))
+            sizing = forced_asset_lots(asset, float(account["equity"]), direction["direction"], config)
+            account.update({
+                "pending_side": direction["direction"], "pending_lots": int(sizing["signed_lots"]),
+                "pending_signal_date": confirmed_date, "pending_reason": direction["reason"],
+                "pending_score": direction["score"], "pending_votes": direction["votes"],
+            })
+            account["history"] = account["history"][-1500:]
+            account["change_history"] = account["change_history"][-1000:]
+
+        history = account.get("history", [])
+        peak, max_drawdown = initial_cash, 0.0
+        for point in history:
+            peak = max(peak, float(point["equity"]))
+            max_drawdown = min(max_drawdown, float(point["equity"]) / peak - 1 if peak else 0)
+        signed_lots = int(account.get("signed_lots", 0))
+        live_price = float(asset.get("live_daily", {}).get("close") or asset["price"])
+        notional = abs(signed_lots) * multiplier * live_price
+        intraday_pnl = signed_lots * multiplier * (live_price - float(account.get("last_mark", live_price)))
+        last_point = history[-1] if history else {}
+        rows.append({
+            "asset_id": asset["id"], "asset": asset["name"], "short_name": asset["short_name"], "symbol": symbol,
+            "initial_cash": initial_cash, "equity": account["equity"],
+            "return_pct": (float(account["equity"]) / initial_cash - 1) * 100,
+            "max_drawdown_pct": max_drawdown * 100, "daily_pnl": last_point.get("daily_pnl"),
+            "daily_return_pct": last_point.get("daily_return_pct"), "confirmed_date": account.get("last_confirmed_date"),
+            "side": _side(signed_lots), "lots": abs(signed_lots), "signed_lots": signed_lots,
+            "position_size_pct": notional / float(account["equity"]) * 100 if account.get("equity") else 0,
+            "mark_price": account.get("last_mark"), "live_price": live_price, "intraday_pnl": intraday_pnl,
+            "pending_side": account.get("pending_side"), "pending_lots": abs(int(account.get("pending_lots", 0))),
+            "pending_reason": account.get("pending_reason"), "pending_score": account.get("pending_score"),
+            "pending_votes": account.get("pending_votes"), "entry_price": account.get("entry_price"),
+            "entry_time": account.get("entry_time"), "trades": account.get("trades", 0),
+            "total_costs": account.get("total_costs", 0), "volatility_control": asset.get("volatility_control"),
+            "win_days": sum(float(point.get("daily_pnl", 0)) > 0 for point in history),
+            "observations": len(history),
+        })
+    root["change_history"] = root["change_history"][-3000:]
+    return {
+        "mode": "individual_forced_direction", "name": root["name"], "started_at": root["started_at"],
+        "initial_cash_per_asset": initial_cash, "accounts": rows,
+        "recent_changes": list(reversed(root["change_history"][-30:])),
+        "history_count": len(root["change_history"]),
+        "method": "每品种独立100万元；每日必须持有多或空。适配方法40%、技术方向35%、风险调整趋势25%；波动率只调手数不允许空仓；确认日K产生信号，下一交易日开盘执行。",
+    }
+
+
 def _capped_allocation_weights(raw_scores: dict[str, float], cap: float, gross_target: float = 1.0) -> dict[str, float]:
     """Normalize positive scores into capped gross weights without forced leverage."""
     positive = {key: value for key, value in raw_scores.items() if value > 0}
@@ -1714,40 +1905,59 @@ def build_allocation_targets(
         rows = {row["key"]: row for row in asset.get("strategy_comparison", [])}
         selected = asset.get("strategy_selection", {}).get("selected")
         selected_keys = [selected["key"]] if selected and selected.get("key") in rows else []
-        votes = [int(rows[key].get("latest_target", 0)) for key in selected_keys]
-        consensus = statistics.fmean(votes) if votes else 0.0
+        method_side = _side(rows[selected_keys[0]].get("latest_target")) if selected_keys else 0
         trend = asset.get("trend_quality", {})
         risk_adjusted = float(trend.get("risk_adjusted_trend") or 0)
         noise_ratio = float(trend.get("noise_ratio") or 99)
-        trend_side = 1 if risk_adjusted > 0 else -1 if risk_adjusted < 0 else 0
-        vote_side = 1 if consensus > 0 else -1 if consensus < 0 else 0
+        trend_side = _side(risk_adjusted, 0.25)
         signal = asset.get("signal", "neutral")
         technical_side = 1 if signal in ("long", "watch_long") else -1 if signal in ("short", "watch_short") else 0
+        vote_values = [method_side, technical_side, trend_side]
+        long_votes = sum(value > 0 for value in vote_values)
+        short_votes = sum(value < 0 for value in vote_values)
+        if long_votes >= 2:
+            direction = 1
+        elif short_votes >= 2:
+            direction = -1
+        else:
+            direction = 0
+        opposing = sum(value == -direction for value in vote_values) if direction else 0
+        neutral = sum(value == 0 for value in vote_values)
+        conviction = 1.0 if direction and long_votes + short_votes == 3 and opposing == 0 else 0.8 if direction and neutral else 0.55 if direction and opposing else 0.0
         spread = asset.get("calendar_spread", {})
         spread_side = int(spread.get("structure_side") or 0)
-        base_aligned = vote_side != 0 and vote_side == trend_side == technical_side and abs(consensus) >= 0.25 and abs(risk_adjusted) >= 0.25
-        spread_warning = spread.get("status") == "ok" and spread_side == -technical_side
-        aligned = base_aligned
+        spread_warning = spread.get("status") == "ok" and direction and spread_side == -direction
         volatility = max(float(trend.get("volatility_20d_pct") or 0) / 100, 0.03)
         noise_penalty = 1 / (1 + noise_ratio)
         vol_multiplier = float(asset.get("volatility_control", {}).get("position_multiplier", 0))
-        raw_score = abs(consensus) * min(abs(risk_adjusted), 2.0) * noise_penalty * vol_multiplier / volatility if aligned else 0.0
+        trend_strength = max(0.25, min(abs(risk_adjusted), 2.0))
+        raw_score = conviction * trend_strength * noise_penalty * vol_multiplier / volatility if direction else 0.0
         raw_scores[asset["id"]] = raw_score
         diagnostics[asset["id"]] = {
-            "direction": vote_side if aligned else 0,
+            "direction": direction,
             "technical_side": technical_side,
+            "method_side": method_side,
+            "trend_side": trend_side,
             "calendar_spread_side": spread_side,
             "calendar_spread_status": spread.get("status", "missing"),
-            "consensus": consensus,
-            "votes": votes,
+            "consensus": conviction * direction,
+            "conviction": conviction,
+            "votes": {"method": method_side, "technical": technical_side, "trend": trend_side},
             "selected_strategies": selected_keys,
             "risk_adjusted_trend": risk_adjusted,
             "noise_ratio": noise_ratio,
             "volatility_20d_pct": trend.get("volatility_20d_pct"),
             "volatility_multiplier": vol_multiplier,
             "calendar_spread_warning": spread_warning,
-            "reason": ("综合技术、品种选优方法与20日风险调整趋势一致；近月月差背离仅作风险提示，不改变配置" if aligned and spread_warning else "综合技术、品种选优方法与20日风险调整趋势一致；近月月差仅作风险参考" if aligned else "综合技术、品种选优方法与趋势方向未形成一致，保持空仓"),
+            "reason": (f"三票同向，置信度100%" if conviction == 1 else f"两票同向、一票中性，置信度80%" if conviction == 0.8 else f"两票同向、一票反向，置信度55%" if conviction == 0.55 else "未取得两票同向，保持空仓") + ("；近月月差背离仅作风险提示" if spread_warning else "；近月月差不参与方向票"),
         }
+    max_active = int(config.get("paper_max_active_assets", 6))
+    selected_ids = {key for key, value in sorted(raw_scores.items(), key=lambda row: row[1], reverse=True)[:max_active] if value > 0}
+    for asset_id, value in raw_scores.items():
+        if value > 0 and asset_id not in selected_ids:
+            diagnostics[asset_id]["direction"] = 0
+            diagnostics[asset_id]["reason"] += f"；价值评分未进入前{max_active}，组合空仓"
+    raw_scores = {key: value if key in selected_ids else 0.0 for key, value in raw_scores.items()}
     weights = _capped_allocation_weights(
         raw_scores, float(config.get("paper_max_weight_per_asset", 0.20)), float(config.get("paper_gross_target", 1.0))
     )
@@ -1762,6 +1972,15 @@ def build_allocation_targets(
     elif net < -max_net and short_total > 0:
         short_scale = (max_net + long_total) / short_total
         signed = {key: value * short_scale if value < 0 else value for key, value in signed.items()}
+    max_sector = float(config.get("paper_max_sector_exposure", 0.50))
+    sectors = {asset["id"]: asset.get("sector", "other") for asset in assets}
+    for sector in set(sectors.values()):
+        members = [key for key, value in signed.items() if sectors.get(key) == sector and value]
+        exposure = sum(abs(signed[key]) for key in members)
+        if exposure > max_sector and exposure > 0:
+            scale = max_sector / exposure
+            for key in members:
+                signed[key] *= scale
     targets = []
     for asset in assets:
         weight = signed.get(asset["id"], 0.0)
@@ -1797,16 +2016,25 @@ def update_allocation_paper_portfolio(
             state = {}
     else:
         state = {}
+    individual_forced = update_individual_forced_books(state, results, generated_at, config)
     portfolio = state.setdefault("allocation_portfolio_v1", {
         "name": "1000万动态多空组合", "started_at": generated_at.isoformat(timespec="seconds"),
         "initial_cash": initial_cash, "equity": initial_cash, "positions": {}, "last_prices": {},
         "last_bars": {}, "entry_prices": {}, "entry_times": {}, "history": [], "change_history": [], "trades": 0,
     })
+    rule_upgraded = portfolio.get("rule_version") != "majority_vote_v2"
+    if rule_upgraded:
+        portfolio.setdefault("rule_changes", []).append({
+            "time": generated_at.isoformat(timespec="seconds"), "version": "majority_vote_v2",
+            "note": "保留原权益与持仓；方向门槛由三票全同改为三票取二，目标总名义仓位90%、单品种30%、净敞口70%、板块50%、最多6个持仓。",
+        })
+        portfolio["rule_version"] = "majority_vote_v2"
     paper_ids = set(config.get("paper_asset_ids", []))
     valid = [item for item in results if item.get("price") and item["id"] in paper_ids]
     by_symbol = {item["symbol"]: item for item in valid}
     fee = float(config.get("commission_per_side_bps", 1.2)) / 10000
     slip_ticks = float(config.get("slippage_ticks_per_side", 1))
+    confirmed_date = max((str(item.get("daily_date", ""))[:10] for item in valid), default="")
     pnl = 0.0
     for symbol, stored_lots in portfolio["positions"].items():
         asset = by_symbol.get(symbol)
@@ -1815,54 +2043,75 @@ def update_allocation_paper_portfolio(
             continue
         pnl += float(stored_lots) * float(asset.get("multiplier", 1)) * (float(asset["price"]) - float(prior_price))
     marked_equity = max(1.0, float(portfolio["equity"]) + pnl)
-    targets = build_allocation_targets(valid, performance_report, config, marked_equity)
     costs = 0.0
+    execution_adjustment = 0.0
     changes: list[dict[str, Any]] = []
-    target_symbols = {row["asset"]["symbol"] for row in targets}
-    for symbol in set(portfolio["positions"]) - target_symbols:
-        portfolio["positions"][symbol] = 0
-    for target in targets:
-        asset = target["asset"]
-        symbol, price = asset["symbol"], float(asset["price"])
-        multiplier = float(target["contract_multiplier"])
-        prior_lots = int(portfolio["positions"].get(symbol, 0))
-        target_lots = int(target["target_lots"])
-        delta_lots = target_lots - prior_lots
-        if delta_lots:
-            turnover_notional = abs(delta_lots) * price * multiplier
-            costs += turnover_notional * fee + abs(delta_lots) * slip_ticks * float(asset["tick"]) * multiplier
-            reason = "open" if prior_lots == 0 else "close" if target_lots == 0 else "reverse" if prior_lots * target_lots < 0 else "rebalance"
-            record = {
-                "time": generated_at.isoformat(timespec="seconds"), "strategy_key": "allocation_portfolio_v1",
-                "strategy": portfolio["name"], "asset_id": asset["id"], "asset": asset["name"], "symbol": symbol,
-                "from_lots": prior_lots, "to_lots": target_lots,
-                "from_position": prior_lots, "to_position": target_lots,
-                "target_weight_pct": target["target_weight"] * 100, "price": price, "bar_time": asset["bar_time"],
-                "reason": reason, "allocation_reason": target["reason"], "strategy_votes": target["votes"],
-                "risk_adjusted_trend": target["risk_adjusted_trend"], "noise_ratio": target["noise_ratio"],
-            }
-            changes.append(record)
-            portfolio["change_history"].append(record)
-            portfolio["trades"] += 1
-            if target_lots and (prior_lots == 0 or prior_lots * target_lots < 0):
-                portfolio["entry_prices"][symbol] = price
-                portfolio["entry_times"][symbol] = generated_at.isoformat(timespec="seconds")
-            elif target_lots == 0:
-                portfolio["entry_prices"].pop(symbol, None)
-                portfolio["entry_times"].pop(symbol, None)
-        portfolio["positions"][symbol] = target_lots
-        portfolio["last_prices"][symbol] = price
-        portfolio["last_bars"][symbol] = asset["bar_time"]
+    pending_targets = portfolio.get("pending_targets", {})
+    if portfolio.get("last_signal_date") and confirmed_date > portfolio["last_signal_date"]:
+        # The prior confirmed-close signal is executed at today's open. Because
+        # the book was marked intraday under the old lots, this adjustment
+        # replaces open-to-current P&L with the staged lots without look-ahead.
+        for asset in valid:
+            symbol, current_price = asset["symbol"], float(asset["price"])
+            multiplier = float(asset.get("multiplier", 1))
+            prior_lots = int(portfolio["positions"].get(symbol, 0))
+            staged = pending_targets.get(symbol, {})
+            target_lots = int(staged.get("target_lots", 0))
+            open_price = float(asset.get("daily_open") or current_price)
+            delta_lots = target_lots - prior_lots
+            execution_adjustment += delta_lots * multiplier * (current_price - open_price)
+            if delta_lots:
+                turnover_notional = abs(delta_lots) * open_price * multiplier
+                costs += turnover_notional * fee + abs(delta_lots) * slip_ticks * float(asset["tick"]) * multiplier
+                reason = "open" if prior_lots == 0 else "close" if target_lots == 0 else "reverse" if prior_lots * target_lots < 0 else "rebalance"
+                record = {
+                    "time": generated_at.isoformat(timespec="seconds"), "strategy_key": "allocation_portfolio_v1",
+                    "strategy": portfolio["name"], "asset_id": asset["id"], "asset": asset["name"], "symbol": symbol,
+                    "from_lots": prior_lots, "to_lots": target_lots,
+                    "from_position": prior_lots, "to_position": target_lots,
+                    "target_weight_pct": float(staged.get("target_weight", 0)) * 100,
+                    "price": open_price, "bar_time": asset["bar_time"], "execution_date": confirmed_date,
+                    "signal_date": portfolio.get("last_signal_date"), "reason": reason,
+                    "allocation_reason": staged.get("reason", "上一确认日信号于下一交易日开盘执行"),
+                    "strategy_votes": staged.get("votes", {}),
+                    "risk_adjusted_trend": staged.get("risk_adjusted_trend"), "noise_ratio": staged.get("noise_ratio"),
+                }
+                changes.append(record)
+                portfolio["change_history"].append(record)
+                portfolio["trades"] += 1
+                if target_lots and (prior_lots == 0 or prior_lots * target_lots < 0):
+                    portfolio["entry_prices"][symbol] = open_price
+                    portfolio["entry_times"][symbol] = generated_at.isoformat(timespec="seconds")
+                elif target_lots == 0:
+                    portfolio["entry_prices"].pop(symbol, None)
+                    portfolio["entry_times"].pop(symbol, None)
+            portfolio["positions"][symbol] = target_lots
+            portfolio.setdefault("position_reasons", {})[symbol] = staged
+        marked_equity = max(1.0, marked_equity + execution_adjustment)
     portfolio["equity"] = max(1.0, marked_equity - costs)
+    targets = build_allocation_targets(valid, performance_report, config, portfolio["equity"])
+    if not portfolio.get("last_signal_date") or confirmed_date > portfolio["last_signal_date"]:
+        portfolio["pending_targets"] = {
+            row["asset"]["symbol"]: {
+                "target_lots": int(row["target_lots"]), "target_weight": row["target_weight"],
+                "reason": row["reason"], "votes": row["votes"],
+                "risk_adjusted_trend": row["risk_adjusted_trend"], "noise_ratio": row["noise_ratio"],
+            } for row in targets
+        }
+        portfolio["last_signal_date"] = confirmed_date
+    for asset in valid:
+        portfolio["last_prices"][asset["symbol"]] = float(asset["price"])
+        portfolio["last_bars"][asset["symbol"]] = asset["bar_time"]
     portfolio["history"].append({
         "time": generated_at.isoformat(timespec="seconds"), "equity": portfolio["equity"],
-        "pnl": pnl, "costs": costs,
+        "pnl": pnl + execution_adjustment, "costs": costs, "confirmed_date": confirmed_date,
     })
     portfolio["history"] = portfolio["history"][-1000:]
     portfolio["change_history"] = portfolio["change_history"][-3000:]
     positions = []
     for target in targets:
-        asset, lots = target["asset"], int(target["target_lots"])
+        asset = target["asset"]
+        lots = int(portfolio["positions"].get(asset["symbol"], 0))
         symbol, price = asset["symbol"], float(asset["price"])
         entry_price = float(portfolio["entry_prices"].get(symbol) or price)
         multiplier = float(target["contract_multiplier"])
@@ -1877,7 +2126,10 @@ def update_allocation_paper_portfolio(
             "entry_price": entry_price, "current_price": price,
             "unrealized_cny": unrealized, "unrealized_pct": unrealized / notional * 100 if notional else 0,
             "volatility_control": asset.get("volatility_control"), "trend_quality": asset.get("trend_quality"),
-            "allocation_reason": target["reason"], "strategy_votes": target["votes"],
+            "allocation_reason": (portfolio.get("position_reasons", {}).get(symbol) or target)["reason"],
+            "strategy_votes": (portfolio.get("position_reasons", {}).get(symbol) or target)["votes"],
+            "next_target_lots": int(portfolio.get("pending_targets", {}).get(symbol, {}).get("target_lots", 0)),
+            "next_signal_date": portfolio.get("last_signal_date"),
             "entry_time": portfolio["entry_times"].get(symbol), "bar_time": asset["bar_time"],
         })
     gross_notional = sum(row["notional_cny"] for row in positions)
@@ -1906,14 +2158,16 @@ def update_allocation_paper_portfolio(
         "initial_cash": initial_cash, "scope": scope_rows, "strategies": summary, "positions": positions,
         "position_changes": all_changes, "equity_history": {"allocation_portfolio_v1": portfolio["history"]},
         "selected_strategies": {item["id"]: item.get("strategy_selection", {}).get("selected") for item in valid},
-        "assumptions": "1000万元初始权益；仅指定10个品种；综合技术、各品种选优方法与20日风险调整趋势三者同向时配置，再按逆波动率分配；近月月差背离只作风险提示，不改变方向或仓位；单品种≤20%、组合净敞口≤40%、总名义敞口≤100%；主连价仅用于模拟盘参考手数折算；开平各万1.2、每侧1跳。",
+        "assumptions": "1000万元初始权益并延续原账本；仅指定10个品种；适配方法、技术方向、风险调整趋势三票取二即可入选，按置信度、趋势质量、噪音与逆波动率排序，最多6个持仓；确认日K生成目标，下一交易日开盘执行；目标总名义仓位90%、单品种≤30%、组合净敞口≤70%、单板块≤50%；近月月差只作风险提示；主连价仅用于模拟盘参考手数折算；开平各万1.2、每侧1跳。",
+        "rule_changes": portfolio.get("rule_changes", []),
+        "individual_forced": individual_forced,
     }
     atomic_json(PAPER_REPORT_PATH, paper_report)
     return {
-        **{key: paper_report[key] for key in ("mode", "started_at", "updated_at", "initial_cash", "scope", "strategies", "positions")},
+        **{key: paper_report[key] for key in ("mode", "started_at", "updated_at", "initial_cash", "scope", "strategies", "positions", "individual_forced", "rule_changes")},
         "recent_changes": all_changes[:30], "history_count": len(all_changes), "history_url": "paper-history.json",
         "allocation_method": paper_report["assumptions"],
-        "note": "单一1000万元组合账本；方向来自品种自身时间序列信号，不使用板块截面强弱。参考手数按主连价和交易单位折算，不代表可成交合约或真实委托。",
+        "note": "1000万元择优组合与17个独立强制方向实验盘并行；方向均来自品种自身时间序列信号，不使用板块截面强弱。参考手数按主连价和交易单位折算，不代表可成交合约或真实委托。",
     }
 
 
@@ -2165,6 +2419,7 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             "daily_date": daily[-1]["datetime"],
             "daily_open": daily[-1]["open"],
             "daily_close": daily[-1]["close"],
+            "daily_settle": daily[-1].get("settle") or daily[-1]["close"],
             "live_daily": {
                 "date": live_daily_bar["datetime"] if live_daily_bar else daily[-1]["datetime"],
                 "open": live_daily_bar["open"] if live_daily_bar else daily[-1]["open"],
@@ -2285,7 +2540,7 @@ def scan_once() -> dict[str, Any]:
                 strategy.pop("return_series", None)
         signal_changes = update_signal_change_log(results, generated_at)
         payload = {
-            "schema_version": 15,
+            "schema_version": 16,
             "generated_at": generated_at.isoformat(timespec="seconds"),
             "interval_seconds": int(config["scan_interval_seconds"]),
             "summary": counts,
@@ -2305,7 +2560,7 @@ def scan_once() -> dict[str, Any]:
                 "capital_structure": "价格上涨且总持仓增加归为多头增仓；价格下跌且总持仓增加归为空头增仓；上涨缩仓提示警惕追多，下跌缩仓提示警惕追空。该分类只描述价格与总持仓组合，不判定多空持仓归属",
                 "trend_quality": "20日收益率刻画中期趋势，3日收益率相对20日趋势的绝对比例刻画短期噪音；20日收益率除以20日同期限波动率得到风险调整后趋势",
                 "strategy_selection": "所有品种统一先按最近一年硬门槛筛选，再排可用名次：至少8笔、收益>0；日线四因子Sharpe≥0.30，其他方法Sharpe>0。高绩效但低于8笔的方法仅列入前向观察；低换手方法另用真实5年、数据不足时3年历史作背景核验，不直接替换。",
-                "allocation": "1000万元模拟组合要求综合技术、品种选优方法与20日风险调整趋势三者同向，再按逆波动率配置；近月月差背离仅作风险提示，不改变配置；单品种≤20%、净敞口≤40%、总名义敞口≤100%",
+                "allocation": "两套模拟盘并行：17品种各自100万元且每日必须持有多或空，用于检验方向能力；原1000万元组合延续历史，三票取二后择优配置，目标总名义仓位90%、单品种≤30%、净敞口≤70%、板块≤50%、最多6个持仓。波动率只缩放仓位，不改变方向",
                 "open_interest": "优先读取行情商的品种加权合约持仓字段；若无该序列，将全部挂牌分月合约持仓逐日求和；两者均失败才明确标记主连降级",
                 "calendar_spread": "按到期月份选择最近两个仍挂牌且有有效买卖盘的分月合约；月差=近月买卖盘中值−次近月买卖盘中值，正值为BACKWARDATION、负值为CONTANGO；保留两侧可成交边界并核对报价交易日和时间差",
                 "technical": "主流指标层覆盖均线、MACD、ADX、ROC、RSI、KDJ、CCI、ATR、布林带、唐奇安、量比与OBV，仅作交叉验证",
@@ -2322,6 +2577,7 @@ def scan_once() -> dict[str, Any]:
                 "最近一年按Sharpe选择策略属于同窗筛选，存在选择偏差；应继续观察前向模拟盘，不能把排名直接外推为未来收益。",
                 "低换手方法的3年/5年结果只用于稳定性背景；最近一年样本不足时仍不能直接替换当前方法，避免事后放宽门槛。",
                 "模拟盘参考手数由主力连续价和交易单位折算；主力连续不是可成交月份，实盘前必须映射具体合约并复核保证金、手续费和平今规则。",
+                "单品种强制方向盘是模型辨别力实验：必须持有多或空不等于每天强制换仓，也不代表推荐实盘持续满仓；应与允许空仓的1000万元择优组合分开评价。",
                 "公开接口可能限流或中断；实盘研究建议切换至iFinD、Wind、CTP或交易所授权源。",
             ],
         }

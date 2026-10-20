@@ -22,6 +22,9 @@ from momentum_monitor import (
     build_allocation_targets,
     build_operation_research_view,
     build_live_daily_bar,
+    forced_asset_direction,
+    forced_asset_lots,
+    update_individual_forced_books,
     contract_expiry_month,
     select_asset_strategy,
 )
@@ -164,7 +167,7 @@ if __name__ == "__main__":
             bar["high"] = bar["close"] + 12
             bar["low"] = bar["close"] - 12
     volatility = volatility_position_control(volatile_bars)
-    assert volatility["regime"] == "surge" and volatility["position_multiplier"] == 0.25
+    assert volatility["regime"] == "surge" and volatility["position_multiplier"] == 0.35
     trend_quality = trend_quality_snapshot(make_bars(1))
     assert trend_quality["risk_adjusted_trend"] > 0 and trend_quality["noise_ratio"] >= 0
     capped = _capped_allocation_weights({"a": 9, "b": 1, "c": 1, "d": 1, "e": 1}, 0.20)
@@ -230,6 +233,38 @@ if __name__ == "__main__":
     }], {}, config, 10_000_000)[0]
     assert allocation_with_spread_warning["direction"] == 1 and allocation_with_spread_warning["target_lots"] > 0
     assert allocation_with_spread_warning["calendar_spread_warning"] is True
+    forced = forced_asset_direction({
+        "signal": "watch_long", "strategy_selection": {"selected": {"name": "测试方法", "latest_target": -1}},
+        "trend_quality": {"risk_adjusted_trend": 0.8, "return_20d_pct": 3.0},
+    })
+    assert forced["direction"] == 1 and forced["votes"] == {"method": -1, "technical": 1, "trend": 1}
+    forced_sizing = forced_asset_lots({
+        "daily_close": 100, "price": 100, "multiplier": 10,
+        "trend_quality": {"volatility_20d_pct": 5.0},
+        "volatility_control": {"position_multiplier": 0.35},
+    }, 1_000_000, -1, config)
+    assert forced_sizing["signed_lots"] < 0 and abs(forced_sizing["signed_lots"]) >= 1
+    forced_state = {}
+    forced_asset = {
+        "id": "test", "name": "测试品种", "short_name": "测试", "symbol": "T0", "price": 102,
+        "daily_date": "2026-10-19", "daily_open": 100, "daily_close": 102, "daily_settle": 101,
+        "live_daily": {"close": 102}, "multiplier": 10, "tick": 1, "signal": "watch_long",
+        "strategy_selection": {"selected": {"name": "测试方法", "latest_target": 1}},
+        "trend_quality": {"risk_adjusted_trend": 0.8, "return_20d_pct": 3.0, "volatility_20d_pct": 5.0},
+        "volatility_control": {"position_multiplier": 1.0, "regime": "normal", "regime_text": "正常波动"},
+    }
+    first_forced = update_individual_forced_books(forced_state, [forced_asset], datetime(2026, 10, 20, 9), config)
+    assert len(first_forced["accounts"]) == 1 and first_forced["accounts"][0]["side"] != 0
+    forced_asset_next = {**forced_asset, "daily_date": "2026-10-20", "daily_open": 103, "daily_close": 104, "daily_settle": 104, "price": 104, "live_daily": {"close": 104}}
+    second_forced = update_individual_forced_books(forced_state, [forced_asset_next], datetime(2026, 10, 21, 9), config)
+    assert second_forced["accounts"][0]["observations"] == 2 and second_forced["accounts"][0]["side"] != 0
+    two_of_three = build_allocation_targets([{
+        "id": "copper", "sector": "nonferrous", "price": 100_000, "multiplier": 5, "signal": "long",
+        "strategy_comparison": [{"key": "robust", "latest_target": 1}], "strategy_selection": selection,
+        "trend_quality": {"risk_adjusted_trend": -0.8, "noise_ratio": 0.2, "volatility_20d_pct": 4.0},
+        "volatility_control": {"position_multiplier": 1.0}, "calendar_spread": {"status": "missing"},
+    }], {}, config, 10_000_000)[0]
+    assert two_of_three["direction"] == 1 and two_of_three["conviction"] == 0.55 and two_of_three["target_lots"] > 0
     direct_reversal = classify_signal_change(
         {"signal": "long", "daily_signal": "long", "score": 70},
         {"signal": "short", "daily_signal": "short", "score": -65},
