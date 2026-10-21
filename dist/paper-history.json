@@ -1,7 +1,7 @@
 {
   "mode": "forward_allocation_paper",
   "started_at": "2026-10-19T15:22:07+08:00",
-  "updated_at": "2026-10-21T11:36:36+08:00",
+  "updated_at": "2026-10-21T12:26:37+08:00",
   "initial_cash": 10000000.0,
   "scope": [
     {
@@ -73,7 +73,7 @@
       "pending_margin_usage_pct": 39.33541933546208,
       "margin_occupied_cny": 670863.8,
       "cash_buffer_cny": 9277575.967799999,
-      "observations": 7
+      "observations": 9
     }
   ],
   "positions": [
@@ -99,6 +99,16 @@
       "current_price": 109150.0,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
+      "historical_pnl_cny": 0.0,
+      "history_started_at": "2026-10-21T12:23:40+08:00",
+      "stop_price": null,
+      "stop_status": "空仓",
+      "stop_set_date": null,
+      "stop_triggered_date": null,
+      "stop_triggered_at": null,
+      "stop_distance_pct": null,
+      "stop_risk_cny": 0.0,
+      "stop_policy": "2×ATR跟踪风险线；触及后安排下一交易日开盘退出，不按未知盘中价格回填成交",
       "volatility_control": {
         "atr_pct": 1.006063767359979,
         "percentile_252": 6.349206349206349,
@@ -128,6 +138,8 @@
         "trend": 0
       },
       "next_target_lots": 0,
+      "next_action_reason": "未取得两票同向，保持空仓；近月月差不参与方向票",
+      "stop_exit_scheduled": false,
       "next_signal_date": "2026-10-20",
       "entry_time": null,
       "bar_time": "2026-10-21 11:30:00"
@@ -154,6 +166,16 @@
       "current_price": 23020.0,
       "unrealized_cny": -4000.0,
       "unrealized_pct": -0.2172024326672459,
+      "historical_pnl_cny": 0.0,
+      "history_started_at": "2026-10-21T12:23:40+08:00",
+      "stop_price": 23612.14285714286,
+      "stop_status": "安全",
+      "stop_set_date": "2026-10-20",
+      "stop_triggered_date": null,
+      "stop_triggered_at": null,
+      "stop_distance_pct": 2.5722973811592476,
+      "stop_risk_cny": 47371.428571428696,
+      "stop_policy": "2×ATR跟踪风险线；触及后安排下一交易日开盘退出，不按未知盘中价格回填成交",
       "volatility_control": {
         "atr_pct": 1.2305117317050491,
         "percentile_252": 46.03174603174603,
@@ -183,6 +205,8 @@
         "trend": -1
       },
       "next_target_lots": -70,
+      "next_action_reason": "两票同向、一票中性，置信度80%；近月月差背离仅作风险提示",
+      "stop_exit_scheduled": false,
       "next_signal_date": "2026-10-20",
       "entry_time": "2026-10-19T15:22:07+08:00",
       "bar_time": "2026-10-21 11:30:00"
@@ -209,6 +233,16 @@
       "current_price": 16140.0,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
+      "historical_pnl_cny": 0.0,
+      "history_started_at": "2026-10-21T12:23:40+08:00",
+      "stop_price": null,
+      "stop_status": "空仓",
+      "stop_set_date": null,
+      "stop_triggered_date": null,
+      "stop_triggered_at": null,
+      "stop_distance_pct": null,
+      "stop_risk_cny": 0.0,
+      "stop_policy": "2×ATR跟踪风险线；触及后安排下一交易日开盘退出，不按未知盘中价格回填成交",
       "volatility_control": {
         "atr_pct": 1.0608203677510606,
         "percentile_252": 49.2063492063492,
@@ -238,6 +272,8 @@
         "trend": 0
       },
       "next_target_lots": 80,
+      "next_action_reason": "两票同向、一票中性，置信度80%；近月月差不参与方向票",
+      "stop_exit_scheduled": false,
       "next_signal_date": "2026-10-20",
       "entry_time": null,
       "bar_time": "2026-10-21 11:30:00"
@@ -264,6 +300,16 @@
       "current_price": 25580.0,
       "unrealized_cny": 1000.0,
       "unrealized_pct": 0.07818608287724785,
+      "historical_pnl_cny": 0.0,
+      "history_started_at": "2026-10-21T12:23:40+08:00",
+      "stop_price": 26280.0,
+      "stop_status": "安全",
+      "stop_set_date": "2026-10-20",
+      "stop_triggered_date": null,
+      "stop_triggered_at": null,
+      "stop_distance_pct": 2.7365129007036746,
+      "stop_risk_cny": 35000.0,
+      "stop_policy": "2×ATR跟踪风险线；触及后安排下一交易日开盘退出，不按未知盘中价格回填成交",
       "volatility_control": {
         "atr_pct": 1.328125,
         "percentile_252": 44.84126984126984,
@@ -293,6 +339,8 @@
         "trend": -1
       },
       "next_target_lots": -34,
+      "next_action_reason": "两票同向、一票反向，置信度55%；近月月差不参与方向票",
+      "stop_exit_scheduled": false,
       "next_signal_date": "2026-10-20",
       "entry_time": "2026-10-21T11:29:06+08:00",
       "bar_time": "2026-10-21 11:30:00"
@@ -319,6 +367,16 @@
       "current_price": 120790.0,
       "unrealized_cny": -34600.0,
       "unrealized_pct": -2.8644755360543095,
+      "historical_pnl_cny": 0.0,
+      "history_started_at": "2026-10-21T12:23:40+08:00",
+      "stop_price": 121837.14285714286,
+      "stop_status": "接近止损",
+      "stop_set_date": "2026-10-20",
+      "stop_triggered_date": null,
+      "stop_triggered_at": null,
+      "stop_distance_pct": 0.8669118777571446,
+      "stop_risk_cny": 10471.42857142855,
+      "stop_policy": "2×ATR跟踪风险线；触及后安排下一交易日开盘退出，不按未知盘中价格回填成交",
       "volatility_control": {
         "atr_pct": 1.656551707429347,
         "percentile_252": 33.33333333333333,
@@ -348,6 +406,8 @@
         "trend": -1
       },
       "next_target_lots": -36,
+      "next_action_reason": "两票同向、一票中性，置信度80%；近月月差不参与方向票",
+      "stop_exit_scheduled": false,
       "next_signal_date": "2026-10-20",
       "entry_time": "2026-10-19T15:22:07+08:00",
       "bar_time": "2026-10-21 11:30:00"
@@ -374,6 +434,16 @@
       "current_price": 96000.0,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
+      "historical_pnl_cny": 0.0,
+      "history_started_at": "2026-10-21T12:23:40+08:00",
+      "stop_price": null,
+      "stop_status": "空仓",
+      "stop_set_date": null,
+      "stop_triggered_date": null,
+      "stop_triggered_at": null,
+      "stop_distance_pct": null,
+      "stop_risk_cny": 0.0,
+      "stop_policy": "2×ATR跟踪风险线；触及后安排下一交易日开盘退出，不按未知盘中价格回填成交",
       "volatility_control": {
         "atr_pct": 6.227616394747313,
         "percentile_252": 79.76190476190477,
@@ -403,6 +473,8 @@
         "trend": -1
       },
       "next_target_lots": 0,
+      "next_action_reason": "三票同向，置信度100%；近月月差背离仅作风险提示；价值评分未进入前6，组合空仓",
+      "stop_exit_scheduled": false,
       "next_signal_date": "2026-10-20",
       "entry_time": null,
       "bar_time": "2026-10-21 11:30:00"
@@ -429,6 +501,16 @@
       "current_price": 388070.0,
       "unrealized_cny": -8090.0,
       "unrealized_pct": -2.084675445151648,
+      "historical_pnl_cny": 0.0,
+      "history_started_at": "2026-10-21T12:23:40+08:00",
+      "stop_price": 402171.4285714286,
+      "stop_status": "安全",
+      "stop_set_date": "2026-10-20",
+      "stop_triggered_date": null,
+      "stop_triggered_at": null,
+      "stop_distance_pct": 3.6337332366399306,
+      "stop_risk_cny": 14101.42857142858,
+      "stop_policy": "2×ATR跟踪风险线；触及后安排下一交易日开盘退出，不按未知盘中价格回填成交",
       "volatility_control": {
         "atr_pct": 2.5604355391589437,
         "percentile_252": 41.269841269841265,
@@ -458,6 +540,8 @@
         "trend": -1
       },
       "next_target_lots": 0,
+      "next_action_reason": "三票同向，置信度100%；近月月差背离仅作风险提示；价值评分未进入前6，组合空仓",
+      "stop_exit_scheduled": false,
       "next_signal_date": "2026-10-20",
       "entry_time": "2026-10-19T15:22:07+08:00",
       "bar_time": "2026-10-21 11:30:00"
@@ -484,6 +568,16 @@
       "current_price": 889.02,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
+      "historical_pnl_cny": 0.0,
+      "history_started_at": "2026-10-21T12:23:40+08:00",
+      "stop_price": null,
+      "stop_status": "空仓",
+      "stop_set_date": null,
+      "stop_triggered_date": null,
+      "stop_triggered_at": null,
+      "stop_distance_pct": null,
+      "stop_risk_cny": 0.0,
+      "stop_policy": "2×ATR跟踪风险线；触及后安排下一交易日开盘退出，不按未知盘中价格回填成交",
       "volatility_control": {
         "atr_pct": 1.5360914224219369,
         "percentile_252": 9.126984126984127,
@@ -513,6 +607,8 @@
         "trend": -1
       },
       "next_target_lots": -4,
+      "next_action_reason": "两票同向、一票中性，置信度80%；近月月差不参与方向票",
+      "stop_exit_scheduled": false,
       "next_signal_date": "2026-10-20",
       "entry_time": null,
       "bar_time": "2026-10-21 11:30:00"
@@ -539,6 +635,16 @@
       "current_price": 13961.0,
       "unrealized_cny": 0.0,
       "unrealized_pct": 0,
+      "historical_pnl_cny": 0.0,
+      "history_started_at": "2026-10-21T12:23:40+08:00",
+      "stop_price": null,
+      "stop_status": "空仓",
+      "stop_set_date": null,
+      "stop_triggered_date": null,
+      "stop_triggered_at": null,
+      "stop_distance_pct": null,
+      "stop_risk_cny": 0.0,
+      "stop_policy": "2×ATR跟踪风险线；触及后安排下一交易日开盘退出，不按未知盘中价格回填成交",
       "volatility_control": {
         "atr_pct": 3.255121766613139,
         "percentile_252": 16.26984126984127,
@@ -568,6 +674,8 @@
         "trend": -1
       },
       "next_target_lots": 0,
+      "next_action_reason": "两票同向、一票中性，置信度80%；近月月差不参与方向票；价值评分未进入前6，组合空仓",
+      "stop_exit_scheduled": false,
       "next_signal_date": "2026-10-20",
       "entry_time": null,
       "bar_time": "2026-10-21 11:30:00"
@@ -594,6 +702,16 @@
       "current_price": 13635.0,
       "unrealized_cny": -13600.0,
       "unrealized_pct": -2.4935826916024935,
+      "historical_pnl_cny": 0.0,
+      "history_started_at": "2026-10-21T12:23:40+08:00",
+      "stop_price": 13707.142857142857,
+      "stop_status": "接近止损",
+      "stop_set_date": "2026-10-20",
+      "stop_triggered_date": null,
+      "stop_triggered_at": null,
+      "stop_distance_pct": 0.5291005291005272,
+      "stop_risk_cny": 2885.7142857142753,
+      "stop_policy": "2×ATR跟踪风险线；触及后安排下一交易日开盘退出，不按未知盘中价格回填成交",
       "volatility_control": {
         "atr_pct": 1.3568484718728255,
         "percentile_252": 36.11111111111111,
@@ -623,6 +741,8 @@
         "trend": -1
       },
       "next_target_lots": -47,
+      "next_action_reason": "三票同向，置信度100%；近月月差不参与方向票",
+      "stop_exit_scheduled": false,
       "next_signal_date": "2026-10-20",
       "entry_time": "2026-10-21T11:29:06+08:00",
       "bar_time": "2026-10-21 11:30:00"
@@ -971,9 +1091,48 @@
         "pnl": 0.0,
         "costs": 0.0,
         "confirmed_date": "2026-10-20"
+      },
+      {
+        "time": "2026-10-21T12:23:40+08:00",
+        "equity": 9948439.7678,
+        "pnl": 0.0,
+        "costs": 0.0,
+        "confirmed_date": "2026-10-20"
+      },
+      {
+        "time": "2026-10-21T12:26:37+08:00",
+        "equity": 9948439.7678,
+        "pnl": 0.0,
+        "costs": 0.0,
+        "confirmed_date": "2026-10-20"
       }
     ]
   },
+  "daily_history": [
+    {
+      "date": "2026-10-19",
+      "costs": 833.4298,
+      "time": "2026-10-20T11:16:48+08:00",
+      "equity": 9993546.5702,
+      "daily_pnl": -6453.429800000042,
+      "daily_return_pct": -0.06453429800000042,
+      "cumulative_pnl": -6453.429800000042,
+      "cumulative_return_pct": -0.06453429799999633,
+      "drawdown_pct": -0.06453429799999633
+    },
+    {
+      "date": "2026-10-20",
+      "costs": 1551.8024,
+      "time": "2026-10-21T12:26:37+08:00",
+      "equity": 9948439.7678,
+      "daily_pnl": -45106.80240000039,
+      "daily_return_pct": -0.4513593055593043,
+      "cumulative_pnl": -51560.232200000435,
+      "cumulative_return_pct": -0.5156023220000083,
+      "drawdown_pct": -0.5156023220000083
+    }
+  ],
+  "stop_events": [],
   "selected_strategies": {
     "copper": {
       "key": "risk_adjusted_trend",
@@ -1304,7 +1463,7 @@
       "eligible_rank": 1
     }
   },
-  "assumptions": "1000万元初始权益并延续原账本；仅指定10个品种；适配方法、技术方向、风险调整趋势三票取二即可入选，最多6个持仓。确认日K生成目标，下一交易日开盘执行；按模拟保证金预算配置：目标总占用45%、单品种≤12%、净方向差≤30%、单板块≤30%；名义敞口另列，不再冒充资金占用。连续合约保证金率为公开规则基础上的模拟假设，实际以具体月份合约与期货公司结算为准；近月月差只作风险提示；开平各万1.2、每侧1跳。",
+  "assumptions": "1000万元初始权益并延续原账本；仅指定10个品种；适配方法、技术方向、风险调整趋势三票取二即可入选，最多6个持仓。确认日K生成目标，下一交易日开盘执行；按模拟保证金预算配置：目标总占用45%、单品种≤12%、净方向差≤30%、单板块≤30%；名义敞口另列。持仓采用2×ATR跟踪止损，触线记录日期并安排下一交易日开盘退出，不按无法验证的盘中价格回填成交。连续合约保证金率为公开规则基础上的模拟假设，实际以具体月份合约与期货公司结算为准；近月月差只作风险提示；开平各万1.2、每侧1跳。",
   "rule_changes": [
     {
       "time": "2026-10-20T11:12:30+08:00",

@@ -103,7 +103,11 @@
         <div id="paperScope" class="paper-scope"></div>
         <div id="paperCards" class="paper-cards"></div>
         <h3 class="subsection-title">十品种当前配置（含空仓）</h3>
-        <div class="table-scroll"><table class="position-table"><thead><tr><th>品种</th><th>方向</th><th>保证金预算</th><th>保证金占用</th><th>参考手数</th><th>名义敞口</th><th>波动状态</th><th>风险调整趋势</th><th>噪音比率</th><th>入场 / 最新</th><th>持仓浮盈亏</th><th>入场时间</th></tr></thead><tbody id="paperPositionRows"></tbody></table></div>
+        <div class="table-scroll"><table class="position-table allocation-position-table"><thead><tr><th>品种</th><th>当前 / 下期操作</th><th>当前手数</th><th>止损状态</th><th>止损日期</th><th>持仓浮盈亏</th><th>归因历史盈亏</th><th>保证金占用</th><th>名义敞口</th><th>波动 / 趋势</th><th>入场 / 最新</th><th>操作依据</th></tr></thead><tbody id="paperPositionRows"></tbody></table></div>
+        <h3 class="subsection-title">组合权益与历史收益</h3>
+        <div id="allocationEquitySpark" class="spark-wrap allocation-equity-spark"></div>
+        <div class="table-scroll"><table class="paper-history-table"><thead><tr><th>确认日</th><th>组合权益</th><th>当日盈亏</th><th>当日收益率</th><th>历史累计盈亏</th><th>累计收益率</th><th>回撤</th><th>交易成本</th></tr></thead><tbody id="allocationHistoryRows"></tbody></table></div>
+        <h3 class="subsection-title">止损触发记录</h3><div id="allocationStopLog" class="change-log"></div>
         <h3 class="subsection-title">最近开仓 / 平仓 / 换向</h3>
         <div id="paperChangeLog" class="change-log"></div><p id="paperNote" class="panel-note"></p>
       </div>

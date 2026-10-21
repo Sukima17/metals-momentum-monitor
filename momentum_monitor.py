@@ -2123,6 +2123,11 @@ def update_allocation_paper_portfolio(
         "initial_cash": initial_cash, "equity": initial_cash, "positions": {}, "last_prices": {},
         "last_bars": {}, "entry_prices": {}, "entry_times": {}, "history": [], "change_history": [], "trades": 0,
     })
+    portfolio.setdefault("active_stops", {})
+    portfolio.setdefault("stop_set_dates", {})
+    portfolio.setdefault("stop_triggered", {})
+    portfolio.setdefault("stop_events", [])
+    portfolio.setdefault("asset_ledgers", {})
     rule_upgraded = portfolio.get("rule_version") != "margin_budget_v3"
     if rule_upgraded:
         portfolio.setdefault("rule_changes", []).append({
@@ -2137,12 +2142,15 @@ def update_allocation_paper_portfolio(
     slip_ticks = float(config.get("slippage_ticks_per_side", 1))
     confirmed_date = max((str(item.get("daily_date", ""))[:10] for item in valid), default="")
     pnl = 0.0
+    asset_contributions: dict[str, float] = {}
     for symbol, stored_lots in portfolio["positions"].items():
         asset = by_symbol.get(symbol)
         prior_price = portfolio["last_prices"].get(symbol)
         if not asset or prior_price is None or portfolio["last_bars"].get(symbol) == asset["bar_time"]:
             continue
-        pnl += float(stored_lots) * float(asset.get("multiplier", 1)) * (float(asset["price"]) - float(prior_price))
+        contribution = float(stored_lots) * float(asset.get("multiplier", 1)) * (float(asset["price"]) - float(prior_price))
+        pnl += contribution
+        asset_contributions[symbol] = asset_contributions.get(symbol, 0.0) + contribution
     marked_equity = max(1.0, float(portfolio["equity"]) + pnl)
     costs = 0.0
     execution_adjustment = 0.0
@@ -2160,10 +2168,14 @@ def update_allocation_paper_portfolio(
             target_lots = int(staged.get("target_lots", 0))
             open_price = float(asset.get("daily_open") or current_price)
             delta_lots = target_lots - prior_lots
-            execution_adjustment += delta_lots * multiplier * (current_price - open_price)
+            symbol_adjustment = delta_lots * multiplier * (current_price - open_price)
+            execution_adjustment += symbol_adjustment
+            asset_contributions[symbol] = asset_contributions.get(symbol, 0.0) + symbol_adjustment
             if delta_lots:
                 turnover_notional = abs(delta_lots) * open_price * multiplier
-                costs += turnover_notional * fee + abs(delta_lots) * slip_ticks * float(asset["tick"]) * multiplier
+                symbol_cost = turnover_notional * fee + abs(delta_lots) * slip_ticks * float(asset["tick"]) * multiplier
+                costs += symbol_cost
+                asset_contributions[symbol] = asset_contributions.get(symbol, 0.0) - symbol_cost
                 reason = "open" if prior_lots == 0 else "close" if target_lots == 0 else "reverse" if prior_lots * target_lots < 0 else "rebalance"
                 record = {
                     "time": generated_at.isoformat(timespec="seconds"), "strategy_key": "allocation_portfolio_v1",
@@ -2183,9 +2195,17 @@ def update_allocation_paper_portfolio(
                 if target_lots and (prior_lots == 0 or prior_lots * target_lots < 0):
                     portfolio["entry_prices"][symbol] = open_price
                     portfolio["entry_times"][symbol] = generated_at.isoformat(timespec="seconds")
+                    staged_stop = staged.get("stop_price")
+                    if staged_stop is not None:
+                        portfolio["active_stops"][symbol] = float(staged_stop)
+                        portfolio["stop_set_dates"][symbol] = str(staged.get("signal_date") or portfolio.get("last_signal_date") or confirmed_date)
+                    portfolio["stop_triggered"].pop(symbol, None)
                 elif target_lots == 0:
                     portfolio["entry_prices"].pop(symbol, None)
                     portfolio["entry_times"].pop(symbol, None)
+                    portfolio["active_stops"].pop(symbol, None)
+                    portfolio["stop_set_dates"].pop(symbol, None)
+                    portfolio["stop_triggered"].pop(symbol, None)
             portfolio["positions"][symbol] = target_lots
             portfolio.setdefault("position_reasons", {})[symbol] = staged
         marked_equity = max(1.0, marked_equity + execution_adjustment)
@@ -2197,9 +2217,77 @@ def update_allocation_paper_portfolio(
                 "target_lots": int(row["target_lots"]), "target_weight": row["target_weight"],
                 "reason": row["reason"], "votes": row["votes"],
                 "risk_adjusted_trend": row["risk_adjusted_trend"], "noise_ratio": row["noise_ratio"],
+                "stop_price": active_atr_stop(row["asset"], _side(int(row["target_lots"]))) if row["target_lots"] else None,
+                "signal_date": confirmed_date,
             } for row in targets
         }
         portfolio["last_signal_date"] = confirmed_date
+    # Maintain a trailing 2xATR risk line. A breach is an auditable risk event
+    # and schedules a flat target for the next session open; it is not filled
+    # retrospectively at an unknown intraday price.
+    for asset in valid:
+        symbol = asset["symbol"]
+        lots = int(portfolio["positions"].get(symbol, 0))
+        if not lots:
+            continue
+        side = _side(lots)
+        proposed_stop = active_atr_stop(asset, side)
+        existing_stop = portfolio["active_stops"].get(symbol)
+        initialized_now = existing_stop is None
+        if proposed_stop is not None:
+            if initialized_now:
+                existing_stop = float(proposed_stop)
+                portfolio["active_stops"][symbol] = existing_stop
+                portfolio["stop_set_dates"][symbol] = confirmed_date
+            else:
+                trailed_stop = max(float(existing_stop), float(proposed_stop)) if side > 0 else min(float(existing_stop), float(proposed_stop))
+                if trailed_stop != float(existing_stop):
+                    existing_stop = trailed_stop
+                    portfolio["active_stops"][symbol] = existing_stop
+                    portfolio["stop_set_dates"][symbol] = confirmed_date
+        if existing_stop is None:
+            continue
+        live = asset.get("live_daily", {})
+        live_price = float(live.get("close") or asset["price"])
+        observed_high = live_price if initialized_now else float(live.get("high") or live_price)
+        observed_low = live_price if initialized_now else float(live.get("low") or live_price)
+        breached = (side > 0 and observed_low <= float(existing_stop)) or (side < 0 and observed_high >= float(existing_stop))
+        event_date = str(live.get("date") or asset.get("bar_time") or generated_at.date())[:10]
+        trigger = portfolio["stop_triggered"].get(symbol)
+        if breached and (not trigger or trigger.get("date") != event_date):
+            trigger = {
+                "time": generated_at.isoformat(timespec="seconds"), "date": event_date,
+                "asset_id": asset["id"], "asset": asset["name"], "symbol": symbol,
+                "side": side, "lots": abs(lots), "stop_price": float(existing_stop),
+                "observed_price": live_price, "observed_high": observed_high, "observed_low": observed_low,
+                "action": "next_open_exit", "note": "2×ATR风险线触及，已安排下一交易日开盘退出",
+            }
+            portfolio["stop_triggered"][symbol] = trigger
+            portfolio["stop_events"].append(trigger)
+        if portfolio["stop_triggered"].get(symbol):
+            staged = portfolio.setdefault("pending_targets", {}).setdefault(symbol, {})
+            staged.update({
+                "target_lots": 0, "target_weight": 0.0,
+                "reason": "2×ATR止损风险线已触及，下一交易日开盘退出",
+                "stop_exit": True, "signal_date": confirmed_date,
+            })
+    for asset in valid:
+        symbol = asset["symbol"]
+        ledger = portfolio["asset_ledgers"].setdefault(symbol, {
+            "asset_id": asset["id"], "asset": asset["name"], "symbol": symbol,
+            "started_at": generated_at.isoformat(timespec="seconds"),
+            "cumulative_pnl": 0.0, "history": [],
+        })
+        contribution = float(asset_contributions.get(symbol, 0.0))
+        bar_changed = portfolio["last_bars"].get(symbol) != asset["bar_time"]
+        if contribution or bar_changed or not ledger["history"]:
+            ledger["cumulative_pnl"] = float(ledger.get("cumulative_pnl", 0.0)) + contribution
+            ledger["history"].append({
+                "time": generated_at.isoformat(timespec="seconds"), "date": confirmed_date,
+                "bar_time": asset["bar_time"], "pnl": contribution,
+                "cumulative_pnl": ledger["cumulative_pnl"],
+            })
+            ledger["history"] = ledger["history"][-1000:]
     for asset in valid:
         portfolio["last_prices"][asset["symbol"]] = float(asset["price"])
         portfolio["last_bars"][asset["symbol"]] = asset["bar_time"]
@@ -2209,6 +2297,30 @@ def update_allocation_paper_portfolio(
     })
     portfolio["history"] = portfolio["history"][-1000:]
     portfolio["change_history"] = portfolio["change_history"][-3000:]
+    portfolio["stop_events"] = portfolio["stop_events"][-1000:]
+    daily_map: dict[str, dict[str, Any]] = {}
+    for point in portfolio["history"]:
+        date = str(point.get("confirmed_date") or point.get("time", ""))[:10]
+        if not date:
+            continue
+        row = daily_map.setdefault(date, {"date": date, "costs": 0.0})
+        row.update({"time": point.get("time"), "equity": float(point.get("equity", initial_cash))})
+        row["costs"] += float(point.get("costs", 0.0))
+    daily_history: list[dict[str, Any]] = []
+    prior_daily_equity = initial_cash
+    daily_peak = initial_cash
+    for row in daily_map.values():
+        equity = float(row["equity"])
+        daily_pnl = equity - prior_daily_equity
+        daily_peak = max(daily_peak, equity)
+        daily_history.append({
+            **row, "daily_pnl": daily_pnl,
+            "daily_return_pct": daily_pnl / prior_daily_equity * 100 if prior_daily_equity else 0,
+            "cumulative_pnl": equity - initial_cash,
+            "cumulative_return_pct": (equity / initial_cash - 1) * 100,
+            "drawdown_pct": (equity / daily_peak - 1) * 100 if daily_peak else 0,
+        })
+        prior_daily_equity = equity
     positions = []
     for target in targets:
         asset = target["asset"]
@@ -2220,6 +2332,14 @@ def update_allocation_paper_portfolio(
         margin_rate = simulation_margin_rate(asset)
         margin_occupied = notional * margin_rate
         unrealized = lots * multiplier * (price - entry_price)
+        stop_price = portfolio["active_stops"].get(symbol) if lots else None
+        stop_trigger = portfolio["stop_triggered"].get(symbol) if lots else None
+        stop_distance = (price - float(stop_price)) * _side(lots) if stop_price is not None and lots else None
+        stop_distance_pct = stop_distance / price * 100 if stop_distance is not None and price else None
+        stop_risk = max(0.0, float(stop_distance or 0)) * abs(lots) * multiplier
+        stop_status = "已触线待退出" if stop_trigger else "接近止损" if stop_distance_pct is not None and stop_distance_pct <= 1 else "安全" if lots else "空仓"
+        ledger = portfolio["asset_ledgers"].get(symbol, {})
+        staged_target = portfolio.get("pending_targets", {}).get(symbol, {})
         positions.append({
             "strategy_key": "allocation_portfolio_v1", "strategy": portfolio["name"], "asset_id": asset["id"],
             "asset": asset["name"], "symbol": symbol, "side": 1 if lots > 0 else -1 if lots < 0 else 0,
@@ -2232,10 +2352,20 @@ def update_allocation_paper_portfolio(
             "margin_note": asset.get("margin_note", "模拟保证金率，不等于期货公司实时结算参数"),
             "entry_price": entry_price, "current_price": price,
             "unrealized_cny": unrealized, "unrealized_pct": unrealized / notional * 100 if notional else 0,
+            "historical_pnl_cny": float(ledger.get("cumulative_pnl", 0.0)),
+            "history_started_at": ledger.get("started_at"),
+            "stop_price": stop_price, "stop_status": stop_status,
+            "stop_set_date": portfolio["stop_set_dates"].get(symbol) if lots else None,
+            "stop_triggered_date": stop_trigger.get("date") if stop_trigger else None,
+            "stop_triggered_at": stop_trigger.get("time") if stop_trigger else None,
+            "stop_distance_pct": stop_distance_pct, "stop_risk_cny": stop_risk,
+            "stop_policy": "2×ATR跟踪风险线；触及后安排下一交易日开盘退出，不按未知盘中价格回填成交",
             "volatility_control": asset.get("volatility_control"), "trend_quality": asset.get("trend_quality"),
             "allocation_reason": (portfolio.get("position_reasons", {}).get(symbol) or target)["reason"],
             "strategy_votes": (portfolio.get("position_reasons", {}).get(symbol) or target)["votes"],
-            "next_target_lots": int(portfolio.get("pending_targets", {}).get(symbol, {}).get("target_lots", 0)),
+            "next_target_lots": int(staged_target.get("target_lots", 0)),
+            "next_action_reason": staged_target.get("reason"),
+            "stop_exit_scheduled": bool(staged_target.get("stop_exit")),
             "next_signal_date": portfolio.get("last_signal_date"),
             "entry_time": portfolio["entry_times"].get(symbol), "bar_time": asset["bar_time"],
         })
@@ -2271,14 +2401,16 @@ def update_allocation_paper_portfolio(
         "mode": "forward_allocation_paper", "started_at": portfolio["started_at"], "updated_at": state["updated_at"],
         "initial_cash": initial_cash, "scope": scope_rows, "strategies": summary, "positions": positions,
         "position_changes": all_changes, "equity_history": {"allocation_portfolio_v1": portfolio["history"]},
+        "daily_history": daily_history[-500:],
+        "stop_events": list(reversed(portfolio.get("stop_events", [])[-100:])),
         "selected_strategies": {item["id"]: item.get("strategy_selection", {}).get("selected") for item in valid},
-        "assumptions": "1000万元初始权益并延续原账本；仅指定10个品种；适配方法、技术方向、风险调整趋势三票取二即可入选，最多6个持仓。确认日K生成目标，下一交易日开盘执行；按模拟保证金预算配置：目标总占用45%、单品种≤12%、净方向差≤30%、单板块≤30%；名义敞口另列，不再冒充资金占用。连续合约保证金率为公开规则基础上的模拟假设，实际以具体月份合约与期货公司结算为准；近月月差只作风险提示；开平各万1.2、每侧1跳。",
+        "assumptions": "1000万元初始权益并延续原账本；仅指定10个品种；适配方法、技术方向、风险调整趋势三票取二即可入选，最多6个持仓。确认日K生成目标，下一交易日开盘执行；按模拟保证金预算配置：目标总占用45%、单品种≤12%、净方向差≤30%、单板块≤30%；名义敞口另列。持仓采用2×ATR跟踪止损，触线记录日期并安排下一交易日开盘退出，不按无法验证的盘中价格回填成交。连续合约保证金率为公开规则基础上的模拟假设，实际以具体月份合约与期货公司结算为准；近月月差只作风险提示；开平各万1.2、每侧1跳。",
         "rule_changes": portfolio.get("rule_changes", []),
         "individual_forced": individual_forced,
     }
     atomic_json(PAPER_REPORT_PATH, paper_report)
     return {
-        **{key: paper_report[key] for key in ("mode", "started_at", "updated_at", "initial_cash", "scope", "strategies", "positions", "individual_forced", "rule_changes")},
+        **{key: paper_report[key] for key in ("mode", "started_at", "updated_at", "initial_cash", "scope", "strategies", "positions", "individual_forced", "rule_changes", "daily_history", "stop_events")},
         "recent_changes": all_changes[:30], "history_count": len(all_changes), "history_url": "paper-history.json",
         "allocation_method": paper_report["assumptions"],
         "note": "1000万元择优组合与17个独立强制方向实验盘并行；方向均来自品种自身时间序列信号，不使用板块截面强弱。手数按主连参考价、交易单位和模拟保证金率折算；名义敞口与保证金占用分开，均不代表真实委托或期货公司实时结算参数。",
@@ -2660,7 +2792,7 @@ def scan_once() -> dict[str, Any]:
                 strategy.pop("return_series", None)
         signal_changes = update_signal_change_log(results, generated_at)
         payload = {
-            "schema_version": 17,
+            "schema_version": 18,
             "generated_at": generated_at.isoformat(timespec="seconds"),
             "interval_seconds": int(config["scan_interval_seconds"]),
             "summary": counts,
@@ -2680,7 +2812,7 @@ def scan_once() -> dict[str, Any]:
                 "capital_structure": "价格上涨且总持仓增加归为多头增仓；价格下跌且总持仓增加归为空头增仓；上涨缩仓提示警惕追多，下跌缩仓提示警惕追空。该分类只描述价格与总持仓组合，不判定多空持仓归属",
                 "trend_quality": "20日收益率刻画中期趋势，3日收益率相对20日趋势的绝对比例刻画短期噪音；20日收益率除以20日同期限波动率得到风险调整后趋势",
                 "strategy_selection": "所有品种统一先按最近一年硬门槛筛选，再排可用名次：至少8笔、收益>0；日线四因子Sharpe≥0.30，其他方法Sharpe>0。高绩效但低于8笔的方法仅列入前向观察；低换手方法另用真实5年、数据不足时3年历史作背景核验，不直接替换。",
-                "allocation": "两套模拟盘并行：17品种各自100万元且每日必须持有多或空，用于检验方向能力；原1000万元组合延续历史，三票取二后择优配置，目标总名义仓位90%、单品种≤30%、净敞口≤70%、板块≤50%、最多6个持仓。波动率只缩放仓位，不改变方向",
+                "allocation": "两套模拟盘并行：17品种各自100万元且每日必须持有多或空，用于检验方向能力；原1000万元组合延续历史，三票取二后择优配置，目标总保证金占用45%、单品种≤12%、净保证金方向差≤30%、单板块≤30%、最多6个持仓。保证金占用与名义敞口分开，波动率只缩放仓位、不改变方向",
                 "open_interest": "优先读取行情商的品种加权合约持仓字段；若无该序列，将全部挂牌分月合约持仓逐日求和；两者均失败才明确标记主连降级",
                 "calendar_spread": "按到期月份选择最近两个仍挂牌且有有效买卖盘的分月合约；月差=近月买卖盘中值−次近月买卖盘中值，正值为BACKWARDATION、负值为CONTANGO；保留两侧可成交边界并核对报价交易日和时间差",
                 "technical": "主流指标层覆盖均线、MACD、ADX、ROC、RSI、KDJ、CCI、ATR、布林带、唐奇安、量比与OBV，仅作交叉验证",
