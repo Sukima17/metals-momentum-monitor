@@ -23,7 +23,7 @@
   "individual_target_margin_usage": 0.55,
   "individual_max_margin_usage": 0.70,
   "individual_stop_atr_multiple": 1.5,
-  "individual_sizing_rule_version": "assertive_hard_stop_v2",
+  "individual_sizing_rule_version": "assertive_close_confirm_stop_v3",
   "backtest_calendar_days": 365,
   "top_strategy_count": 4,
   "minimum_ranked_strategy_trades": 20,
