@@ -95,14 +95,15 @@
       <div id="individualPaperPanel" class="paper-tab-panel">
         <div id="individualPaperSummary" class="paper-cards"></div>
         <p id="individualPaperMethod" class="panel-note"></p>
-        <div class="table-scroll"><table class="position-table individual-position-table"><thead><tr><th>品种</th><th>当前方向</th><th>参考手数</th><th>确认日</th><th>当日收益</th><th>盘中浮盈</th><th>累计收益</th><th>最大回撤</th><th>名义仓位</th><th>累计成本</th><th>下期方向 / 手数</th><th>方向依据</th></tr></thead><tbody id="individualPaperRows"></tbody></table></div>
+        <div class="margin-explainer"><b>资金口径</b><span>名义敞口 = 价格 × 合约乘数 × 手数</span><span>模拟保证金 = 名义敞口 × 模拟保证金率</span><span>止损风险 = 距止损点数 × 合约乘数 × 手数</span><small>连续合约无法映射唯一月份合约，保证金率是透明的模拟假设；实际交易以期货公司逐合约结算参数为准。</small></div>
+        <div class="table-scroll"><table class="position-table individual-position-table"><thead><tr><th>品种</th><th>方向 / 手数</th><th>止损情况</th><th>持仓浮盈亏</th><th>今日盯市</th><th>历史累计收益</th><th>实时权益</th><th>保证金占用</th><th>名义敞口</th><th>最大回撤</th><th>下期方向 / 手数</th><th>方向依据</th></tr></thead><tbody id="individualPaperRows"></tbody></table></div>
         <h3 class="subsection-title">最近换向 / 再平衡</h3><div id="individualChangeLog" class="change-log"></div>
       </div>
       <div id="allocationPaperPanel" class="paper-tab-panel" hidden>
         <div id="paperScope" class="paper-scope"></div>
         <div id="paperCards" class="paper-cards"></div>
         <h3 class="subsection-title">十品种当前配置（含空仓）</h3>
-        <div class="table-scroll"><table class="position-table"><thead><tr><th>品种</th><th>方向</th><th>配置权重</th><th>参考手数</th><th>名义金额</th><th>波动状态</th><th>风险调整趋势</th><th>噪音比率</th><th>入场 / 最新</th><th>浮盈亏</th><th>入场时间</th></tr></thead><tbody id="paperPositionRows"></tbody></table></div>
+        <div class="table-scroll"><table class="position-table"><thead><tr><th>品种</th><th>方向</th><th>保证金预算</th><th>保证金占用</th><th>参考手数</th><th>名义敞口</th><th>波动状态</th><th>风险调整趋势</th><th>噪音比率</th><th>入场 / 最新</th><th>持仓浮盈亏</th><th>入场时间</th></tr></thead><tbody id="paperPositionRows"></tbody></table></div>
         <h3 class="subsection-title">最近开仓 / 平仓 / 换向</h3>
         <div id="paperChangeLog" class="change-log"></div><p id="paperNote" class="panel-note"></p>
       </div>

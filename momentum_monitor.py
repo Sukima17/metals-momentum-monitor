@@ -1709,24 +1709,48 @@ def forced_asset_direction(asset: dict[str, Any], previous_side: int = 0) -> dic
     }
 
 
+def simulation_margin_rate(asset: dict[str, Any]) -> float:
+    """Return a disclosed simulation rate, never an implied broker live rate."""
+    return max(0.01, min(float(asset.get("sim_margin_rate") or 0.12), 1.0))
+
+
+def active_atr_stop(asset: dict[str, Any], direction: int) -> float | None:
+    levels = asset.get("risk_levels") or {}
+    value = levels.get("long_atr_stop" if direction > 0 else "short_atr_stop")
+    return float(value) if value is not None else None
+
+
 def forced_asset_lots(asset: dict[str, Any], equity: float, direction: int, config: dict[str, Any]) -> dict[str, Any]:
-    """Risk-scale one independent account while preserving at least one lot."""
+    """Size by margin capacity and stop-loss risk, preserving at least one lot."""
     price = float(asset.get("daily_close") or asset.get("price") or 0)
     contract_notional = price * float(asset.get("multiplier", 1))
-    volatility_20d = float(asset.get("trend_quality", {}).get("volatility_20d_pct") or 0) / 100
-    annualized_vol = volatility_20d * math.sqrt(252 / 20) if volatility_20d > 0 else 0
-    target_vol = float(config.get("individual_target_annual_volatility", 0.12))
-    max_weight = float(config.get("individual_max_notional_weight", 1.0))
+    margin_rate = simulation_margin_rate(asset)
+    margin_per_contract = contract_notional * margin_rate
     vol_multiplier = float(asset.get("volatility_control", {}).get("position_multiplier") or 0.35)
-    risk_weight = min(max_weight, target_vol / annualized_vol if annualized_vol > 0 else 0.35)
-    target_weight = max(0.0, risk_weight * vol_multiplier)
-    lots = math.floor(equity * target_weight / contract_notional) if contract_notional > 0 else 0
+    target_margin_usage = min(
+        float(config.get("individual_max_margin_usage", 0.60)),
+        float(config.get("individual_target_margin_usage", 0.35)) * vol_multiplier,
+    )
+    lots_by_margin = math.floor(equity * target_margin_usage / margin_per_contract) if margin_per_contract > 0 else 0
+    stop_price = active_atr_stop(asset, direction)
+    stop_distance = abs(price - stop_price) if stop_price is not None else max(price * 0.03, float(asset.get("tick", 0)))
+    stop_risk_per_contract = stop_distance * float(asset.get("multiplier", 1))
+    risk_budget_pct = float(config.get("individual_risk_budget_per_trade", 0.02)) * vol_multiplier
+    lots_by_stop_risk = math.floor(equity * risk_budget_pct / stop_risk_per_contract) if stop_risk_per_contract > 0 else lots_by_margin
+    lots = min(lots_by_margin, lots_by_stop_risk) if contract_notional > 0 else 0
     lots = max(1, lots) if contract_notional > 0 else 0
     return {
         "signed_lots": direction * lots,
-        "target_weight": target_weight,
-        "annualized_volatility_pct": annualized_vol * 100 if annualized_vol else None,
+        "target_margin_usage_pct": target_margin_usage * 100,
+        "risk_budget_pct": risk_budget_pct * 100,
+        "lots_by_margin": lots_by_margin,
+        "lots_by_stop_risk": lots_by_stop_risk,
+        "limiting_rule": "止损风险预算" if lots_by_stop_risk <= lots_by_margin else "保证金预算",
         "contract_notional": contract_notional,
+        "margin_rate": margin_rate,
+        "margin_per_contract": margin_per_contract,
+        "stop_price": stop_price,
+        "stop_risk_per_contract": stop_risk_per_contract,
     }
 
 
@@ -1763,7 +1787,8 @@ def update_individual_forced_books(
                 "equity": equity, "signed_lots": signed_lots, "last_mark": mark,
                 "last_confirmed_date": confirmed_date, "entry_price": mark,
                 "entry_time": generated_at.isoformat(timespec="seconds"), "trades": 1,
-                "total_costs": costs, "history": [{
+                "total_costs": costs, "active_stop": sizing.get("stop_price"), "current_sizing": sizing,
+                "stop_events": [], "history": [{
                     "date": confirmed_date, "time": generated_at.isoformat(timespec="seconds"),
                     "equity": equity, "daily_pnl": -costs, "daily_return_pct": -costs / initial_cash * 100,
                     "costs": costs, "mark_price": mark, "side": _side(signed_lots), "lots": abs(signed_lots),
@@ -1784,12 +1809,29 @@ def update_individual_forced_books(
                 "pending_side": pending_direction["direction"], "pending_lots": int(pending_sizing["signed_lots"]),
                 "pending_signal_date": confirmed_date, "pending_reason": pending_direction["reason"],
                 "pending_score": pending_direction["score"], "pending_votes": pending_direction["votes"],
+                "pending_sizing": pending_sizing,
             })
             root["accounts"][symbol] = account
         elif confirmed_date > str(account.get("last_confirmed_date", "")):
             prior_equity = float(account["equity"])
             prior_lots = int(account.get("signed_lots", 0))
+            prior_stop = account.get("active_stop")
+            daily_high = float(asset.get("daily_high") or max(daily_open, mark))
+            daily_low = float(asset.get("daily_low") or min(daily_open, mark))
+            stop_hit = bool(
+                prior_stop is not None and prior_lots and
+                ((prior_lots > 0 and daily_low <= float(prior_stop)) or (prior_lots < 0 and daily_high >= float(prior_stop)))
+            )
+            if stop_hit and account.get("last_stop_event_date") != confirmed_date:
+                account.setdefault("stop_events", []).append({
+                    "date": confirmed_date, "time": generated_at.isoformat(timespec="seconds"),
+                    "side": _side(prior_lots), "stop_price": float(prior_stop),
+                    "low": daily_low, "high": daily_high, "mode": "risk_alert_only",
+                    "note": "ATR风险线触及；强制方向实验盘不自动空仓，由下一期方向与手数处理",
+                })
+                account["last_stop_event_date"] = confirmed_date
             target_lots = int(account.get("pending_lots") or prior_lots or 1)
+            executed_sizing = account.get("pending_sizing")
             pnl_before_open = prior_lots * multiplier * (daily_open - float(account["last_mark"]))
             delta_lots = target_lots - prior_lots
             costs = abs(delta_lots) * (daily_open * multiplier * fee + slip_ticks * tick * multiplier)
@@ -1810,7 +1852,14 @@ def update_individual_forced_books(
                 if prior_lots * target_lots <= 0:
                     account["entry_price"] = daily_open
                     account["entry_time"] = generated_at.isoformat(timespec="seconds")
+                elif abs(target_lots) > abs(prior_lots):
+                    added = abs(target_lots) - abs(prior_lots)
+                    account["entry_price"] = (
+                        abs(prior_lots) * float(account.get("entry_price", daily_open)) + added * daily_open
+                    ) / abs(target_lots)
             account["signed_lots"] = target_lots
+            if executed_sizing:
+                account["current_sizing"] = executed_sizing
             account["last_mark"] = mark
             account["last_confirmed_date"] = confirmed_date
             account["total_costs"] = float(account.get("total_costs", 0)) + costs
@@ -1823,10 +1872,19 @@ def update_individual_forced_books(
             })
             direction = forced_asset_direction(asset, _side(target_lots))
             sizing = forced_asset_lots(asset, float(account["equity"]), direction["direction"], config)
+            proposed_stop = active_atr_stop(asset, _side(target_lots))
+            if proposed_stop is not None:
+                if prior_lots * target_lots <= 0 or account.get("active_stop") is None:
+                    account["active_stop"] = proposed_stop
+                elif target_lots > 0:
+                    account["active_stop"] = max(float(account["active_stop"]), proposed_stop)
+                else:
+                    account["active_stop"] = min(float(account["active_stop"]), proposed_stop)
             account.update({
                 "pending_side": direction["direction"], "pending_lots": int(sizing["signed_lots"]),
                 "pending_signal_date": confirmed_date, "pending_reason": direction["reason"],
                 "pending_score": direction["score"], "pending_votes": direction["votes"],
+                "pending_sizing": sizing,
             })
             account["history"] = account["history"][-1500:]
             account["change_history"] = account["change_history"][-1000:]
@@ -1840,7 +1898,31 @@ def update_individual_forced_books(
         live_price = float(asset.get("live_daily", {}).get("close") or asset["price"])
         notional = abs(signed_lots) * multiplier * live_price
         intraday_pnl = signed_lots * multiplier * (live_price - float(account.get("last_mark", live_price)))
+        holding_pnl = signed_lots * multiplier * (live_price - float(account.get("entry_price", live_price)))
+        live_equity = float(account["equity"]) + intraday_pnl
+        margin_rate = simulation_margin_rate(asset)
+        margin_occupied = notional * margin_rate
+        stop_price = account.get("active_stop")
+        live_bar = asset.get("live_daily", {})
+        live_high = float(live_bar.get("high") or live_price)
+        live_low = float(live_bar.get("low") or live_price)
+        stop_breached = bool(
+            stop_price is not None and signed_lots and
+            ((signed_lots > 0 and live_low <= float(stop_price)) or (signed_lots < 0 and live_high >= float(stop_price)))
+        )
+        stop_distance = (live_price - float(stop_price)) * _side(signed_lots) if stop_price is not None else None
+        stop_risk = max(0.0, float(stop_distance or 0)) * abs(signed_lots) * multiplier
+        stop_distance_pct = stop_distance / live_price * 100 if stop_distance is not None and live_price else None
+        stop_status = "已触线" if stop_breached else "接近止损" if stop_distance_pct is not None and stop_distance_pct <= 1.0 else "安全"
         last_point = history[-1] if history else {}
+        current_sizing = account.get("current_sizing") or forced_asset_lots(
+            asset, float(account["equity"]), _side(signed_lots), config
+        )
+        public_history = [{
+            **point,
+            "cumulative_pnl": float(point.get("equity", initial_cash)) - initial_cash,
+            "cumulative_return_pct": (float(point.get("equity", initial_cash)) / initial_cash - 1) * 100,
+        } for point in history[-260:]]
         rows.append({
             "asset_id": asset["id"], "asset": asset["name"], "short_name": asset["short_name"], "symbol": symbol,
             "initial_cash": initial_cash, "equity": account["equity"],
@@ -1848,15 +1930,27 @@ def update_individual_forced_books(
             "max_drawdown_pct": max_drawdown * 100, "daily_pnl": last_point.get("daily_pnl"),
             "daily_return_pct": last_point.get("daily_return_pct"), "confirmed_date": account.get("last_confirmed_date"),
             "side": _side(signed_lots), "lots": abs(signed_lots), "signed_lots": signed_lots,
-            "position_size_pct": notional / float(account["equity"]) * 100 if account.get("equity") else 0,
+            "position_size_pct": margin_occupied / live_equity * 100 if live_equity else 0,
+            "notional_cny": notional, "notional_exposure_pct": notional / live_equity * 100 if live_equity else 0,
+            "margin_rate_pct": margin_rate * 100, "margin_occupied_cny": margin_occupied,
+            "margin_usage_pct": margin_occupied / live_equity * 100 if live_equity else 0,
+            "available_funds_cny": live_equity - margin_occupied, "leverage_multiple": notional / live_equity if live_equity else 0,
+            "margin_note": asset.get("margin_note", "模拟保证金率，不等于期货公司实时结算参数"),
             "mark_price": account.get("last_mark"), "live_price": live_price, "intraday_pnl": intraday_pnl,
+            "live_equity": live_equity, "live_return_pct": (live_equity / initial_cash - 1) * 100,
+            "holding_pnl_cny": holding_pnl, "historical_pnl_cny": float(account["equity"]) - initial_cash,
+            "stop_price": stop_price, "stop_status": stop_status, "stop_breached": stop_breached,
+            "stop_distance_pct": stop_distance_pct, "stop_risk_cny": stop_risk,
+            "stop_policy": "2×ATR跟踪风险线；触线记录风险提示，强制方向盘不自动空仓",
+            "stop_events": list(reversed(account.get("stop_events", [])[-20:])),
+            "sizing": current_sizing, "pending_sizing": account.get("pending_sizing"),
             "pending_side": account.get("pending_side"), "pending_lots": abs(int(account.get("pending_lots", 0))),
             "pending_reason": account.get("pending_reason"), "pending_score": account.get("pending_score"),
             "pending_votes": account.get("pending_votes"), "entry_price": account.get("entry_price"),
             "entry_time": account.get("entry_time"), "trades": account.get("trades", 0),
             "total_costs": account.get("total_costs", 0), "volatility_control": asset.get("volatility_control"),
             "win_days": sum(float(point.get("daily_pnl", 0)) > 0 for point in history),
-            "observations": len(history),
+            "observations": len(history), "history": public_history,
         })
     root["change_history"] = root["change_history"][-3000:]
     return {
@@ -1864,7 +1958,7 @@ def update_individual_forced_books(
         "initial_cash_per_asset": initial_cash, "accounts": rows,
         "recent_changes": list(reversed(root["change_history"][-30:])),
         "history_count": len(root["change_history"]),
-        "method": "每品种独立100万元；每日必须持有多或空。适配方法40%、技术方向35%、风险调整趋势25%；波动率只调手数不允许空仓；确认日K产生信号，下一交易日开盘执行。",
+        "method": "每品种独立100万元且每日必须持有多或空。手数取‘模拟保证金预算’与‘2×ATR止损风险预算’两者较小值；波动率升高会同时压低二者。合约价值是名义敞口，不是保证金占用；保证金率为连续合约模拟假设，不等于期货公司实时结算参数。止损线用于风险监控，强制方向盘触线不自动空仓，由下一期方向与手数处理。",
     }
 
 
@@ -1959,9 +2053,9 @@ def build_allocation_targets(
             diagnostics[asset_id]["reason"] += f"；价值评分未进入前{max_active}，组合空仓"
     raw_scores = {key: value if key in selected_ids else 0.0 for key, value in raw_scores.items()}
     weights = _capped_allocation_weights(
-        raw_scores, float(config.get("paper_max_weight_per_asset", 0.20)), float(config.get("paper_gross_target", 1.0))
+        raw_scores, float(config.get("paper_max_margin_per_asset", 0.12)), float(config.get("paper_target_margin_usage", 0.45))
     )
-    max_net = float(config.get("paper_max_net_exposure", 0.40))
+    max_net = float(config.get("paper_max_net_margin", 0.30))
     signed = {asset_id: diagnostics[asset_id]["direction"] * weight for asset_id, weight in weights.items()}
     long_total = sum(value for value in signed.values() if value > 0)
     short_total = abs(sum(value for value in signed.values() if value < 0))
@@ -1972,7 +2066,7 @@ def build_allocation_targets(
     elif net < -max_net and short_total > 0:
         short_scale = (max_net + long_total) / short_total
         signed = {key: value * short_scale if value < 0 else value for key, value in signed.items()}
-    max_sector = float(config.get("paper_max_sector_exposure", 0.50))
+    max_sector = float(config.get("paper_max_sector_margin", 0.30))
     sectors = {asset["id"]: asset.get("sector", "other") for asset in assets}
     for sector in set(sectors.values()):
         members = [key for key, value in signed.items() if sectors.get(key) == sector and value]
@@ -1987,19 +2081,24 @@ def build_allocation_targets(
         multiplier = float(asset.get("multiplier", 1))
         price = float(asset["price"])
         contract_notional = price * multiplier
-        reference_lots = math.floor(abs(weight) * equity / contract_notional) if contract_notional > 0 else 0
+        margin_rate = simulation_margin_rate(asset)
+        margin_per_contract = contract_notional * margin_rate
+        reference_lots = math.floor(abs(weight) * equity / margin_per_contract) if margin_per_contract > 0 else 0
         signed_lots = reference_lots if weight > 0 else -reference_lots if weight < 0 else 0
         actual_notional = abs(signed_lots) * contract_notional
+        actual_margin = actual_notional * margin_rate
         targets.append({
             "asset": asset,
             "target_lots": signed_lots,
-            "target_weight": (actual_notional / equity if equity > 0 else 0) * (1 if signed_lots > 0 else -1 if signed_lots < 0 else 0),
+            "target_weight": (actual_margin / equity if equity > 0 else 0) * (1 if signed_lots > 0 else -1 if signed_lots < 0 else 0),
             "target_notional": actual_notional,
+            "target_margin": actual_margin,
+            "margin_rate": margin_rate,
             "contract_multiplier": multiplier,
             **diagnostics[asset["id"]],
         })
         if weight and reference_lots == 0:
-            targets[-1]["reason"] += "；目标金额不足主连参考价1手，暂不建仓"
+            targets[-1]["reason"] += "；保证金预算不足主连参考价1手，暂不建仓"
     return targets
 
 
@@ -2022,13 +2121,13 @@ def update_allocation_paper_portfolio(
         "initial_cash": initial_cash, "equity": initial_cash, "positions": {}, "last_prices": {},
         "last_bars": {}, "entry_prices": {}, "entry_times": {}, "history": [], "change_history": [], "trades": 0,
     })
-    rule_upgraded = portfolio.get("rule_version") != "majority_vote_v2"
+    rule_upgraded = portfolio.get("rule_version") != "margin_budget_v3"
     if rule_upgraded:
         portfolio.setdefault("rule_changes", []).append({
-            "time": generated_at.isoformat(timespec="seconds"), "version": "majority_vote_v2",
-            "note": "保留原权益与持仓；方向门槛由三票全同改为三票取二，目标总名义仓位90%、单品种30%、净敞口70%、板块50%、最多6个持仓。",
+            "time": generated_at.isoformat(timespec="seconds"), "version": "margin_budget_v3",
+            "note": "保留原权益与持仓；纠正资金口径为保证金预算：目标总保证金占用45%、单品种≤12%、净保证金方向差≤30%、单板块≤30%、最多6个持仓。名义敞口单独展示。",
         })
-        portfolio["rule_version"] = "majority_vote_v2"
+        portfolio["rule_version"] = "margin_budget_v3"
     paper_ids = set(config.get("paper_asset_ids", []))
     valid = [item for item in results if item.get("price") and item["id"] in paper_ids]
     by_symbol = {item["symbol"]: item for item in valid}
@@ -2116,13 +2215,19 @@ def update_allocation_paper_portfolio(
         entry_price = float(portfolio["entry_prices"].get(symbol) or price)
         multiplier = float(target["contract_multiplier"])
         notional = abs(lots) * price * multiplier
+        margin_rate = simulation_margin_rate(asset)
+        margin_occupied = notional * margin_rate
         unrealized = lots * multiplier * (price - entry_price)
         positions.append({
             "strategy_key": "allocation_portfolio_v1", "strategy": portfolio["name"], "asset_id": asset["id"],
             "asset": asset["name"], "symbol": symbol, "side": 1 if lots > 0 else -1 if lots < 0 else 0,
             "lots": abs(lots), "signed_lots": lots, "contract_multiplier": multiplier,
-            "position_size_pct": notional / portfolio["equity"] * 100 if portfolio["equity"] else 0,
+            "position_size_pct": margin_occupied / portfolio["equity"] * 100 if portfolio["equity"] else 0,
+            "margin_usage_pct": margin_occupied / portfolio["equity"] * 100 if portfolio["equity"] else 0,
+            "notional_exposure_pct": notional / portfolio["equity"] * 100 if portfolio["equity"] else 0,
             "target_weight_pct": target["target_weight"] * 100, "notional_cny": notional,
+            "margin_rate_pct": margin_rate * 100, "margin_occupied_cny": margin_occupied,
+            "margin_note": asset.get("margin_note", "模拟保证金率，不等于期货公司实时结算参数"),
             "entry_price": entry_price, "current_price": price,
             "unrealized_cny": unrealized, "unrealized_pct": unrealized / notional * 100 if notional else 0,
             "volatility_control": asset.get("volatility_control"), "trend_quality": asset.get("trend_quality"),
@@ -2134,6 +2239,9 @@ def update_allocation_paper_portfolio(
         })
     gross_notional = sum(row["notional_cny"] for row in positions)
     net_notional = sum(row["notional_cny"] * row["side"] for row in positions)
+    gross_margin = sum(row["margin_occupied_cny"] for row in positions)
+    net_margin = sum(row["margin_occupied_cny"] * row["side"] for row in positions)
+    pending_margin = sum(float(row.get("target_margin", 0)) for row in targets)
     peak, max_drawdown = initial_cash, 0.0
     for point in portfolio["history"]:
         peak = max(peak, float(point["equity"]))
@@ -2146,7 +2254,11 @@ def update_allocation_paper_portfolio(
         "long_positions": sum(row["side"] > 0 for row in positions), "short_positions": sum(row["side"] < 0 for row in positions),
         "gross_exposure_pct": gross_notional / portfolio["equity"] * 100 if portfolio["equity"] else 0,
         "net_exposure_pct": net_notional / portfolio["equity"] * 100 if portfolio["equity"] else 0,
-        "cash_buffer_cny": max(0.0, portfolio["equity"] - gross_notional), "observations": len(portfolio["history"]),
+        "gross_margin_usage_pct": gross_margin / portfolio["equity"] * 100 if portfolio["equity"] else 0,
+        "net_margin_usage_pct": net_margin / portfolio["equity"] * 100 if portfolio["equity"] else 0,
+        "pending_margin_usage_pct": pending_margin / portfolio["equity"] * 100 if portfolio["equity"] else 0,
+        "margin_occupied_cny": gross_margin,
+        "cash_buffer_cny": max(0.0, portfolio["equity"] - gross_margin), "observations": len(portfolio["history"]),
     }]
     all_changes = sorted(portfolio["change_history"], key=lambda row: row["time"], reverse=True)
     scope_rows = [{"id": asset["id"], "name": asset["name"], "symbol": asset["symbol"]} for asset in config["assets"] if asset["id"] in paper_ids]
@@ -2158,7 +2270,7 @@ def update_allocation_paper_portfolio(
         "initial_cash": initial_cash, "scope": scope_rows, "strategies": summary, "positions": positions,
         "position_changes": all_changes, "equity_history": {"allocation_portfolio_v1": portfolio["history"]},
         "selected_strategies": {item["id"]: item.get("strategy_selection", {}).get("selected") for item in valid},
-        "assumptions": "1000万元初始权益并延续原账本；仅指定10个品种；适配方法、技术方向、风险调整趋势三票取二即可入选，按置信度、趋势质量、噪音与逆波动率排序，最多6个持仓；确认日K生成目标，下一交易日开盘执行；目标总名义仓位90%、单品种≤30%、组合净敞口≤70%、单板块≤50%；近月月差只作风险提示；主连价仅用于模拟盘参考手数折算；开平各万1.2、每侧1跳。",
+        "assumptions": "1000万元初始权益并延续原账本；仅指定10个品种；适配方法、技术方向、风险调整趋势三票取二即可入选，最多6个持仓。确认日K生成目标，下一交易日开盘执行；按模拟保证金预算配置：目标总占用45%、单品种≤12%、净方向差≤30%、单板块≤30%；名义敞口另列，不再冒充资金占用。连续合约保证金率为公开规则基础上的模拟假设，实际以具体月份合约与期货公司结算为准；近月月差只作风险提示；开平各万1.2、每侧1跳。",
         "rule_changes": portfolio.get("rule_changes", []),
         "individual_forced": individual_forced,
     }
@@ -2167,7 +2279,7 @@ def update_allocation_paper_portfolio(
         **{key: paper_report[key] for key in ("mode", "started_at", "updated_at", "initial_cash", "scope", "strategies", "positions", "individual_forced", "rule_changes")},
         "recent_changes": all_changes[:30], "history_count": len(all_changes), "history_url": "paper-history.json",
         "allocation_method": paper_report["assumptions"],
-        "note": "1000万元择优组合与17个独立强制方向实验盘并行；方向均来自品种自身时间序列信号，不使用板块截面强弱。参考手数按主连价和交易单位折算，不代表可成交合约或真实委托。",
+        "note": "1000万元择优组合与17个独立强制方向实验盘并行；方向均来自品种自身时间序列信号，不使用板块截面强弱。手数按主连参考价、交易单位和模拟保证金率折算；名义敞口与保证金占用分开，均不代表真实委托或期货公司实时结算参数。",
     }
 
 
@@ -2254,6 +2366,10 @@ def update_signal_change_log(results: list[dict[str, Any]], generated_at: dateti
 
 def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: datetime) -> dict[str, Any]:
     base = {key: asset[key] for key in ("id", "name", "short_name", "symbol", "exchange", "sector", "provider", "tick", "multiplier", "decimals", "unit", "bar_timezone")}
+    base.update({
+        "sim_margin_rate": simulation_margin_rate(asset),
+        "margin_note": asset.get("margin_note", "模拟保证金率，不等于期货公司实时结算参数"),
+    })
     try:
         if asset["provider"] == "sina":
             cache_errors: dict[str, str] = {}
@@ -2418,6 +2534,8 @@ def analyze_asset(asset: dict[str, Any], config: dict[str, Any], generated_at: d
             "bar_time": five[-1]["datetime"],
             "daily_date": daily[-1]["datetime"],
             "daily_open": daily[-1]["open"],
+            "daily_high": daily[-1]["high"],
+            "daily_low": daily[-1]["low"],
             "daily_close": daily[-1]["close"],
             "daily_settle": daily[-1].get("settle") or daily[-1]["close"],
             "live_daily": {
@@ -2540,7 +2658,7 @@ def scan_once() -> dict[str, Any]:
                 strategy.pop("return_series", None)
         signal_changes = update_signal_change_log(results, generated_at)
         payload = {
-            "schema_version": 16,
+            "schema_version": 17,
             "generated_at": generated_at.isoformat(timespec="seconds"),
             "interval_seconds": int(config["scan_interval_seconds"]),
             "summary": counts,

@@ -244,6 +244,8 @@ if __name__ == "__main__":
         "volatility_control": {"position_multiplier": 0.35},
     }, 1_000_000, -1, config)
     assert forced_sizing["signed_lots"] < 0 and abs(forced_sizing["signed_lots"]) >= 1
+    assert forced_sizing["margin_rate"] > 0 and forced_sizing["margin_per_contract"] < forced_sizing["contract_notional"]
+    assert forced_sizing["limiting_rule"] in ("保证金预算", "止损风险预算")
     forced_state = {}
     forced_asset = {
         "id": "test", "name": "测试品种", "short_name": "测试", "symbol": "T0", "price": 102,
@@ -255,6 +257,8 @@ if __name__ == "__main__":
     }
     first_forced = update_individual_forced_books(forced_state, [forced_asset], datetime(2026, 10, 20, 9), config)
     assert len(first_forced["accounts"]) == 1 and first_forced["accounts"][0]["side"] != 0
+    assert first_forced["accounts"][0]["margin_usage_pct"] < first_forced["accounts"][0]["notional_exposure_pct"]
+    assert first_forced["accounts"][0]["history"] and "historical_pnl_cny" in first_forced["accounts"][0]
     forced_asset_next = {**forced_asset, "daily_date": "2026-10-20", "daily_open": 103, "daily_close": 104, "daily_settle": 104, "price": 104, "live_daily": {"close": 104}}
     second_forced = update_individual_forced_books(forced_state, [forced_asset_next], datetime(2026, 10, 21, 9), config)
     assert second_forced["accounts"][0]["observations"] == 2 and second_forced["accounts"][0]["side"] != 0
