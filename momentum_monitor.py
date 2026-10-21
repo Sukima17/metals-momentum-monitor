@@ -1720,6 +1720,25 @@ def active_atr_stop(asset: dict[str, Any], direction: int) -> float | None:
     return float(value) if value is not None else None
 
 
+def individual_atr_stop(asset: dict[str, Any], direction: int, config: dict[str, Any]) -> float | None:
+    """Return the forced-book stop without changing the dashboard's disclosed 2xATR reference."""
+    levels = asset.get("risk_levels") or {}
+    reference = float(levels.get("entry_reference") or asset.get("daily_close") or asset.get("price") or 0)
+    baseline = active_atr_stop(asset, direction)
+    if not reference or baseline is None:
+        return baseline
+    # risk_levels publishes a 2xATR line. Recover ATR from that transparent
+    # reference so the forced-book profile can use a tighter independent stop.
+    atr = abs(reference - float(baseline)) / 2
+    multiple = max(0.5, float(config.get("individual_stop_atr_multiple", 1.5)))
+    return reference - direction * multiple * atr
+
+
+def stop_order_fill(open_price: float, stop_price: float, direction: int) -> float:
+    """Apply a conservative gap rule to an already-resting stop order."""
+    return min(open_price, stop_price) if direction > 0 else max(open_price, stop_price)
+
+
 def forced_asset_lots(asset: dict[str, Any], equity: float, direction: int, config: dict[str, Any]) -> dict[str, Any]:
     """Size by margin capacity and stop-loss risk, preserving at least one lot."""
     price = float(asset.get("daily_close") or asset.get("price") or 0)
@@ -1732,7 +1751,7 @@ def forced_asset_lots(asset: dict[str, Any], equity: float, direction: int, conf
         float(config.get("individual_target_margin_usage", 0.35)) * vol_multiplier,
     )
     lots_by_margin = math.floor(equity * target_margin_usage / margin_per_contract) if margin_per_contract > 0 else 0
-    stop_price = active_atr_stop(asset, direction)
+    stop_price = individual_atr_stop(asset, direction, config)
     stop_distance = abs(price - stop_price) if stop_price is not None else max(price * 0.03, float(asset.get("tick", 0)))
     stop_risk_per_contract = stop_distance * float(asset.get("multiplier", 1))
     risk_budget_pct = float(config.get("individual_risk_budget_per_trade", 0.02)) * vol_multiplier
@@ -1750,6 +1769,7 @@ def forced_asset_lots(asset: dict[str, Any], equity: float, direction: int, conf
         "margin_rate": margin_rate,
         "margin_per_contract": margin_per_contract,
         "stop_price": stop_price,
+        "stop_atr_multiple": float(config.get("individual_stop_atr_multiple", 1.5)),
         "stop_risk_per_contract": stop_risk_per_contract,
     }
 
@@ -1757,12 +1777,26 @@ def forced_asset_lots(asset: dict[str, Any], equity: float, direction: int, conf
 def update_individual_forced_books(
     state: dict[str, Any], results: list[dict[str, Any]], generated_at: datetime, config: dict[str, Any]
 ) -> dict[str, Any]:
-    """Maintain 17 independent, always-long-or-short, forward-only daily ledgers."""
+    """Maintain direction-assigned forward ledgers with hard-stop cooldowns."""
     initial_cash = float(config.get("individual_paper_initial_cash", 1_000_000))
     root = state.setdefault("individual_forced_v1", {
         "name": "17品种强制方向实验盘", "started_at": generated_at.isoformat(timespec="seconds"),
         "initial_cash_per_asset": initial_cash, "accounts": {}, "change_history": [],
     })
+    profile_version = str(config.get("individual_sizing_rule_version", "assertive_hard_stop_v2"))
+    profile_upgraded = root.get("sizing_rule_version") != profile_version
+    if profile_upgraded:
+        root.setdefault("rule_changes", []).append({
+            "time": generated_at.isoformat(timespec="seconds"), "version": profile_version,
+            "note": "进攻型硬止损：正常波动单笔风险预算4%、目标保证金55%、上限70%，止损收紧至1.5×ATR；触线立即退出，下一交易日才可按最新方向重建。",
+        })
+        root["sizing_rule_version"] = profile_version
+    # Keep the persisted ledger label aligned with the current execution rules.
+    root["name"] = "17品种进攻型硬止损实验盘"
+    profile_activation_date = next((
+        str(item.get("time", ""))[:10] for item in reversed(root.get("rule_changes", []))
+        if item.get("version") == profile_version
+    ), "")
     fee = float(config.get("commission_per_side_bps", 1.2)) / 10000
     slip_ticks = float(config.get("slippage_ticks_per_side", 1))
     valid = [asset for asset in results if asset.get("price") and asset.get("daily_date")]
@@ -1815,71 +1849,114 @@ def update_individual_forced_books(
         elif confirmed_date > str(account.get("last_confirmed_date", "")):
             prior_equity = float(account["equity"])
             prior_lots = int(account.get("signed_lots", 0))
-            prior_stop = account.get("active_stop")
-            daily_high = float(asset.get("daily_high") or max(daily_open, mark))
-            daily_low = float(asset.get("daily_low") or min(daily_open, mark))
-            stop_hit = bool(
-                prior_stop is not None and prior_lots and
-                ((prior_lots > 0 and daily_low <= float(prior_stop)) or (prior_lots < 0 and daily_high >= float(prior_stop)))
-            )
-            if stop_hit and account.get("last_stop_event_date") != confirmed_date:
-                account.setdefault("stop_events", []).append({
-                    "date": confirmed_date, "time": generated_at.isoformat(timespec="seconds"),
-                    "side": _side(prior_lots), "stop_price": float(prior_stop),
-                    "low": daily_low, "high": daily_high, "mode": "risk_alert_only",
-                    "note": "ATR风险线触及；强制方向实验盘不自动空仓，由下一期方向与手数处理",
-                })
-                account["last_stop_event_date"] = confirmed_date
-            target_lots = int(account.get("pending_lots") or prior_lots or 1)
-            executed_sizing = account.get("pending_sizing")
-            pnl_before_open = prior_lots * multiplier * (daily_open - float(account["last_mark"]))
-            delta_lots = target_lots - prior_lots
-            costs = abs(delta_lots) * (daily_open * multiplier * fee + slip_ticks * tick * multiplier)
-            pnl_after_open = target_lots * multiplier * (mark - daily_open)
-            daily_pnl = pnl_before_open + pnl_after_open - costs
-            account["equity"] = max(1.0, prior_equity + daily_pnl)
-            if delta_lots:
-                reason = "reverse" if prior_lots * target_lots < 0 else "rebalance"
-                change = {
-                    "time": generated_at.isoformat(timespec="seconds"), "date": confirmed_date,
-                    "asset_id": asset["id"], "asset": asset["name"], "symbol": symbol,
-                    "from_lots": prior_lots, "to_lots": target_lots, "price": daily_open, "reason": reason,
-                    "direction_reason": account.get("pending_reason"), "direction_score": account.get("pending_score"),
-                }
-                account["change_history"].append(change)
-                root["change_history"].append(change)
-                account["trades"] = int(account.get("trades", 0)) + 1
-                if prior_lots * target_lots <= 0:
-                    account["entry_price"] = daily_open
-                    account["entry_time"] = generated_at.isoformat(timespec="seconds")
-                elif abs(target_lots) > abs(prior_lots):
-                    added = abs(target_lots) - abs(prior_lots)
-                    account["entry_price"] = (
-                        abs(prior_lots) * float(account.get("entry_price", daily_open)) + added * daily_open
-                    ) / abs(target_lots)
-            account["signed_lots"] = target_lots
-            if executed_sizing:
+            # A stop already executed during this forming daily bar must not be
+            # re-entered retrospectively at that morning's open when the bar confirms.
+            if account.get("cooldown_date") == confirmed_date and not prior_lots:
+                account["last_mark"] = mark
+                account["last_confirmed_date"] = confirmed_date
+                if account.get("history") and account["history"][-1].get("date") == confirmed_date:
+                    account["history"][-1]["completion"] = "confirmed_after_intraday_stop"
+            else:
+                planned_lots = int(account.get("pending_lots") or prior_lots or 1)
+                executed_sizing = account.get("pending_sizing") or forced_asset_lots(
+                    asset, prior_equity, _side(planned_lots), config
+                )
+                pnl_before_open = prior_lots * multiplier * (daily_open - float(account["last_mark"]))
+                delta_lots = planned_lots - prior_lots
+                open_costs = abs(delta_lots) * (daily_open * multiplier * fee + slip_ticks * tick * multiplier)
+                if delta_lots:
+                    reason = "open" if not prior_lots else "reverse" if prior_lots * planned_lots < 0 else "rebalance"
+                    change = {
+                        "time": generated_at.isoformat(timespec="seconds"), "date": confirmed_date,
+                        "asset_id": asset["id"], "asset": asset["name"], "symbol": symbol,
+                        "from_lots": prior_lots, "to_lots": planned_lots, "price": daily_open, "reason": reason,
+                        "direction_reason": account.get("pending_reason"), "direction_score": account.get("pending_score"),
+                    }
+                    account["change_history"].append(change)
+                    root["change_history"].append(change)
+                    account["trades"] = int(account.get("trades", 0)) + 1
+                    if prior_lots * planned_lots <= 0:
+                        account["entry_price"] = daily_open
+                        account["entry_time"] = generated_at.isoformat(timespec="seconds")
+                    elif abs(planned_lots) > abs(prior_lots):
+                        added = abs(planned_lots) - abs(prior_lots)
+                        account["entry_price"] = (
+                            abs(prior_lots) * float(account.get("entry_price", daily_open)) + added * daily_open
+                        ) / abs(planned_lots)
+                working_stop = account.get("active_stop")
+                staged_stop = executed_sizing.get("stop_price") if executed_sizing else None
+                if planned_lots and staged_stop is not None:
+                    if prior_lots * planned_lots <= 0 or working_stop is None:
+                        working_stop = float(staged_stop)
+                    elif planned_lots > 0:
+                        working_stop = max(float(working_stop), float(staged_stop))
+                    else:
+                        working_stop = min(float(working_stop), float(staged_stop))
+                daily_high = float(asset.get("daily_high") or max(daily_open, mark))
+                daily_low = float(asset.get("daily_low") or min(daily_open, mark))
+                stop_hit = bool(
+                    working_stop is not None and planned_lots and
+                    ((planned_lots > 0 and daily_low <= float(working_stop)) or
+                     (planned_lots < 0 and daily_high >= float(working_stop)))
+                )
+                close_costs = 0.0
+                fill_price = mark
+                target_lots = planned_lots
+                if stop_hit:
+                    fill_price = stop_order_fill(daily_open, float(working_stop), _side(planned_lots))
+                    close_costs = abs(planned_lots) * (
+                        fill_price * multiplier * fee + slip_ticks * tick * multiplier
+                    )
+                    target_lots = 0
+                    event = {
+                        "date": confirmed_date, "time": generated_at.isoformat(timespec="seconds"),
+                        "side": _side(planned_lots), "lots": abs(planned_lots),
+                        "stop_price": float(working_stop), "fill_price": fill_price,
+                        "low": daily_low, "high": daily_high, "mode": "hard_exit_confirmed",
+                        "note": "1.5×ATR硬止损已执行；跳空越过止损时按更差的开盘价成交",
+                    }
+                    account.setdefault("stop_events", []).append(event)
+                    account["last_stop_event_date"] = confirmed_date
+                    account["cooldown_date"] = confirmed_date
+                    stop_change = {
+                        "time": generated_at.isoformat(timespec="seconds"), "date": confirmed_date,
+                        "asset_id": asset["id"], "asset": asset["name"], "symbol": symbol,
+                        "from_lots": planned_lots, "to_lots": 0, "price": fill_price, "reason": "hard_stop",
+                        "direction_reason": event["note"], "direction_score": account.get("pending_score"),
+                    }
+                    account["change_history"].append(stop_change)
+                    root["change_history"].append(stop_change)
+                    account["trades"] = int(account.get("trades", 0)) + 1
+                pnl_after_open = planned_lots * multiplier * (fill_price - daily_open)
+                costs = open_costs + close_costs
+                daily_pnl = pnl_before_open + pnl_after_open - costs
+                account["equity"] = max(1.0, prior_equity + daily_pnl)
+                account["signed_lots"] = target_lots
                 account["current_sizing"] = executed_sizing
-            account["last_mark"] = mark
-            account["last_confirmed_date"] = confirmed_date
-            account["total_costs"] = float(account.get("total_costs", 0)) + costs
-            account["history"].append({
-                "date": confirmed_date, "time": generated_at.isoformat(timespec="seconds"),
-                "equity": account["equity"], "daily_pnl": daily_pnl,
-                "daily_return_pct": daily_pnl / prior_equity * 100 if prior_equity else 0,
-                "costs": costs, "mark_price": mark, "side": _side(target_lots), "lots": abs(target_lots),
-                "event": "daily_mark",
-            })
-            direction = forced_asset_direction(asset, _side(target_lots))
+                account["active_stop"] = None if stop_hit else working_stop
+                account["last_mark"] = mark if target_lots else fill_price
+                account["last_confirmed_date"] = confirmed_date
+                account["total_costs"] = float(account.get("total_costs", 0)) + costs
+                account["history"].append({
+                    "date": confirmed_date, "time": generated_at.isoformat(timespec="seconds"),
+                    "equity": account["equity"], "daily_pnl": daily_pnl,
+                    "daily_return_pct": daily_pnl / prior_equity * 100 if prior_equity else 0,
+                    "costs": costs, "mark_price": fill_price if stop_hit else mark,
+                    "side": _side(target_lots), "lots": abs(target_lots),
+                    "event": "hard_stop" if stop_hit else "daily_mark", "completion": "confirmed",
+                })
+            current_lots = int(account.get("signed_lots", 0))
+            direction = forced_asset_direction(asset, _side(current_lots))
             sizing = forced_asset_lots(asset, float(account["equity"]), direction["direction"], config)
-            proposed_stop = active_atr_stop(asset, _side(target_lots))
-            if proposed_stop is not None:
-                if prior_lots * target_lots <= 0 or account.get("active_stop") is None:
-                    account["active_stop"] = proposed_stop
-                elif target_lots > 0:
-                    account["active_stop"] = max(float(account["active_stop"]), proposed_stop)
-                else:
-                    account["active_stop"] = min(float(account["active_stop"]), proposed_stop)
+            if current_lots:
+                proposed_stop = individual_atr_stop(asset, _side(current_lots), config)
+                if proposed_stop is not None:
+                    if account.get("active_stop") is None:
+                        account["active_stop"] = proposed_stop
+                    elif current_lots > 0:
+                        account["active_stop"] = max(float(account["active_stop"]), proposed_stop)
+                    else:
+                        account["active_stop"] = min(float(account["active_stop"]), proposed_stop)
             account.update({
                 "pending_side": direction["direction"], "pending_lots": int(sizing["signed_lots"]),
                 "pending_signal_date": confirmed_date, "pending_reason": direction["reason"],
@@ -1888,6 +1965,105 @@ def update_individual_forced_books(
             })
             account["history"] = account["history"][-1500:]
             account["change_history"] = account["change_history"][-1000:]
+
+        if profile_upgraded:
+            current_lots = int(account.get("signed_lots", 0))
+            upgraded_direction = forced_asset_direction(asset, _side(current_lots))
+            upgraded_sizing = forced_asset_lots(
+                asset, float(account["equity"]), upgraded_direction["direction"], config
+            )
+            account.update({
+                "pending_side": upgraded_direction["direction"],
+                "pending_lots": int(upgraded_sizing["signed_lots"]),
+                "pending_signal_date": confirmed_date, "pending_reason": upgraded_direction["reason"],
+                "pending_score": upgraded_direction["score"], "pending_votes": upgraded_direction["votes"],
+                "pending_sizing": upgraded_sizing,
+            })
+            if current_lots:
+                tightened_stop = individual_atr_stop(asset, _side(current_lots), config)
+                if tightened_stop is not None:
+                    if account.get("active_stop") is None:
+                        account["active_stop"] = tightened_stop
+                    elif current_lots > 0:
+                        account["active_stop"] = max(float(account["active_stop"]), tightened_stop)
+                    else:
+                        account["active_stop"] = min(float(account["active_stop"]), tightened_stop)
+
+        # Enforce the resting stop during the forming daily bar. This is a
+        # separate execution lane from the confirmed close: it books the stop
+        # once at the known stop price, or at the worse session open after a gap.
+        live_bar_for_stop = asset.get("live_daily", {})
+        live_date_for_stop = str(live_bar_for_stop.get("date") or "")[:10]
+        live_price_for_stop = float(live_bar_for_stop.get("close") or asset["price"])
+        # On the rule-upgrade scan the tighter stop did not exist earlier in
+        # the session, so only the current observable price may trigger it.
+        # Subsequent scans can safely use the full forming-bar high/low.
+        activation_day = live_date_for_stop == profile_activation_date
+        live_high_for_stop = live_price_for_stop if profile_upgraded or activation_day else float(
+            live_bar_for_stop.get("high") or live_price_for_stop
+        )
+        live_low_for_stop = live_price_for_stop if profile_upgraded or activation_day else float(
+            live_bar_for_stop.get("low") or live_price_for_stop
+        )
+        current_lots = int(account.get("signed_lots", 0))
+        current_stop = account.get("active_stop")
+        live_stop_hit = bool(
+            live_date_for_stop and live_date_for_stop > str(account.get("last_confirmed_date", "")) and
+            current_stop is not None and current_lots and
+            ((current_lots > 0 and live_low_for_stop <= float(current_stop)) or
+             (current_lots < 0 and live_high_for_stop >= float(current_stop)))
+        )
+        if live_stop_hit and account.get("last_stop_event_date") != live_date_for_stop:
+            live_open_for_stop = float(live_bar_for_stop.get("open") or live_price_for_stop)
+            fill_price = stop_order_fill(live_open_for_stop, float(current_stop), _side(current_lots))
+            prior_equity = float(account["equity"])
+            close_cost = abs(current_lots) * (
+                fill_price * multiplier * fee + slip_ticks * tick * multiplier
+            )
+            stop_pnl = current_lots * multiplier * (fill_price - float(account["last_mark"])) - close_cost
+            account["equity"] = max(1.0, prior_equity + stop_pnl)
+            account["total_costs"] = float(account.get("total_costs", 0)) + close_cost
+            event = {
+                "date": live_date_for_stop, "time": generated_at.isoformat(timespec="seconds"),
+                "side": _side(current_lots), "lots": abs(current_lots),
+                "stop_price": float(current_stop), "fill_price": fill_price,
+                "low": live_low_for_stop, "high": live_high_for_stop, "mode": "hard_exit_live",
+                "completion": "forming_daily_bar",
+                "note": "1.5×ATR硬止损已执行；跳空越过止损时按更差的开盘价成交",
+            }
+            account.setdefault("stop_events", []).append(event)
+            account["last_stop_event_date"] = live_date_for_stop
+            account["cooldown_date"] = live_date_for_stop
+            stop_change = {
+                "time": generated_at.isoformat(timespec="seconds"), "date": live_date_for_stop,
+                "asset_id": asset["id"], "asset": asset["name"], "symbol": symbol,
+                "from_lots": current_lots, "to_lots": 0, "price": fill_price, "reason": "hard_stop",
+                "direction_reason": event["note"], "direction_score": account.get("pending_score"),
+            }
+            account["change_history"].append(stop_change)
+            root["change_history"].append(stop_change)
+            account["trades"] = int(account.get("trades", 0)) + 1
+            account["signed_lots"] = 0
+            account["active_stop"] = None
+            account["last_mark"] = fill_price
+            account["history"].append({
+                "date": live_date_for_stop, "time": generated_at.isoformat(timespec="seconds"),
+                "equity": account["equity"], "daily_pnl": stop_pnl,
+                "daily_return_pct": stop_pnl / prior_equity * 100 if prior_equity else 0,
+                "costs": close_cost, "mark_price": fill_price, "side": 0, "lots": 0,
+                "event": "hard_stop", "completion": "forming_daily_bar",
+            })
+            reentry_direction = forced_asset_direction(asset, _side(current_lots))
+            reentry_sizing = forced_asset_lots(
+                asset, float(account["equity"]), reentry_direction["direction"], config
+            )
+            account.update({
+                "pending_side": reentry_direction["direction"],
+                "pending_lots": int(reentry_sizing["signed_lots"]),
+                "pending_signal_date": confirmed_date, "pending_reason": reentry_direction["reason"],
+                "pending_score": reentry_direction["score"], "pending_votes": reentry_direction["votes"],
+                "pending_sizing": reentry_sizing,
+            })
 
         history = account.get("history", [])
         peak, max_drawdown = initial_cash, 0.0
@@ -1915,7 +2091,14 @@ def update_individual_forced_books(
         stop_distance = (live_price - float(stop_price)) * _side(signed_lots) if stop_price is not None else None
         stop_risk = max(0.0, float(stop_distance or 0)) * abs(signed_lots) * multiplier
         stop_distance_pct = stop_distance / live_price * 100 if stop_distance is not None and live_price else None
-        stop_status = "已触线" if stop_breached else "接近止损" if stop_distance_pct is not None and stop_distance_pct <= 1.0 else "安全"
+        stopped_today = bool(
+            not signed_lots and account.get("last_stop_event_date") and
+            account.get("last_stop_event_date") == account.get("cooldown_date")
+        )
+        stop_status = (
+            "硬止损已退出" if stopped_today else "空仓待重建" if not signed_lots else
+            "已触线" if stop_breached else "接近止损" if stop_distance_pct is not None and stop_distance_pct <= 1.0 else "安全"
+        )
         last_point = history[-1] if history else {}
         current_sizing = account.get("current_sizing") or forced_asset_lots(
             asset, float(account["equity"]), _side(signed_lots), config
@@ -1943,7 +2126,7 @@ def update_individual_forced_books(
             "holding_pnl_cny": holding_pnl, "historical_pnl_cny": float(account["equity"]) - initial_cash,
             "stop_price": stop_price, "stop_status": stop_status, "stop_breached": stop_breached,
             "stop_distance_pct": stop_distance_pct, "stop_risk_cny": stop_risk,
-            "stop_policy": "2×ATR跟踪风险线；触线记录风险提示，强制方向盘不自动空仓",
+            "stop_policy": "1.5×ATR跟踪硬止损；形成中日K触线即退出，跳空按更差开盘价，止损当日不重入、下一交易日按最新方向重建",
             "stop_events": list(reversed(account.get("stop_events", [])[-20:])),
             "sizing": current_sizing, "pending_sizing": account.get("pending_sizing"),
             "pending_side": account.get("pending_side"), "pending_lots": abs(int(account.get("pending_lots", 0))),
@@ -1959,8 +2142,9 @@ def update_individual_forced_books(
         "mode": "individual_forced_direction", "name": root["name"], "started_at": root["started_at"],
         "initial_cash_per_asset": initial_cash, "accounts": rows,
         "recent_changes": list(reversed(root["change_history"][-30:])),
-        "history_count": len(root["change_history"]),
-        "method": "每品种独立100万元且每日必须持有多或空。手数取‘模拟保证金预算’与‘2×ATR止损风险预算’两者较小值；波动率升高会同时压低二者。合约价值是名义敞口，不是保证金占用；保证金率为连续合约模拟假设，不等于期货公司实时结算参数。止损线用于风险监控，强制方向盘触线不自动空仓，由下一期方向与手数处理。",
+        "history_count": len(root["change_history"]), "rule_changes": root.get("rule_changes", []),
+        "sizing_rule_version": root.get("sizing_rule_version"),
+        "method": "每品种独立100万元并持续分配多空方向；正常波动采用4%单笔止损风险预算、55%目标保证金、70%硬上限，仓位取保证金容量与1.5×ATR止损风险容量的较小值。波动率升高时两项预算同步降档。1.5×ATR为硬止损：形成中日K触线立即退出，跳空按更差开盘价成交，止损当日不重入，下一交易日再按最新方向建仓。",
     }
 
 
@@ -2413,7 +2597,7 @@ def update_allocation_paper_portfolio(
         **{key: paper_report[key] for key in ("mode", "started_at", "updated_at", "initial_cash", "scope", "strategies", "positions", "individual_forced", "rule_changes", "daily_history", "stop_events")},
         "recent_changes": all_changes[:30], "history_count": len(all_changes), "history_url": "paper-history.json",
         "allocation_method": paper_report["assumptions"],
-        "note": "1000万元择优组合与17个独立强制方向实验盘并行；方向均来自品种自身时间序列信号，不使用板块截面强弱。手数按主连参考价、交易单位和模拟保证金率折算；名义敞口与保证金占用分开，均不代表真实委托或期货公司实时结算参数。",
+        "note": "1000万元择优组合与17个独立进攻型硬止损实验盘并行；方向均来自品种自身时间序列信号，不使用板块截面强弱。独立盘正常波动按4%风险预算、55%目标保证金和1.5×ATR硬止损；名义敞口与保证金占用分开，均不代表真实委托或期货公司实时结算参数。",
     }
 
 
@@ -2792,7 +2976,7 @@ def scan_once() -> dict[str, Any]:
                 strategy.pop("return_series", None)
         signal_changes = update_signal_change_log(results, generated_at)
         payload = {
-            "schema_version": 18,
+            "schema_version": 19,
             "generated_at": generated_at.isoformat(timespec="seconds"),
             "interval_seconds": int(config["scan_interval_seconds"]),
             "summary": counts,
@@ -2812,7 +2996,7 @@ def scan_once() -> dict[str, Any]:
                 "capital_structure": "价格上涨且总持仓增加归为多头增仓；价格下跌且总持仓增加归为空头增仓；上涨缩仓提示警惕追多，下跌缩仓提示警惕追空。该分类只描述价格与总持仓组合，不判定多空持仓归属",
                 "trend_quality": "20日收益率刻画中期趋势，3日收益率相对20日趋势的绝对比例刻画短期噪音；20日收益率除以20日同期限波动率得到风险调整后趋势",
                 "strategy_selection": "所有品种统一先按最近一年硬门槛筛选，再排可用名次：至少8笔、收益>0；日线四因子Sharpe≥0.30，其他方法Sharpe>0。高绩效但低于8笔的方法仅列入前向观察；低换手方法另用真实5年、数据不足时3年历史作背景核验，不直接替换。",
-                "allocation": "两套模拟盘并行：17品种各自100万元且每日必须持有多或空，用于检验方向能力；原1000万元组合延续历史，三票取二后择优配置，目标总保证金占用45%、单品种≤12%、净保证金方向差≤30%、单板块≤30%、最多6个持仓。保证金占用与名义敞口分开，波动率只缩放仓位、不改变方向",
+                "allocation": "两套模拟盘并行：17品种各自100万元采用进攻型硬止损配置，正常波动时单笔风险预算4%、目标保证金55%、硬上限70%，按1.5×ATR严格止损；原1000万元组合延续历史，三票取二后择优配置，目标总保证金占用45%、单品种≤12%、净保证金方向差≤30%、单板块≤30%、最多6个持仓。保证金占用与名义敞口分开，波动率只缩放仓位、不改变方向",
                 "open_interest": "优先读取行情商的品种加权合约持仓字段；若无该序列，将全部挂牌分月合约持仓逐日求和；两者均失败才明确标记主连降级",
                 "calendar_spread": "按到期月份选择最近两个仍挂牌且有有效买卖盘的分月合约；月差=近月买卖盘中值−次近月买卖盘中值，正值为BACKWARDATION、负值为CONTANGO；保留两侧可成交边界并核对报价交易日和时间差",
                 "technical": "主流指标层覆盖均线、MACD、ADX、ROC、RSI、KDJ、CCI、ATR、布林带、唐奇安、量比与OBV，仅作交叉验证",
@@ -2829,7 +3013,7 @@ def scan_once() -> dict[str, Any]:
                 "最近一年按Sharpe选择策略属于同窗筛选，存在选择偏差；应继续观察前向模拟盘，不能把排名直接外推为未来收益。",
                 "低换手方法的3年/5年结果只用于稳定性背景；最近一年样本不足时仍不能直接替换当前方法，避免事后放宽门槛。",
                 "模拟盘参考手数由主力连续价和交易单位折算；主力连续不是可成交月份，实盘前必须映射具体合约并复核保证金、手续费和平今规则。",
-                "单品种强制方向盘是模型辨别力实验：必须持有多或空不等于每天强制换仓，也不代表推荐实盘持续满仓；应与允许空仓的1000万元择优组合分开评价。",
+                "单品种进攻盘是模型辨别力实验：持续分配多空方向不等于每天换仓；1.5×ATR硬止损优先于强制持仓，触线当日允许临时空仓，下一交易日才能按最新方向重建。该实验不代表实盘推荐，应与1000万元择优组合分开评价。",
                 "公开接口可能限流或中断；实盘研究建议切换至iFinD、Wind、CTP或交易所授权源。",
             ],
         }

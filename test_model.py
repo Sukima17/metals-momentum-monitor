@@ -246,6 +246,20 @@ if __name__ == "__main__":
     assert forced_sizing["signed_lots"] < 0 and abs(forced_sizing["signed_lots"]) >= 1
     assert forced_sizing["margin_rate"] > 0 and forced_sizing["margin_per_contract"] < forced_sizing["contract_notional"]
     assert forced_sizing["limiting_rule"] in ("保证金预算", "止损风险预算")
+    copper_sizing = forced_asset_lots({
+        "daily_close": 109_550, "price": 109_150, "multiplier": 5, "sim_margin_rate": 0.13,
+        "risk_levels": {"entry_reference": 109_550, "long_atr_stop": 107_345.71428571429},
+        "volatility_control": {"position_multiplier": 1.0},
+    }, 1_000_000, 1, config)
+    assert copper_sizing["signed_lots"] == 4
+    assert copper_sizing["stop_atr_multiple"] == 1.5
+    assert copper_sizing["risk_budget_pct"] == 4.0
+    high_vol_copper = forced_asset_lots({
+        "daily_close": 109_550, "price": 109_150, "multiplier": 5, "sim_margin_rate": 0.13,
+        "risk_levels": {"entry_reference": 109_550, "long_atr_stop": 107_345.71428571429},
+        "volatility_control": {"position_multiplier": 0.5},
+    }, 1_000_000, 1, config)
+    assert 1 <= high_vol_copper["signed_lots"] < copper_sizing["signed_lots"]
     forced_state = {}
     forced_asset = {
         "id": "test", "name": "测试品种", "short_name": "测试", "symbol": "T0", "price": 102,
@@ -262,6 +276,24 @@ if __name__ == "__main__":
     forced_asset_next = {**forced_asset, "daily_date": "2026-10-20", "daily_open": 103, "daily_close": 104, "daily_settle": 104, "price": 104, "live_daily": {"close": 104}}
     second_forced = update_individual_forced_books(forced_state, [forced_asset_next], datetime(2026, 10, 21, 9), config)
     assert second_forced["accounts"][0]["observations"] == 2 and second_forced["accounts"][0]["side"] != 0
+    stop_state = {}
+    stop_asset = {
+        **forced_asset, "daily_date": "2026-10-19", "daily_open": 100, "daily_close": 100,
+        "daily_settle": 100, "price": 100,
+        "risk_levels": {"entry_reference": 100, "long_atr_stop": 96},
+        "live_daily": {"date": "2026-10-19", "open": 100, "high": 101, "low": 99, "close": 100},
+    }
+    opened = update_individual_forced_books(stop_state, [stop_asset], datetime(2026, 10, 19, 15), config)
+    assert opened["accounts"][0]["side"] > 0
+    stop_asset_live = {
+        **stop_asset,
+        "live_daily": {"date": "2026-10-20", "open": 100, "high": 101, "low": 96.5, "close": 97},
+    }
+    stopped = update_individual_forced_books(stop_state, [stop_asset_live], datetime(2026, 10, 20, 10), config)
+    assert stopped["accounts"][0]["side"] == 0
+    assert stopped["accounts"][0]["stop_status"] == "硬止损已退出"
+    assert stopped["accounts"][0]["stop_events"][0]["mode"] == "hard_exit_live"
+    assert stopped["accounts"][0]["pending_lots"] > 0
     two_of_three = build_allocation_targets([{
         "id": "copper", "sector": "nonferrous", "price": 100_000, "multiplier": 5, "signal": "long",
         "strategy_comparison": [{"key": "robust", "latest_target": 1}], "strategy_selection": selection,
