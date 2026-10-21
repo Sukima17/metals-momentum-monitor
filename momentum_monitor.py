@@ -1895,6 +1895,8 @@ def update_individual_forced_books(
             peak = max(peak, float(point["equity"]))
             max_drawdown = min(max_drawdown, float(point["equity"]) / peak - 1 if peak else 0)
         signed_lots = int(account.get("signed_lots", 0))
+        if account.get("active_stop") is None and signed_lots:
+            account["active_stop"] = active_atr_stop(asset, _side(signed_lots))
         live_price = float(asset.get("live_daily", {}).get("close") or asset["price"])
         notional = abs(signed_lots) * multiplier * live_price
         intraday_pnl = signed_lots * multiplier * (live_price - float(account.get("last_mark", live_price)))
