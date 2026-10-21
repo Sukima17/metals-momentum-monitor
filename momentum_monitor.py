@@ -1783,7 +1783,7 @@ def update_individual_forced_books(
         "name": "17品种强制方向实验盘", "started_at": generated_at.isoformat(timespec="seconds"),
         "initial_cash_per_asset": initial_cash, "accounts": {}, "change_history": [],
     })
-    profile_version = str(config.get("individual_sizing_rule_version", "assertive_close_confirm_stop_v3"))
+    profile_version = str(config.get("individual_sizing_rule_version", "assertive_close_confirm_stop_v4"))
     profile_upgraded = root.get("sizing_rule_version") != profile_version
     if profile_upgraded:
         root.setdefault("rule_changes", []).append({
@@ -1816,10 +1816,10 @@ def update_individual_forced_books(
             live_date = str(live_bar.get("date") or "")[:10]
             close_price = float(asset.get("daily_close") or live_bar.get("close") or mark)
             if (
-                prior_stop and prior_stop.get("mode") == "hard_exit_live" and
+                prior_stop and prior_stop.get("mode") in {"hard_exit_live", "hard_exit_confirmed"} and
                 prior_stop.get("date") == confirmed_date and
                 last_history and last_history.get("event") == "hard_stop" and
-                last_history.get("completion") == "confirmed_after_intraday_stop"
+                last_history.get("completion") in {"confirmed_after_intraday_stop", "confirmed"}
             ):
                 restored_lots = int(prior_stop.get("side", 0)) * int(prior_stop.get("lots", 0))
                 prior_history = history[-2] if len(history) > 1 else None
