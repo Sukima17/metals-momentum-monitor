@@ -51,7 +51,7 @@
       <div class="section-head"><div><p class="eyebrow">CONFIRMED CLOSE / NEXT OPEN</p><h2>交易机会 · 开仓与止损计划</h2></div><span id="opportunityTime" class="scope-note">等待确认日线</span></div>
       <div class="opportunity-toolbar"><div class="filters" role="group" aria-label="筛选交易机会"><button class="opportunity-filter active" data-opportunity-filter="all">全部</button><button class="opportunity-filter" data-opportunity-filter="ready">开仓信号</button><button class="opportunity-filter" data-opportunity-filter="watch">观察</button><button class="opportunity-filter" data-opportunity-filter="blocked">未达门槛</button></div><span id="opportunityCount"></span></div>
       <div id="opportunityCards" class="opportunity-cards" aria-live="polite"></div>
-      <p class="panel-note">开仓信号须有已确认日线的明确方向，且技术方向、达标适配方法、风险调整趋势一致并允许配置仓位。信号日收盘价仅作参考；模拟成交按下一交易时段观测开盘价记录，夜盘品种可能先在前一晚开盘。计划止损为参考价起算的2×ATR，按最小变动价位向风险外侧取整；持仓中的止损与模拟入场均价取自独立模拟盘，初建账本的入场均价按确认收盘价初始化。止损以日线收盘确认，下一交易时段开盘退出，因此跳空亏损可能超过卡片中的每手参考风险。仅使用主力连续合约研究，不能把连续合约代码当作可委托的月份合约。</p>
+      <p class="panel-note">开仓信号须有已确认日线的明确方向，且技术方向、达标适配方法、风险调整趋势一致并允许配置仓位。信号日收盘价仅作参考；模拟成交按下一交易时段观测开盘价记录，夜盘品种可能先在前一晚开盘。计划止损是统一的2×ATR风险参考线，按最小变动价位向风险外侧取整；它不等同于各适配方法的回测退出规则。持仓止损与模拟入场均价取自独立模拟盘，其跟踪止损采用1.5×ATR，初建账本的入场均价按确认收盘价初始化。止损以日线收盘确认，下一交易时段开盘退出，因此跳空亏损可能超过卡片中的每手参考风险。仅使用主力连续合约研究，不能把连续合约代码当作可委托的月份合约。</p>
     </section>
 
     <section class="panel capital-panel" id="capital">
