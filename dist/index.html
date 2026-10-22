@@ -14,15 +14,16 @@
     <nav aria-label="主导航">
       <button class="nav-item active" data-scroll="overview"><span>01</span> 总览</button>
       <button class="nav-item" data-scroll="operation"><span>02</span> 操作总结</button>
-      <button class="nav-item" data-scroll="capital"><span>03</span> 资金流向</button>
-      <button class="nav-item" data-scroll="changes"><span>04</span> 信号变化</button>
-      <button class="nav-item" data-scroll="matrix"><span>05</span> 技术信号矩阵</button>
-      <button class="nav-item" data-scroll="technical"><span>06</span> 技术全景</button>
-      <button class="nav-item" data-scroll="trendQuality"><span>07</span> 趋势质量</button>
-      <button class="nav-item" data-scroll="performance"><span>08</span> 策略回测</button>
-      <button class="nav-item" data-scroll="paper"><span>09</span> 模拟盘持仓</button>
-      <button class="nav-item" data-scroll="market"><span>10</span> 全市场</button>
-      <button class="nav-item" data-scroll="method"><span>11</span> 模型口径</button>
+      <button class="nav-item" data-scroll="opportunities"><span>03</span> 交易机会</button>
+      <button class="nav-item" data-scroll="capital"><span>04</span> 资金流向</button>
+      <button class="nav-item" data-scroll="changes"><span>05</span> 信号变化</button>
+      <button class="nav-item" data-scroll="matrix"><span>06</span> 技术信号矩阵</button>
+      <button class="nav-item" data-scroll="technical"><span>07</span> 技术全景</button>
+      <button class="nav-item" data-scroll="trendQuality"><span>08</span> 趋势质量</button>
+      <button class="nav-item" data-scroll="performance"><span>09</span> 策略回测</button>
+      <button class="nav-item" data-scroll="paper"><span>10</span> 模拟盘持仓</button>
+      <button class="nav-item" data-scroll="market"><span>11</span> 全市场</button>
+      <button class="nav-item" data-scroll="method"><span>12</span> 模型口径</button>
     </nav>
     <div class="rail-foot"><i></i><span>实时日K双轨</span><small>盘中形成K · 收盘确认K</small></div>
   </aside>
@@ -44,6 +45,13 @@
       <div class="section-head"><div><p class="eyebrow">FOUR-VOTE EXECUTION GATE</p><h2>操作总结 · 四票逐项核验</h2></div><span class="scope-note">方向三票须一致 · 波动率决定仓位上限</span></div>
       <div id="operationRows" class="operation-rows"></div>
       <p class="panel-note">四票依次为技术方向、适配方法、20日风险调整趋势和波动仓位。前三票方向一致才形成可执行方向；第四票只给出仓位上限。所有阻断项与风险提示同时列出，近月月差和价格×总持仓不参与方向投票。</p>
+    </section>
+
+    <section class="panel opportunity-panel" id="opportunities">
+      <div class="section-head"><div><p class="eyebrow">CONFIRMED CLOSE / NEXT OPEN</p><h2>交易机会 · 开仓与止损计划</h2></div><span id="opportunityTime" class="scope-note">等待确认日线</span></div>
+      <div class="opportunity-toolbar"><div class="filters" role="group" aria-label="筛选交易机会"><button class="opportunity-filter active" data-opportunity-filter="all">全部</button><button class="opportunity-filter" data-opportunity-filter="ready">开仓信号</button><button class="opportunity-filter" data-opportunity-filter="watch">观察</button><button class="opportunity-filter" data-opportunity-filter="blocked">未达门槛</button></div><span id="opportunityCount"></span></div>
+      <div id="opportunityCards" class="opportunity-cards" aria-live="polite"></div>
+      <p class="panel-note">开仓信号须有已确认日线的明确方向，且技术方向、达标适配方法、风险调整趋势一致并允许配置仓位。信号日收盘价仅作参考；模拟成交按下一交易时段实际开盘价记录，夜盘品种可能先在前一晚开盘。计划止损为参考价起算的2×ATR，按最小变动价位向风险外侧取整；持仓中的止损与实际开仓均价取自独立模拟盘。止损以日线收盘确认，下一交易时段开盘退出，因此跳空亏损可能超过卡片中的每手参考风险。仅使用主力连续合约研究，不能把连续合约代码当作可委托的月份合约。</p>
     </section>
 
     <section class="panel capital-panel" id="capital">
